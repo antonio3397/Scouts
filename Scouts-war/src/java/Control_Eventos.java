@@ -1,4 +1,3 @@
-package controladores;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -9,7 +8,6 @@ import clases.Evento;
 import clases.Notificacion;
 import clases.NotificacionID;
 import clases.Seccion;
-import clases.Usuario;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Iterator;
