@@ -1,4 +1,3 @@
-package controladores;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -8,13 +7,11 @@ package controladores;
 
 import clases.Notificacion;
 import clases.NotificacionID;
-import clases.Usuario;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
