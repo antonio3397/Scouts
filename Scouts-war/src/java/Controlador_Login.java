@@ -4,6 +4,10 @@
  * and open the template in the editor.
  */
 
+import Negocio.ContraseniaInvalidaException;
+import Negocio.CuentaInexistenteException;
+import Negocio.Negocio;
+import Negocio.ScoutsException;
 import clases.Evento;
 import clases.Perfil;
 import clases.Seccion;
@@ -34,14 +38,18 @@ public class Controlador_Login implements Serializable {
     private List<Evento> events;
     private Usuario otro;
     private String seccionmod;
+    private Usuario usuario;
 
+    @Inject
+    private Negocio negocio;
+    
     @Inject
     private MiSesion ctrl;
 
     @Inject
     private Control_Eventos ctrle;
 
-    public Controlador_Login() {
+    /*public Controlador_Login() {
         users = new ArrayList<>();
         users.add(new Usuario(121L, "1234", "78556410V", "paco_mg99@hotmail.com", "Francisco", "Marin Garzón", "Hombre", new Date(1997 - 1900, 3, 2), 29610, "C/Luisa Ordoñez n15 1ºB", "Málaga", "Málaga", new Date(2015 - 1900, 3, 2), 50, 921121314, 654121314, "Tarjeta_Crédito", new Perfil(Perfil.Rol.EDUCANDO), new Seccion(1L, Seccion.Secciones.Castores)));
         users.add(new Usuario(122L, "1234", "71156411N", "paula_vp@hotmail.com", "Paula", "Vergara Perez", "Mujer", new Date(1997 - 1900, 11, 6), 29615, "C/Santa Rosa n17 5ºC", "Málaga", "Málaga", new Date(2015 - 1900, 10, 11), 75, 921675432, 654960584, "Tarjeta_Crédito", new Perfil(Perfil.Rol.COORDGEN), new Seccion(0L, Seccion.Secciones.TODAS)));
@@ -55,11 +63,27 @@ public class Controlador_Login implements Serializable {
 
         users.get(0).getEventos().add(events.get(0));
         events.get(0).getUsuarios().add(users.get(0));
-    }
-
+    }*/
+    
     public String autenticar() {
 
-        Iterator<Usuario> iter = users.iterator();
+        try {
+            negocio.compruebaLogin(usuario);
+            ctrl.setUser(negocio.refrescarUsuario(usuario));
+            return "contactos.xhtml";
+        } catch (CuentaInexistenteException e) {
+            FacesMessage fm = new FacesMessage("La cuenta no existe");
+            FacesContext.getCurrentInstance().addMessage("login:user", fm);
+        } catch (ContraseniaInvalidaException e) {
+            FacesMessage fm = new FacesMessage("La contraseña no es correcta");
+            FacesContext.getCurrentInstance().addMessage("login:pass", fm);
+        } catch (ScoutsException e) {
+            FacesMessage fm = new FacesMessage("Error: " + e);
+            FacesContext.getCurrentInstance().addMessage(null, fm);
+        }
+        return null;
+        
+        /*Iterator<Usuario> iter = users.iterator();
 
         boolean pV = false, exist = false;
         Usuario aux = null;
@@ -120,7 +144,7 @@ public class Controlador_Login implements Serializable {
 
         ctrle.setEventosj2(events2);
 
-        return "Inicio.xhtml";
+        return "Inicio.xhtml";*/
     }
 
     public String verUsuario(Long id) {
@@ -136,6 +160,24 @@ public class Controlador_Login implements Serializable {
 
         return "OtroPerfil.xhtml";
     }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
+    }
+
+    public Negocio getNegocio() {
+        return negocio;
+    }
+
+    public void setNegocio(Negocio negocio) {
+        this.negocio = negocio;
+    }
+    
+    
 
     /**
      * @return the password

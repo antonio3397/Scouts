@@ -35,20 +35,6 @@ ESCULTAS PIONEROS -> 5L
 @SessionScoped
 public class MiSesion implements Serializable {
 
-    /**
-     * @return the ctre
-     */
-    public Control_Eventos getCtre() {
-        return ctre;
-    }
-
-    /**
-     * @param ctre the ctre to set
-     */
-    public void setCtre(Control_Eventos ctre) {
-        this.ctre = ctre;
-    }
-
     private Usuario user;
     private List<Usuario> users;
     private List<Usuario> users2;
@@ -81,12 +67,6 @@ public class MiSesion implements Serializable {
     
     @Inject
     private Control_Eventos ctre;
-
-    /**
-     * Creates a new instance of MiSesion
-     */
-    public MiSesion() {
-    }
 
     public String logout() {
         // Destruye la sesión (y con ello, el ámbito de este bean)
@@ -226,6 +206,20 @@ public class MiSesion implements Serializable {
         
         return "Eventos.xhtml";
         
+    }
+    
+    /**
+     * @return the ctre
+     */
+    public Control_Eventos getCtre() {
+        return ctre;
+    }
+
+    /**
+     * @param ctre the ctre to set
+     */
+    public void setCtre(Control_Eventos ctre) {
+        this.ctre = ctre;
     }
 
     /**
