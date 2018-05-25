@@ -35,7 +35,9 @@ ESCULTAS PIONEROS -> 5L
 @SessionScoped
 public class MiSesion implements Serializable {
 
+    //Usuario con sesion iniciada
     private Usuario user;
+    
     private List<Usuario> users;
     private List<Usuario> users2;
     private Usuario otro;
@@ -72,7 +74,7 @@ public class MiSesion implements Serializable {
         // Destruye la sesión (y con ello, el ámbito de este bean)
         FacesContext ctx = FacesContext.getCurrentInstance();
         ctx.getExternalContext().invalidateSession();
-        setUser(null);
+        user = null;
         return "login.xhtml";
     }
 

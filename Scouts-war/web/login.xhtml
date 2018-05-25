@@ -18,9 +18,9 @@
         <h:form>
             <h:panelGrid columns="2" cellpadding="5">
                 <h:outputText value="Email: " />
-                <p:inputText value="#{controlador_Login.email}"/>
+                <p:inputText value="#{controlador_Login.usuario.email}"/>
                 <h:outputText value="Contraseña: " />
-                <p:password id="nonFeedback" value="#{controlador_Login.password}" />
+                <p:password id="nonFeedback" value="#{controlador_Login.usuario.contrasenia}" />
                 <p:commandButton value="Iniciar sesión" action="#{controlador_Login.autenticar()}" ajax="false"/>
                 <p:commandButton value="Registarse" action="registro.xhtml" ajax="false"/>
             </h:panelGrid>

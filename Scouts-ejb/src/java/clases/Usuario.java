@@ -6,13 +6,11 @@
 package clases;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -31,14 +29,11 @@ public class Usuario implements Serializable {
 
     private static long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private String email;
     @Column(nullable=false)
     private String contrasenia;
     @Column(nullable=false)
     private String NIF;
-    @Column(nullable=false)
-    private String email;
     @Column(nullable=false)
     private String nombre;
     @Column(nullable=false)
@@ -102,43 +97,8 @@ public class Usuario implements Serializable {
     @ManyToOne
     @JoinColumn(nullable=true)
     private Responsable_Legal responsable;
-
-    public Usuario(Long id, String contrasenia, String NIF, String email, 
-           String nombre, String apellidos, String sexo, Date fecha_nacimiento,
-           Integer codigo_postal, String direccion, String provincia,
-           String Localidad, Date fecha_ingreso, Integer cuota_total,
-           Integer telefono, Integer movil, String metodo_pago, Perfil perfil, Seccion seccion){
-        this.id=id;
-        this.contrasenia=contrasenia;
-        this.NIF=NIF;
-        this.email=email;
-        this.nombre=nombre;
-        this.apellidos=apellidos;
-        this.sexo=sexo;
-        this.fecha_nacimiento=fecha_nacimiento;
-        this.codigo_postal=codigo_postal;
-        this.direccion=direccion;
-        this.provincia=provincia;
-        this.Localidad=Localidad;
-        this.fecha_ingreso=fecha_ingreso;
-        this.telefono=telefono;
-        this.movil=movil;
-        this.metodo_pago=metodo_pago;
-        this.perfiles = perfil;
-        this.seccion=seccion;
-        this.cuota_total=cuota_total;
-        this.eventos=new ArrayList<>();
-    }
     
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-    
-        /**
+    /**
      * @return the inscripciones
      */
     public List<Evento> getInscripciones() {
@@ -150,31 +110,6 @@ public class Usuario implements Serializable {
      */
     public void setInscripciones(List<Evento> inscripciones) {
         this.inscripciones = inscripciones;
-    }
-
-    @Override
-    public int hashCode() {
-        int hash = 0;
-        hash += (getId() != null ? getId().hashCode() : 0);
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Usuario)) {
-            return false;
-        }
-        Usuario other = (Usuario) object;
-        if ((this.getId() == null && other.getId() != null) || (this.getId() != null && !this.id.equals(other.id))) {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
-    public String toString() {
-        return "trabajo.Usuario[ id=" + getId() + " ]";
     }
 
     /**
@@ -539,6 +474,36 @@ public class Usuario implements Serializable {
      */
     public void setResponsable(Responsable_Legal responsable) {
         this.responsable = responsable;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 67 * hash + Objects.hashCode(this.email);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Usuario other = (Usuario) obj;
+        if (!Objects.equals(this.email, other.email)) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "Usuario{" + "email=" + email + ", contrasenia=" + contrasenia + ", NIF=" + NIF + ", nombre=" + nombre + ", apellidos=" + apellidos + ", sexo=" + sexo + ", fecha_nacimiento=" + fecha_nacimiento + ", codigo_postal=" + codigo_postal + ", direccion=" + direccion + ", provincia=" + provincia + ", Localidad=" + Localidad + ", fecha_ingreso=" + fecha_ingreso + ", fecha_baja=" + fecha_baja + ", cuota_total=" + cuota_total + ", telefono=" + telefono + ", movil=" + movil + ", metodo_pago=" + metodo_pago + ", perfiles=" + perfiles + '}';
     }
     
 }

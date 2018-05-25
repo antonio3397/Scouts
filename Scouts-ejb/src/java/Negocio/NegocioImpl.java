@@ -22,7 +22,7 @@ public class NegocioImpl implements Negocio {
 
     @Override
     public void compruebaLogin(Usuario u) throws ScoutsException {
-        Usuario user = em.find(Usuario.class, u.getId());
+        Usuario user = em.find(Usuario.class, u.getEmail());
         
         if (user == null) {
             throw new CuentaInexistenteException();
@@ -35,7 +35,7 @@ public class NegocioImpl implements Negocio {
     @Override
     public Usuario refrescarUsuario(Usuario u) throws ScoutsException {
         compruebaLogin(u);
-        Usuario user = em.find(Usuario.class, u.getId());
+        Usuario user = em.find(Usuario.class, u.getEmail());
         em.refresh(user);
         return user;
 
