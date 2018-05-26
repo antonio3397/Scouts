@@ -50,6 +50,7 @@ public class Controlador_Login implements Serializable {
         try {
             negocio.compruebaLogin(usuario);
             ctrl.setUser(negocio.refrescarUsuario(usuario));
+            ctrle.setEventosj(negocio.getEventos());
             return "Inicio.xhtml";
         } catch (CuentaInexistenteException e) {
             FacesMessage fm = new FacesMessage("La cuenta no existe");

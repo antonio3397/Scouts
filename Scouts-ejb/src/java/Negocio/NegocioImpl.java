@@ -5,10 +5,14 @@
  */
 package Negocio;
 
+import clases.Evento;
 import clases.Usuario;
+import java.util.ArrayList;
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
 /**
  *
@@ -38,7 +42,29 @@ public class NegocioImpl implements Negocio {
         Usuario user = em.find(Usuario.class, u.getEmail());
         em.refresh(user);
         return user;
-
+    }
+    
+    @Override
+    public void compruebaEvento(Evento e) throws ScoutsException {
+        Evento event = em.find(Evento.class, e.getId());
+        
+        if (event == null) {
+            throw new EventoInexistenteException();
+        }
+    }
+    
+    @Override
+    public List<Evento> getEventos(){
+        List<Evento> e = new ArrayList<>();
+        Query q = em.createQuery("SELECT e FROM Evento e");
+        e=q.getResultList();
+        return e;
+    }
+    
+    @Override
+    public void eliminarEvento(Evento e) throws ScoutsException {
+        compruebaEvento(e);
+        em.remove(em.merge(e));
     }
     
 }

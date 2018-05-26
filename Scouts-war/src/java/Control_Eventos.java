@@ -4,6 +4,8 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+import Negocio.Negocio;
+import Negocio.ScoutsException;
 import clases.Evento;
 import clases.Notificacion;
 import clases.NotificacionID;
@@ -26,7 +28,9 @@ import javax.inject.Inject;
 @Named(value = "Eventos")
 public class Control_Eventos implements Serializable {
 
+    //Lista de todos los eventos
     private List<Evento> eventosj;
+    
     private List<Evento> eventosj2;
     private Evento event;
     private Long idcrear;
@@ -41,8 +45,12 @@ public class Control_Eventos implements Serializable {
     private String seccionMod;
     
     @Inject
+    private Negocio negocio;
+    
+    @Inject
     Control_Notificaciones CN;
 
+    //Se busca un evento por su id
     public Evento buscarEvento(Long id) throws EventoException {
         Evento enc = null;
         Iterator<Evento> iter = eventosj.iterator();
@@ -60,12 +68,14 @@ public class Control_Eventos implements Serializable {
         return enc;
     }
   
+    //Se modifica un evento
     public String modificarEvento(Long id) throws EventoException {
         Evento b = buscarEvento(id);
         setAux(new Evento(id, b.getTitulo(), b.getFecha(), b.getLocalizacion(), b.getDescripcion(), b.getPrecio(), b.getSeccion()));
         return "ModEvento.xhtml";
     }
 
+    //Se aceptan las modificaciones de un evento
     public String aceptarMod() throws EventoException {
         Evento b = buscarEvento(aux.getId());
 
@@ -98,18 +108,22 @@ public class Control_Eventos implements Serializable {
         return "Lista_eventos.xhtml";
     }
 
+    //No se cambia el evento
     public String cancelarMod() {
 
         return "Eventos.xhtml";
     }
 
-    public String borrarEvento(Long id) throws EventoException {
+    //Borra un evento de la lista
+    public String borrarEvento(Long id) throws EventoException, ScoutsException {
         Evento b = buscarEvento(id);
+        negocio.eliminarEvento(b);
         eventosj.remove(b);
         eventosj2.remove(b);
         return "Lista_eventos.xhtml";
     }
 
+    //Se crea un evento
     public String CrearEvento() {
 
         if (eventosj.isEmpty() || eventosj == null) {

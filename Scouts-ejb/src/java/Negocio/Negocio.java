@@ -5,7 +5,9 @@
  */
 package Negocio;
 
+import clases.Evento;
 import clases.Usuario;
+import java.util.List;
 import javax.ejb.Local;
 
 /**
@@ -17,5 +19,8 @@ public interface Negocio {
     
     public void compruebaLogin(Usuario u) throws ScoutsException;
     public Usuario refrescarUsuario(Usuario u) throws ScoutsException;
+    public void compruebaEvento(Evento e) throws ScoutsException;
+    public List<Evento> getEventos();
+    public void eliminarEvento(Evento e) throws ScoutsException;
     
 }
