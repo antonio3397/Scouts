@@ -22,5 +22,7 @@ public interface Negocio {
     public void compruebaEvento(Evento e) throws ScoutsException;
     public List<Evento> getEventos();
     public void eliminarEvento(Evento e) throws ScoutsException;
+    public List<Usuario> getUsuarios();
+    public void crearEvento(Evento e) throws ScoutsException;
     
 }

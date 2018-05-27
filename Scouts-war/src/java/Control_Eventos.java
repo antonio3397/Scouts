@@ -30,9 +30,11 @@ public class Control_Eventos implements Serializable {
 
     //Lista de todos los eventos
     private List<Evento> eventosj;
-    
+    //Lista de eventos que puede ver el usuario
     private List<Evento> eventosj2;
+    //Evento que se quiere ver
     private Evento event;
+    //Datos para la creacion de un evento nuevo
     private Long idcrear;
     private Date fechacrear;
     private String titulocrear;
@@ -71,7 +73,7 @@ public class Control_Eventos implements Serializable {
     //Se modifica un evento
     public String modificarEvento(Long id) throws EventoException {
         Evento b = buscarEvento(id);
-        setAux(new Evento(id, b.getTitulo(), b.getFecha(), b.getLocalizacion(), b.getDescripcion(), b.getPrecio(), b.getSeccion()));
+        //setAux(new Evento(id, b.getTitulo(), b.getFecha(), b.getLocalizacion(), b.getDescripcion(), b.getPrecio(), b.getSeccion()));
         return "ModEvento.xhtml";
     }
 
@@ -124,7 +126,7 @@ public class Control_Eventos implements Serializable {
     }
 
     //Se crea un evento
-    public String CrearEvento() {
+    public String CrearEvento() throws ScoutsException {
 
         if (eventosj.isEmpty() || eventosj == null) {
             Random rd = new Random();
@@ -155,8 +157,16 @@ public class Control_Eventos implements Serializable {
                 break;
         }
 
-        Evento ev = new Evento(idcrear, titulocrear, fechacrear, localizacioncrear, descripcioncrear, precio, sec);
-
+        Evento ev = new Evento();
+        ev.setId(idcrear);
+        ev.setDescripcion(descripcioncrear);
+        ev.setFecha(fechacrear);
+        ev.setLocalizacion(localizacioncrear);
+        ev.setPrecio(precio);
+        ev.setTitulo(titulocrear);
+        ev.setSeccion(sec);
+        
+        negocio.crearEvento(ev);
         eventosj.add(ev);
         eventosj2.add(ev);
 

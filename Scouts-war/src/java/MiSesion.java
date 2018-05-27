@@ -44,7 +44,6 @@ public class MiSesion implements Serializable {
     private Usuario auxiliar;
     private String seccionmod;
 
-    private Long idcrear;
     private String contraseniacrear;
     private String NIFcrear;
     private String emailcrear;
@@ -78,14 +77,14 @@ public class MiSesion implements Serializable {
         return "login.xhtml";
     }
 
-    public Usuario buscarUsuario(Long id) throws UsuarioException {
+    public Usuario buscarUsuario(String email) throws UsuarioException {
 
         Usuario aux = null;
 
         Iterator<Usuario> iter = getUsers().iterator();
         while (iter.hasNext() && aux == null) {
             Usuario it = iter.next();
-            if (it.getId().equals(id)) {
+            if (it.getEmail().equals(email)) {
                 aux = it;
             }
         }
@@ -105,7 +104,7 @@ public class MiSesion implements Serializable {
             u = iter.next();
         }
          */
-        setOtro(new Usuario(getAuxiliar().getId(), getAuxiliar().getContrasenia(), getAuxiliar().getNIF(), getAuxiliar().getEmail(), getAuxiliar().getNombre(), getAuxiliar().getApellidos(), getAuxiliar().getSexo(), getAuxiliar().getFecha_nacimiento(), getAuxiliar().getCodigo_postal(), getAuxiliar().getDireccion(), getAuxiliar().getProvincia(), getAuxiliar().getLocalidad(), getAuxiliar().getFecha_ingreso(), getAuxiliar().getCuota_total(), getAuxiliar().getTelefono(), getAuxiliar().getMovil(), getAuxiliar().getMetodo_pago(), getAuxiliar().getPerfiles(), getAuxiliar().getSeccion()));
+        //setOtro(new Usuario(getAuxiliar().getId(), getAuxiliar().getContrasenia(), getAuxiliar().getNIF(), getAuxiliar().getEmail(), getAuxiliar().getNombre(), getAuxiliar().getApellidos(), getAuxiliar().getSexo(), getAuxiliar().getFecha_nacimiento(), getAuxiliar().getCodigo_postal(), getAuxiliar().getDireccion(), getAuxiliar().getProvincia(), getAuxiliar().getLocalidad(), getAuxiliar().getFecha_ingreso(), getAuxiliar().getCuota_total(), getAuxiliar().getTelefono(), getAuxiliar().getMovil(), getAuxiliar().getMetodo_pago(), getAuxiliar().getPerfiles(), getAuxiliar().getSeccion()));
 
         return "ModPerf.xhtml";
     }
@@ -139,7 +138,7 @@ public class MiSesion implements Serializable {
         getOtro().setSeccion(sec);
 
         int i = 0;
-        while (i < getUsers().size() && getOtro().getId() != getUsers().get(i).getId()) {
+        while (i < getUsers().size() && getOtro().getEmail() != getUsers().get(i).getEmail()) {
             i++;
         }
 
@@ -171,9 +170,9 @@ public class MiSesion implements Serializable {
         return "Lista_Usuarios.xhtml";
     }
 
-    public String borrarUsuario(Long id) throws UsuarioException {
+    public String borrarUsuario(String email) throws UsuarioException {
 
-        Usuario b = buscarUsuario(id);
+        Usuario b = buscarUsuario(email);
 
         getUsers().remove(b);
         getUsers2().remove(b);
@@ -188,14 +187,14 @@ public class MiSesion implements Serializable {
         return users;
     }
 
-    public String verUsuario(Long id) {
+    public String verUsuario(String email) {
 
         Iterator<Usuario> iter = getUsers().iterator();
         Usuario u = iter.next();
-        while (iter.hasNext() && !Objects.equals(id, u.getId())) {
+        while (iter.hasNext() && !Objects.equals(email, u.getEmail())) {
             u = iter.next();
         }
-        if (Objects.equals(id, u.getId())) {
+        if (Objects.equals(email, u.getEmail())) {
             setAuxiliar(u);
         }
 
@@ -325,11 +324,8 @@ public class MiSesion implements Serializable {
             }
         }
 
-        idcrear = users.get(users.size() - 1).getId() + 1;
+        //Usuario u = new Usuario(idcrear, contraseniacrear, NIFcrear, emailcrear, nombrecrear, apellidoscrear, sexocrear, fecha_nacimientocrear, Integer.parseInt(cod_postalcrear), direccioncrear, provinciacrear, localidadcrear, fecha_ingresocrear, Integer.parseInt(cuotacrear), Integer.parseInt(telefonocrear), Integer.parseInt(movilcrear), metodopagocrear, p, s);
 
-        Usuario u = new Usuario(idcrear, contraseniacrear, NIFcrear, emailcrear, nombrecrear, apellidoscrear, sexocrear, fecha_nacimientocrear, Integer.parseInt(cod_postalcrear), direccioncrear, provinciacrear, localidadcrear, fecha_ingresocrear, Integer.parseInt(cuotacrear), Integer.parseInt(telefonocrear), Integer.parseInt(movilcrear), metodopagocrear, p, s);
-
-        idcrear = null;
         contraseniacrear = null;
         NIFcrear = null;
         emailcrear = null;
@@ -349,8 +345,8 @@ public class MiSesion implements Serializable {
         perfilcrear = "";
         seccioncrear = null;
 
-        users.add(u);
-        users2.add(u);
+        /*users.add(u);
+        users2.add(u);*/
 
         return "Lista_Usuarios.xhtml";
     }
@@ -427,20 +423,6 @@ public class MiSesion implements Serializable {
      */
     public void setAuxiliar(Usuario auxiliar) {
         this.auxiliar = auxiliar;
-    }
-
-    /**
-     * @return the idcrear
-     */
-    public Long getIdcrear() {
-        return idcrear;
-    }
-
-    /**
-     * @param idcrear the idcrear to set
-     */
-    public void setIdcrear(Long idcrear) {
-        this.idcrear = idcrear;
     }
 
     /**

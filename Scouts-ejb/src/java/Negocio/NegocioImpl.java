@@ -45,6 +45,14 @@ public class NegocioImpl implements Negocio {
     }
     
     @Override
+    public List<Usuario> getUsuarios(){
+        List<Usuario> u = new ArrayList<>();
+        Query q = em.createQuery("SELECT u FROM Usuario u");
+        u=q.getResultList();
+        return u;
+    }
+    
+    @Override
     public void compruebaEvento(Evento e) throws ScoutsException {
         Evento event = em.find(Evento.class, e.getId());
         
@@ -65,6 +73,12 @@ public class NegocioImpl implements Negocio {
     public void eliminarEvento(Evento e) throws ScoutsException {
         compruebaEvento(e);
         em.remove(em.merge(e));
+    }
+    
+    @Override
+    public void crearEvento(Evento e) throws ScoutsException {
+        compruebaEvento(e);
+        em.persist(e);
     }
     
 }
