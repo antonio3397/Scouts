@@ -17,6 +17,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -40,7 +41,9 @@ public class Evento implements Serializable {
     private String localizacion;
     private String descripcion;
     private Integer precio;
-  
+    @Lob
+    private byte [] imagen;
+    
     @OneToMany(mappedBy = "evento")
     @JoinColumn(nullable=true)
     private List<Documento> documentos;
@@ -179,6 +182,16 @@ public class Evento implements Serializable {
     public void setId(Long id) {
         this.id = id;
     }
+
+    public byte[] getImagen() {
+        return imagen;
+    }
+
+    public void setImagen(byte[] imagen) {
+        this.imagen = imagen;
+    }
+    
+    
 
     @Override
     public int hashCode() {
