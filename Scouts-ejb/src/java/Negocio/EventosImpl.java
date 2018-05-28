@@ -17,11 +17,15 @@ import java.util.Iterator;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
 @Stateless
 public class EventosImpl implements Eventos{
+    
+    @PersistenceContext(unitName = "Scouts-EntidadesPU")
     private EntityManager em;
+    
     @Override
     public void insertar(Evento e) {
         if(!estaEvento(e))em.persist(e);

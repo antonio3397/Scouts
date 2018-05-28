@@ -65,18 +65,6 @@ public class Evento implements Serializable {
     @ManyToMany(mappedBy = "inscripciones")
     private List<Usuario> usuarios;
     
-    public Evento(Long id, String titulo, Date fecha, String localizacion,
-           String descripcion, int precio, Seccion seccion){
-        this.id=id;
-        this.descripcion=descripcion;
-        this.fecha=fecha;
-        this.localizacion=localizacion;
-        this.precio=precio;
-        this.titulo=titulo;
-        this.seccion=seccion;
-        this.usuarios=new ArrayList<>();
-    }
-    
     /**
      * @return the titulo
      */

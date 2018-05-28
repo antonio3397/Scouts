@@ -38,16 +38,6 @@ public class Comentario implements Serializable {
     @ManyToOne
     @JoinColumn (nullable = true)
     private Usuario usuario;
-
-    public Comentario(Long id, String texto, Date fecha_creacion, Evento evento, Usuario usuario) {
-        this.id = id;
-        this.texto = texto;
-        this.fecha_creacion = fecha_creacion;
-        this.evento = evento;
-        this.usuario = usuario;
-    }
-    
-    
     
      /**
      * @return the texto

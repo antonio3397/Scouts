@@ -39,12 +39,6 @@ public class Seccion implements Serializable {
     @OneToMany(mappedBy = "seccion")
     private List<Evento> eventos;
 
-    public Seccion(Long id, Secciones nombre) {
-        this.id = id;
-        this.Nombre = nombre;
-    }
-
-
     /**
      * @return the Edad_minima
      */

@@ -32,11 +32,6 @@ public class Perfil implements Serializable {
 
     @OneToMany(mappedBy = "perfiles")
     private List<Usuario> usuarios;
-
-    public Perfil(Rol rol) {
-        this.rol = rol;
-    }
-    
     
     @Override
     public int hashCode() {
