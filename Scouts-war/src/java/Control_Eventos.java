@@ -58,40 +58,40 @@ public class Control_Eventos implements Serializable {
     }
   
     public String modificarEvento(Long id) throws EventoException {
-        Evento b = buscarEvento(id);
-        setAux(new Evento(id, b.getTitulo(), b.getFecha(), b.getLocalizacion(), b.getDescripcion(), b.getPrecio(), b.getSeccion()));
-        
+//        Evento b = buscarEvento(id);
+//        setAux(new Evento(id, b.getTitulo(), b.getFecha(), b.getLocalizacion(), b.getDescripcion(), b.getPrecio(), b.getSeccion()));
+//        
         return "ModEvento.xhtml";
     }
 
     public String aceptarMod() throws EventoException {
-        Evento b = buscarEvento(aux.getId());
-
-        b.setTitulo(aux.getTitulo());
-        b.setFecha(aux.getFecha());
-        b.setLocalizacion(aux.getLocalizacion());
-        b.setPrecio(aux.getPrecio());
-
-        switch (getSeccionMod()) {
-            case "Castores":
-                b.setSeccion(new Seccion(1L, Seccion.Secciones.Castores));
-                break;
-            case "Lobatos":
-                b.setSeccion(new Seccion(2L, Seccion.Secciones.Lobatos));
-                break;
-            case "Scouts":
-                b.setSeccion(new Seccion(4L, Seccion.Secciones.Tropa_Scout));
-                break;
-            case "Escultas":
-                b.setSeccion(new Seccion(5L, Seccion.Secciones.Escultas_Pioneros));
-                break;
-            case "Rovers":
-                b.setSeccion(new Seccion(3L, Seccion.Secciones.Rovers_Compañeros));
-                break;
-            default:
-                break;
-        }
-        seccionMod = null;
+//        Evento b = buscarEvento(aux.getId());
+//
+//        b.setTitulo(aux.getTitulo());
+//        b.setFecha(aux.getFecha());
+//        b.setLocalizacion(aux.getLocalizacion());
+//        b.setPrecio(aux.getPrecio());
+//
+//        switch (getSeccionMod()) {
+//            case "Castores":
+//                b.setSeccion(new Seccion(1L, Seccion.Secciones.Castores));
+//                break;
+//            case "Lobatos":
+//                b.setSeccion(new Seccion(2L, Seccion.Secciones.Lobatos));
+//                break;
+//            case "Scouts":
+//                b.setSeccion(new Seccion(4L, Seccion.Secciones.Tropa_Scout));
+//                break;
+//            case "Escultas":
+//                b.setSeccion(new Seccion(5L, Seccion.Secciones.Escultas_Pioneros));
+//                break;
+//            case "Rovers":
+//                b.setSeccion(new Seccion(3L, Seccion.Secciones.Rovers_Compañeros));
+//                break;
+//            default:
+//                break;
+//        }
+//        seccionMod = null;
 
         return "Lista_eventos.xhtml";
     }
@@ -110,49 +110,49 @@ public class Control_Eventos implements Serializable {
 
     public String CrearEvento() {
 
-        if (eventosj.isEmpty() || eventosj == null) {
-            Random rd = new Random();
-            idcrear = (long) rd.nextInt(2000);
-        } else {
-            idcrear = eventosj.get(eventosj.size() - 1).getId() + 1L;
-        }
-        Seccion sec = null;
-        int precio = Integer.parseInt(preciocrear);
-
-        switch (seccioncrear) {
-            case "Castores":
-                sec = new Seccion(1L, Seccion.Secciones.Castores);
-                break;
-            case "Lobatos":
-                sec = new Seccion(2L, Seccion.Secciones.Lobatos);
-                break;
-            case "Scouts":
-                sec = new Seccion(4L, Seccion.Secciones.Tropa_Scout);
-                break;
-            case "Escultas":
-                sec = new Seccion(5L, Seccion.Secciones.Escultas_Pioneros);
-                break;
-            case "Rovers":
-                sec = new Seccion(3L, Seccion.Secciones.Rovers_Compañeros);
-                break;
-            default:
-                break;
-        }
-
-        Evento ev = new Evento(idcrear, titulocrear, fechacrear, localizacioncrear, descripcioncrear, precio, sec);
-
-        eventosj.add(ev);
-        eventosj2.add(ev);
-
-        CN.addNotificame(new Notificacion(new NotificacionID(sec.getId(), idcrear), titulocrear, descripcioncrear, fechacrear));  
-        
-        fechacrear = null;
-        idcrear = null;
-        titulocrear = null;
-        localizacioncrear = null;
-        descripcioncrear = null;
-        preciocrear = null;
-        seccioncrear = null;
+//        if (eventosj.isEmpty() || eventosj == null) {
+//            Random rd = new Random();
+//            idcrear = (long) rd.nextInt(2000);
+//        } else {
+//            idcrear = eventosj.get(eventosj.size() - 1).getId() + 1L;
+//        }
+//        Seccion sec = null;
+//        int precio = Integer.parseInt(preciocrear);
+//
+//        switch (seccioncrear) {
+//            case "Castores":
+//                sec = new Seccion(1L, Seccion.Secciones.Castores);
+//                break;
+//            case "Lobatos":
+//                sec = new Seccion(2L, Seccion.Secciones.Lobatos);
+//                break;
+//            case "Scouts":
+//                sec = new Seccion(4L, Seccion.Secciones.Tropa_Scout);
+//                break;
+//            case "Escultas":
+//                sec = new Seccion(5L, Seccion.Secciones.Escultas_Pioneros);
+//                break;
+//            case "Rovers":
+//                sec = new Seccion(3L, Seccion.Secciones.Rovers_Compañeros);
+//                break;
+//            default:
+//                break;
+//        }
+//
+//        Evento ev = new Evento(idcrear, titulocrear, fechacrear, localizacioncrear, descripcioncrear, precio, sec);
+//
+//        eventosj.add(ev);
+//        eventosj2.add(ev);
+//
+//        CN.addNotificame(new Notificacion(new NotificacionID(sec.getId(), idcrear), titulocrear, descripcioncrear, fechacrear));  
+//        
+//        fechacrear = null;
+//        idcrear = null;
+//        titulocrear = null;
+//        localizacioncrear = null;
+//        descripcioncrear = null;
+//        preciocrear = null;
+//        seccioncrear = null;
 
         return "Lista_eventos.xhtml";
     }
