@@ -16,10 +16,13 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
 @Stateless
 public class ComentariosImpl implements Comentarios{
+    
+    @PersistenceContext(unitName = "Scouts-EntidadesPU")
     private EntityManager em;
 
     @Override
