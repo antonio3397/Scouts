@@ -7,13 +7,8 @@ package Negocio;
 
 /**
  *
- * @author franc
+ * @author anton
  */
-public class eventoYaCreado extends RuntimeException {
-
-    public eventoYaCreado() {
-    }
-    public eventoYaCreado(String msg) {
-        super(msg);
-    }
+public class ContraseniaInvalidaException extends ScoutsException{
+    
 }
