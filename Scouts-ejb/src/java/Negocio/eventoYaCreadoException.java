@@ -9,11 +9,11 @@ package Negocio;
  *
  * @author franc
  */
-public class eventoYaCreado extends RuntimeException {
+public class eventoYaCreadoException extends RuntimeException {
 
-    public eventoYaCreado() {
+    public eventoYaCreadoException() {
     }
-    public eventoYaCreado(String msg) {
+    public eventoYaCreadoException(String msg) {
         super(msg);
     }
 }
