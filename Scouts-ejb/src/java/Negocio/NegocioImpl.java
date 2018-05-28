@@ -5,6 +5,7 @@
  */
 package Negocio;
 
+import clases.Comentario;
 import clases.Evento;
 import clases.Usuario;
 import java.util.ArrayList;
@@ -79,6 +80,14 @@ public class NegocioImpl implements Negocio {
     public void crearEvento(Evento e) throws ScoutsException {
         compruebaEvento(e);
         em.persist(e);
+    }
+    
+    @Override
+    public List<Comentario> getComentarios() {
+        List<Comentario> c = new ArrayList<>();
+        Query q = em.createQuery("SELECT c FROM Comentario c");
+        c=q.getResultList();
+        return c;
     }
     
 }

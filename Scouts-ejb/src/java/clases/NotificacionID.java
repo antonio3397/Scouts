@@ -17,23 +17,19 @@ import javax.persistence.Embeddable;
 public class NotificacionID implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    private Long usuario_id;
+    private String usuario_email;
     private Long evento_id;
 
-    public NotificacionID(Long usID, Long evID){
-        usuario_id = usID;
-        evento_id = evID;
-    }
     @Override
     public String toString() {
-        return "NotificacionID{" + "usuario_id=" + usuario_id + ", evento_id=" + evento_id + '}';
+        return "NotificacionID{" + "usuario_email=" + usuario_email + ", evento_id=" + evento_id + '}';
     }
 
     @Override
     public int hashCode() {
-        int hash = 3;
-        hash = 23 * hash + Objects.hashCode(this.usuario_id);
-        hash = 23 * hash + Objects.hashCode(this.evento_id);
+        int hash = 7;
+        hash = 53 * hash + Objects.hashCode(this.usuario_email);
+        hash = 53 * hash + Objects.hashCode(this.evento_id);
         return hash;
     }
 
@@ -49,7 +45,7 @@ public class NotificacionID implements Serializable {
             return false;
         }
         final NotificacionID other = (NotificacionID) obj;
-        if (!Objects.equals(this.usuario_id, other.usuario_id)) {
+        if (!Objects.equals(this.usuario_email, other.usuario_email)) {
             return false;
         }
         if (!Objects.equals(this.evento_id, other.evento_id)) {
@@ -58,20 +54,14 @@ public class NotificacionID implements Serializable {
         return true;
     }
 
-    /**
-     * @return the usuario_id
-     */
-    public Long getUsuario_id() {
-        return usuario_id;
+    public String getUsuario_email() {
+        return usuario_email;
     }
 
-    /**
-     * @param usuario_id the usuario_id to set
-     */
-    public void setUsuario_id(Long usuario_id) {
-        this.usuario_id = usuario_id;
+    public void setUsuario_email(String usuario_email) {
+        this.usuario_email = usuario_email;
     }
-
+    
     /**
      * @return the evento_id
      */

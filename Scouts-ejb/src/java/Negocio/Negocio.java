@@ -5,6 +5,7 @@
  */
 package Negocio;
 
+import clases.Comentario;
 import clases.Evento;
 import clases.Usuario;
 import java.util.List;
@@ -24,5 +25,6 @@ public interface Negocio {
     public void eliminarEvento(Evento e) throws ScoutsException;
     public List<Usuario> getUsuarios();
     public void crearEvento(Evento e) throws ScoutsException;
+    public List<Comentario> getComentarios();
     
 }

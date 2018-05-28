@@ -12,6 +12,8 @@ import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.MapsId;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 /**
  *
@@ -29,14 +31,8 @@ public class Notificacion implements Serializable {
     @Column(nullable=false)
     private String texto;
     @Column(nullable=false)
+    @Temporal(TemporalType.DATE)
     private Date fecha;
-    
-    public Notificacion(NotificacionID nID,String tit, String text, Date fecha){
-        id = nID;
-        titulo = tit;
-        texto = text;
-        this.fecha = fecha;
-    }
     
     @ManyToOne
     @MapsId("usuario_id")
@@ -140,7 +136,13 @@ public class Notificacion implements Serializable {
     public void setEvento(Evento evento) {
         this.evento = evento;
     }
+
+    public Date getFecha() {
+        return fecha;
+    }
+
+    public void setFecha(Date fecha) {
+        this.fecha = fecha;
+    }
     
-    public Date getFecha() { return fecha; }
-    public void setEvento(Date fecha) { this.fecha = fecha; }
 }

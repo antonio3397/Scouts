@@ -10,12 +10,15 @@ import clases.Evento;
 import clases.Notificacion;
 import clases.NotificacionID;
 import clases.Seccion;
+import clases.Usuario;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Random;
+import javax.ejb.EJB;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Inject;
@@ -46,11 +49,11 @@ public class Control_Eventos implements Serializable {
 
     private String seccionMod;
     
-    @Inject
+    @EJB
     private Negocio negocio;
     
     @Inject
-    Control_Notificaciones CN;
+    Control_Notificaciones cn;
 
     //Se busca un evento por su id
     public Evento buscarEvento(Long id) throws EventoException {
@@ -169,8 +172,8 @@ public class Control_Eventos implements Serializable {
         negocio.crearEvento(ev);
         eventosj.add(ev);
         eventosj2.add(ev);
-
-        CN.addNotificame(new Notificacion(new NotificacionID(sec.getId(), idcrear), titulocrear, descripcioncrear, fechacrear));  
+        
+        //CREAMOS UNA NOTIFICACION PARA TODOS LOS USUARIOS DE LA SECCION (POR HACER)
         
         fechacrear = null;
         idcrear = null;

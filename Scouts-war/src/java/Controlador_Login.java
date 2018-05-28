@@ -15,6 +15,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Named;
 import javax.faces.application.FacesMessage;
@@ -38,7 +39,7 @@ public class Controlador_Login implements Serializable {
     //Usuario que inicia la sesión
     private Usuario usuario;
 
-    @Inject
+    @EJB
     private Negocio negocio;
     
     @Inject
@@ -46,6 +47,9 @@ public class Controlador_Login implements Serializable {
 
     @Inject
     private Control_Eventos ctrle;
+    
+    @Inject
+    private Control_Comentario ctrlc;
     
     public Controlador_Login(){
         usuario= new Usuario();
@@ -96,6 +100,9 @@ public class Controlador_Login implements Serializable {
             }
             //Lista de eventos que puede ver el usuario conectado dada su seccion
             ctrle.setEventosj2(events2);
+            
+            //Se le pasa una lista con todos los comentarios a su controlador
+            ctrlc.setComentarios(negocio.getComentarios());
             
             return "Inicio.xhtml";
         } catch (CuentaInexistenteException e) {
