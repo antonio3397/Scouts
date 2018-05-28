@@ -28,11 +28,12 @@ public class EventosImpl implements Eventos{
 
     @Override
     public void modificar(Evento e) {
-        em.refresh(e);
+        em.merge(e);
     }
 
     @Override
     public void eliminar(Evento e) {
+        if(em.contains(e))
         em.remove(e);    
     }
 

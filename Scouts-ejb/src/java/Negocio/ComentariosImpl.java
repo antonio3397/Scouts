@@ -29,7 +29,7 @@ public class ComentariosImpl implements Comentarios{
 
     @Override
     public void modificar(Comentario c) {
-        em.refresh(c);
+        em.merge(c);
     }
 
     @Override
