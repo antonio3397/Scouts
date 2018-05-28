@@ -22,12 +22,13 @@ public class EventosImpl implements Eventos{
     private EntityManager em;
     @Override
     public void insertar(Evento e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if(!estaEvento(e))em.persist(e);
+        else throw new eventoYaCreado("El evento ya está creado");
     }
 
     @Override
     public void modificar(Evento e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        em.refresh(e);
     }
 
     @Override
@@ -41,19 +42,19 @@ public class EventosImpl implements Eventos{
     }
     
     @Override
-    public List<Evento> obtenerEventos() {
+    public List<Evento> verEventos() {
         Query list = em.createNativeQuery("SELECT e FROM Evento e");
         return list.getResultList();
     }
     
     private boolean estaEvento(Evento e){
-        List<Evento> lista = obtenerEventos();
+        List<Evento> lista = verEventos();
         Iterator it = lista.iterator();
         boolean esta = false;
         while(it.hasNext()&&!esta){
             Evento aux = (Evento) it.next();
-            if(aux.getTitulo().equals(e.getTitulo()))esta=true;
+            if(aux.getTitulo().equals(e.getTitulo())&&aux.getFecha().equals(e.getFecha()))esta=true;
         }
-        return false;
+        return esta;
     }
 }

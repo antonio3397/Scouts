@@ -6,6 +6,7 @@
 package Negocio;
 
 import clases.Comentario;
+import clases.Evento;
 import java.util.List;
 import javax.ejb.Local;
 
@@ -16,7 +17,9 @@ import javax.ejb.Local;
 @Local
 public interface Comentarios {
     public void insertar(Comentario c);
-    public void modificar();
-    public void eliminar();
-    public List<Comentario> verComentarios();
+    public void modificar(Comentario c);
+    public void eliminar(Long id);
+    public Comentario buscarComentario(Long id);
+
+    public List<Comentario> verComentarios(Evento event);
 }

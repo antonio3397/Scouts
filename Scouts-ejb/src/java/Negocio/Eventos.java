@@ -19,5 +19,5 @@ public interface Eventos {
     public void modificar (Evento e);
     public void eliminar (Evento e);
     public Evento obtenerEvento(Long id);
-    public List<Evento> obtenerEventos();
+    public List<Evento> verEventos();
 }

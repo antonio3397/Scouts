@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 
+import Negocio.Comentarios;
 import clases.*;
 import java.util.ArrayList;
 import java.util.Date;
@@ -12,6 +13,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
+import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.inject.Inject;
@@ -58,6 +60,8 @@ public class Control_Comentario {
     private Control_Eventos ev;
     @Inject
     private MiSesion lg;
+    @EJB
+    private Comentarios comment;
 
     @PostConstruct
     public void init() {
@@ -83,29 +87,17 @@ public class Control_Comentario {
         this.Comentarios = Comentarios;
     }
 
-    public List<Comentario> buscarComentarios(Evento event) throws EventoException {
-        List<Comentario> aux = new ArrayList<>();
-        for (Comentario comment : Comentarios) {
-            if (comment.getEvento().equals(event)) {
-                aux.add(comment);
-            }
-        }
+    public List<Comentario> verComentarios(Evento event) {
+        List<Comentario> aux = comment.verComentarios(event);
         return aux;
     }
 
-    public boolean hayComentarios(Evento event) throws EventoException {
-        return buscarComentarios(event).isEmpty();
+    public boolean hayComentarios(Evento event){
+        return verComentarios(event).isEmpty();
     }
 
     public Comentario buscarComentario(Long id) throws ComentarioException {
-        Comentario c = null;
-        Iterator<Comentario> iter = Comentarios.iterator();
-        while (iter.hasNext() && c == null) {
-            Comentario aux = iter.next();
-            if (aux.getId().equals(id)) {
-                c = aux;
-            }
-        }
+        Comentario c = comment.buscarComentario(id);
 
         if (c == null) {
             throw new ComentarioException("Comentario no encontrado");
@@ -115,13 +107,12 @@ public class Control_Comentario {
         
     }
 
-    public String borrarComentario(Long id) throws ComentarioException {
-        Comentario c = buscarComentario (id);
-        Comentarios.remove(c);
+    public String borrarComentario(Long id) {
+        comment.eliminar(id);
         return "Eventos.html";
     }
 
-    public void agnadirComentario(Evento event, Usuario user) throws EventoException {
+    public void agnadirComentario(Evento event, Usuario user) {
         if (!"".equals(mensaje)) {
             long tam = Comentarios.size();
             Comentario coment = new Comentario(tam, mensaje, new Date(), event, user);

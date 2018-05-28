@@ -11,6 +11,8 @@ package Negocio;
  */
 
 import clases.Comentario;
+import clases.Evento;
+import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -26,19 +28,29 @@ public class ComentariosImpl implements Comentarios{
     }
 
     @Override
-    public void modificar() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void modificar(Comentario c) {
+        em.refresh(c);
     }
 
     @Override
-    public void eliminar() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void eliminar(Long id) {
+        Comentario c = buscarComentario(id);
+        em.remove(c);
     }
 
     @Override
-    public List<Comentario> verComentarios() {
+    public List<Comentario> verComentarios(Evento event) {
         Query list = em.createNativeQuery("SELECT c FROM Comentario c");
-        return list.getResultList();
+        List<Comentario> comments = new ArrayList<>();
+        for(Comentario aux : (List<Comentario>)list.getResultList()){
+            if(aux.getEvento().equals(event))comments.add(aux);
+        }
+        return comments;
+    }
+
+    @Override
+    public Comentario buscarComentario(Long id) {
+        return em.find(Comentario.class, id);
     }
     
 }

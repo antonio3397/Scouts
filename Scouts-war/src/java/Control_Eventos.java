@@ -4,6 +4,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+import Negocio.Eventos;
 import clases.Evento;
 import clases.Notificacion;
 import clases.NotificacionID;
@@ -14,6 +15,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Random;
+import javax.ejb.EJB;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Inject;
@@ -40,19 +42,14 @@ public class Control_Eventos implements Serializable {
 
     private String seccionMod;
     
+    @EJB
+    private Eventos evento;
+    
     @Inject
     Control_Notificaciones CN;
 
     public Evento buscarEvento(Long id) throws EventoException {
-        Evento enc = null;
-        Iterator<Evento> iter = eventosj.iterator();
-        while (iter.hasNext() && enc == null) {
-            Evento aux = iter.next();
-            if (aux.getId().equals(id)) {
-                enc = aux;
-            }
-
-        }
+        Evento enc = evento.obtenerEvento(id);
 
         if (enc == null) {
             throw new EventoException("Evento no encontrado");
@@ -63,6 +60,7 @@ public class Control_Eventos implements Serializable {
     public String modificarEvento(Long id) throws EventoException {
         Evento b = buscarEvento(id);
         setAux(new Evento(id, b.getTitulo(), b.getFecha(), b.getLocalizacion(), b.getDescripcion(), b.getPrecio(), b.getSeccion()));
+        
         return "ModEvento.xhtml";
     }
 
