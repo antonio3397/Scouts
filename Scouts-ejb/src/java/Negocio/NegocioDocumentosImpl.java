@@ -17,7 +17,7 @@ import javax.persistence.Query;
  */
 public class NegocioDocumentosImpl implements NegocioDocumentos{
 
-    @PersistenceContext(unitName = "Scouts-Entidades")
+    @PersistenceContext(unitName = "Scouts-EntidadesPU")
     private EntityManager em;
     
    
