@@ -23,7 +23,8 @@ public class NegocioDocumentosImpl implements NegocioDocumentos{
    
     @Override
     public void agnadirDocumento(Documento doc) {
-        em.merge(doc);
+        if(!em.contains(doc)) em.persist(doc);
+        else em.merge(doc);
     }
 
     @Override
