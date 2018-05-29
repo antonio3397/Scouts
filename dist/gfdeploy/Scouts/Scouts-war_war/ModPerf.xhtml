@@ -1,0 +1,64 @@
+<ui:composition template="/WEB-INF/Templates/Plantilla.xhtml" 
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous"></link>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
+
+    <ui:define name="title">Documentos</ui:define>
+
+    <ui:define name="content">
+        <div class="container">
+            <h:form>
+                <h:panelGrid columns="2">
+                    <h:outputLabel value="Nombre: "/>
+                    <p:inputText value="#{miSesion.otro.nombre}"/>
+                    <h:outputLabel value="Apellidos: "/>
+                    <p:inputText value="#{miSesion.otro.apellidos}"/>
+                    <h:outputLabel value="Nif: "/>
+                    <p:inputText value="#{miSesion.otro.NIF}"/>
+                    <h:outputLabel value="Sexo: "/>
+                    <p:inputText value="#{miSesion.otro.sexo}"/>
+                    <h:outputLabel value="Email: "/>
+                    <p:inputText value="#{miSesion.otro.email}"/>
+                    <h:outputLabel value="Fecha de nacimiento: "/>
+                    <p:calendar value="#{miSesion.otro.fecha_nacimiento}" pattern="MM/dd/yyyy" navigator="true"/>
+                    <h:outputLabel value="Código postal: "/>
+                    <p:inputText value="#{miSesion.otro.codigo_postal}"/>
+                    <h:outputLabel value="Dirección: "/>
+                    <p:inputText value="#{miSesion.otro.direccion}"/>
+                    <h:outputLabel value="Provincia: "/>
+                    <p:inputText value="#{miSesion.otro.provincia}"/>
+                    <h:outputLabel value="Localidad: "/>
+                    <p:inputText value="#{miSesion.otro.localidad}"/>
+                    <h:outputLabel value="Fecha de ingreso: "/>
+                    <p:calendar value="#{miSesion.otro.fecha_ingreso}" pattern="MM/dd/yyyy" navigator="true"/>
+                    <h:outputLabel value="Cuota total: "/>
+                    <p:inputText value="#{miSesion.otro.cuota_total}"/>
+                    <h:outputLabel value="Teléfono: "/>
+                    <p:inputText value="#{miSesion.otro.telefono}"/>
+                    <h:outputLabel value="Móvil: "/>
+                    <p:inputText value="#{miSesion.otro.movil}"/>
+                    <h:outputLabel value="Método de pago: "/>
+                    <p:inputText value="#{miSesion.otro.metodo_pago}"/>
+                    <h:outputLabel value="Sección: "/>
+                    <p:selectOneMenu value="#{miSesion.seccionmod}">
+                        <f:selectItem itemLabel="Dejar asi para no modificar" itemValue="antigua" />
+                        <f:selectItem itemLabel="Castores" itemValue="Castores" />
+                        <f:selectItem itemLabel="Lobatos" itemValue="Lobatos" />
+                        <f:selectItem itemLabel="Scouts" itemValue="Scouts" />
+                        <f:selectItem itemLabel="Escultas" itemValue="Escultas" />
+                        <f:selectItem itemLabel="Rovers" itemValue="Rovers" />
+                    </p:selectOneMenu>
+                    <p:commandButton value="ACEPTAR" action="#{miSesion.aceptarmod()}" ajax="false"/>
+                    <p:commandButton value="Cancelar" action="#{miSesion.cancerlarMod()}" ajax="false"/>
+                </h:panelGrid>
+            </h:form>
+        </div>
+    </ui:define>
+</ui:composition>

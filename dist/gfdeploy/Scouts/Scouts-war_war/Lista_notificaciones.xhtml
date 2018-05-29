@@ -1,0 +1,48 @@
+<ui:composition template="/WEB-INF/Templates/Plantilla.xhtml" 
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous"></link>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
+
+
+    <ui:define name="title">Documentos</ui:define>
+
+    <ui:define name="content">
+        <div class="container">
+            <c:choose>
+                <c:when test="#{miSesion.user.id == null}">
+                    <h:outputText value="Parece que hay algún error con tu sesión x("></h:outputText><br />
+                </c:when>
+                
+                <c:when test="#{notificaciones.buscarNotificaciones().size() == 0}">
+                    <h:outputText value="No hay ninguna notificación de los eventos suscritos"></h:outputText><br />
+                </c:when>
+                
+                <c:otherwise>
+                    <c:forEach items="#{notificaciones.buscarNotificaciones()}" var="notificacion">
+                    <p:layout style="min-width:70px;min-height:180px;">                   
+                        <p:layoutUnit position="center">
+                            <h:outputText value="#{notificacion.titulo}" style="color:#FF0000"/>
+                            <br/>                      
+                            <h:outputText value="#{notificacion.texto}" style="color:#000000"/>
+                            <br/><br/>
+                            <h:outputText value="#{notificacion.fecha}" style="color:blue"/>
+                            <br/><br/>
+                        </p:layoutUnit>                   
+                    </p:layout>
+                    <h:form>
+                        <p:commandButton value="Eliminar" actionListener="#{notificaciones.borrarNotificacion(notificacion.id)}" ajax="false"/>
+                    </h:form>
+                    <hr />
+                </c:forEach>
+                </c:otherwise>
+            </c:choose>
+        </div>
+    </ui:define>
+</ui:composition>
