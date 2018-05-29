@@ -38,19 +38,6 @@ public class Documento implements Serializable {
     @ManyToOne
     private Usuario usuario;
     
-    /**
-     * @return the fecha_entrega
-     */
-    
-    
-    public Documento(Long id, String estado, String tipo, Date fecha_entrega){
-        this.id=id;
-        this.estado=estado;
-        this.tipo=tipo;
-        this.fecha_entrega=fecha_entrega;
-    }
-    
-    
     public Date getFecha_entrega() {
         return fecha_entrega;
     }

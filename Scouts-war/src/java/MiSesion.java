@@ -82,12 +82,6 @@ public class MiSesion implements Serializable {
     @Inject
     private Control_Eventos ctre;
 
-    /**
-     * Creates a new instance of MiSesion
-     */
-    public MiSesion() {
-    }
-
     public String logout() {
         // Destruye la sesión (y con ello, el ámbito de este bean)
         FacesContext ctx = FacesContext.getCurrentInstance();

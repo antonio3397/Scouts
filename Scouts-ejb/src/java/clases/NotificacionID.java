@@ -20,10 +20,6 @@ public class NotificacionID implements Serializable {
     private Long usuario_id;
     private Long evento_id;
 
-    public NotificacionID(Long usID, Long evID){
-        usuario_id = usID;
-        evento_id = evID;
-    }
     @Override
     public String toString() {
         return "NotificacionID{" + "usuario_id=" + usuario_id + ", evento_id=" + evento_id + '}';
