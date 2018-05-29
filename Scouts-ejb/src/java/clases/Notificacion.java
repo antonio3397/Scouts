@@ -31,13 +31,6 @@ public class Notificacion implements Serializable {
     @Column(nullable=false)
     private Date fecha;
     
-    public Notificacion(NotificacionID nID,String tit, String text, Date fecha){
-        id = nID;
-        titulo = tit;
-        texto = text;
-        this.fecha = fecha;
-    }
-    
     @ManyToOne
     @MapsId("usuario_id")
     private Usuario usuario;

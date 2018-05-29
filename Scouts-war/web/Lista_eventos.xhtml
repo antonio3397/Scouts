@@ -23,29 +23,16 @@
             </c:when>
         </c:choose>
         <div class="container-fluid">
-            <p:dataTable var="events" value="#{Eventos.eventosj2}">
-                <p:column headerText="Titulo">
-                    <h:outputText value="#{events.titulo}" />
-                </p:column>
-                <p:column headerText="Descripcion">
-                    <div class="col-80 text-truncate">
+            <c:forEach var="events" items="#{Eventos.eventosj2}">
+                <h:outputText value="#{events.titulo}" />
+                <div class="col-80 text-truncate">
                         #{events.descripcion}
-                    </div>
-                </p:column>
-
-                <p:column headerText="Fecha">
-                    <h:outputText value="#{events.fecha}" />
-                </p:column>
-
-                <p:column headerText="Lugar">
-                    <h:outputText value="#{events.localizacion}" />
-                </p:column>
-                <p:column headerText="Más">
-                    <h:form>
-                        <p:commandButton value="Ver más" action="#{Eventos.verEvento(events.id)}" ajax="false"/>
-                    </h:form>
-                </p:column>
-                
+                </div>
+                <h:outputText value="#{events.fecha}" />
+                <h:outputText value="#{events.localizacion}" />
+                <h:form>
+                    <p:commandButton value="Ver más" action="#{Eventos.verEvento(events.id)}" ajax="false"/>
+                </h:form>
                 <c:choose>
                     <c:when test="#{miSesion.coordGen || miSesion.cordSec}">
                         <p:column headerText="Borrar">
@@ -56,7 +43,7 @@
                     </c:when>
                 </c:choose>
                 
-            </p:dataTable>
+            </c:forEach>
         </div>
     </ui:define>
 </ui:composition>

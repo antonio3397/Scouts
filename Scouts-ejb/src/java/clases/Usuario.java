@@ -102,33 +102,6 @@ public class Usuario implements Serializable {
     @ManyToOne
     @JoinColumn(nullable=true)
     private Responsable_Legal responsable;
-
-    public Usuario(Long id, String contrasenia, String NIF, String email, 
-           String nombre, String apellidos, String sexo, Date fecha_nacimiento,
-           Integer codigo_postal, String direccion, String provincia,
-           String Localidad, Date fecha_ingreso, Integer cuota_total,
-           Integer telefono, Integer movil, String metodo_pago, Perfil perfil, Seccion seccion){
-        this.id=id;
-        this.contrasenia=contrasenia;
-        this.NIF=NIF;
-        this.email=email;
-        this.nombre=nombre;
-        this.apellidos=apellidos;
-        this.sexo=sexo;
-        this.fecha_nacimiento=fecha_nacimiento;
-        this.codigo_postal=codigo_postal;
-        this.direccion=direccion;
-        this.provincia=provincia;
-        this.Localidad=Localidad;
-        this.fecha_ingreso=fecha_ingreso;
-        this.telefono=telefono;
-        this.movil=movil;
-        this.metodo_pago=metodo_pago;
-        this.perfiles = perfil;
-        this.seccion=seccion;
-        this.cuota_total=cuota_total;
-        this.eventos=new ArrayList<>();
-    }
     
     public Long getId() {
         return id;

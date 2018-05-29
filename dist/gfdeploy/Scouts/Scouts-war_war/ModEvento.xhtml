@@ -1,0 +1,62 @@
+<ui:composition template="/WEB-INF/Templates/Plantilla.xhtml" 
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous"></link>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
+    
+    <ui:define name="title">Modificar evento</ui:define>
+    
+    <ui:define name="content">
+        <div class="container">
+            <h:form>
+                <!--titulo,fecha,localizacion,descripcion,precio-->
+                <h:panelGrid columns="2">
+                    <h:outputLabel value="Título: "/>
+                    <p:inputText value="#{Eventos.aux.titulo}"/>
+                    
+                    <h:outputLabel value="Fecha: "/>
+                    <p:calendar value="#{Eventos.aux.fecha}"/>
+                    
+                    <h:outputLabel value="Localización: "/>
+                    <p:inputText value="#{Eventos.aux.localizacion}"/>
+                    
+                    <h:outputLabel value="Descripción: "/>
+                    <p:inputText value="#{Eventos.aux.descripcion}"/>
+                    
+                    <h:outputLabel value="Precio: "/>
+                    <p:inputText value="#{Eventos.aux.precio}"/>
+                    
+                    <h:outputLabel value="Sección"/>
+                   
+                    
+                    <p:selectOneMenu value="#{Eventos.seccionMod}">
+                    <c:choose>
+                        <c:when test="#{miSesion.coordGen}">
+                            <f:selectItem itemLabel="Dejar así para no modificar" itemValue="antigua" />
+                            <f:selectItem itemLabel="Castores" itemValue="Castores" />
+                            <f:selectItem itemLabel="Lobatos" itemValue="Lobatos" />
+                            <f:selectItem itemLabel="Scouts" itemValue="Scouts" />
+                            <f:selectItem itemLabel="Escultas" itemValue="Escultas" />
+                            <f:selectItem itemLabel="Rovers" itemValue="Rovers" />
+                        </c:when>
+                        <c:otherwise>
+                            <f:selectItem itemLabel="#{miSesion.seccion}" itemValue="#{miSesion.seccion}"/>
+                        </c:otherwise>
+                    </c:choose>
+                    </p:selectOneMenu>
+                    
+                    <p:commandButton value="Modificar" action="#{Eventos.aceptarMod()}" ajax="false"/>
+                    <p:commandButton value="Cancelar" action="#{Eventos.cancelarMod()}" ajax="false"/>
+                </h:panelGrid>
+                
+            </h:form>
+        </div>
+    </ui:define>
+    
+    </ui:composition>
