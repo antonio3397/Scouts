@@ -44,7 +44,7 @@ public class Control_Notificaciones implements Serializable{
     private MiSesion login;
 
     @PostConstruct
-    public void init() {
+    public void init() {/*
         notificame = new ArrayList<>();            
         notificame.add(new Notificacion(new NotificacionID(121L,123L), "Recordatorio","¡Ya mismo se realiza la excursión! Prepararos bien con ropa cómoda, comida para la merienda y agua. La paella la ponemos nosotros ;)",new Date(2018-1900,3,25,8,30)));
         notificame.add(new Notificacion(new NotificacionID(125L,124L), "Viaje al monte 2","Segundo viaje a Códoba",new Date(2018-1900,3,22,10,30)));
@@ -52,7 +52,7 @@ public class Control_Notificaciones implements Serializable{
         
         // Para secciones
         notificame.add(new Notificacion(new NotificacionID(1L,125L), "Comunicación para educandos de una sección","Mensaje de prueba para los educandos de la sección: Castores.",new Date(2018-1900,3,24,9,30)));
-    }
+    */}
 
     public List<Notificacion> buscarNotificaciones() throws NotificacionException{
         List<Notificacion> misNotificaciones = new ArrayList<>();

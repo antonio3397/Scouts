@@ -107,7 +107,7 @@ public class Control_Eventos implements Serializable {
 
         Seccion sec = null;
         int precio = Integer.parseInt(preciocrear);
-
+/*
         switch (seccioncrear) {
             case "Castores":
                 //sec = new Seccion(1L, Seccion.Secciones.Castores);
@@ -126,7 +126,7 @@ public class Control_Eventos implements Serializable {
                 break;
             default:
                 break;
-        }
+        }*/
 
         Evento ev = new Evento();
         ev.setTitulo(titulocrear);
