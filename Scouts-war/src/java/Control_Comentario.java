@@ -64,7 +64,7 @@ public class Control_Comentario {
     private Comentarios comment;
 
     @PostConstruct
-    public void init() {
+    public void init() {/*
         try {
             mensaje = "";
             Comentarios = new ArrayList<>();
@@ -76,7 +76,7 @@ public class Control_Comentario {
             Comentarios.add(new Comentario(6L, "Meh. Seguramente sea otra excursión igual que cuando fuimos a los montes de Malaga", new Date(2018 - 1900, 3, 3, 21, 03, 02), getEv().buscarEvento(1L), getLg().buscarUsuario(122L)));
         } catch (EventoException | UsuarioException ex) {
             Logger.getLogger(Control_Comentario.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        }*/
     }
 
     public List<Comentario> getComentarios() {
@@ -115,8 +115,8 @@ public class Control_Comentario {
     public void agnadirComentario(Evento event, Usuario user) {
         if (!"".equals(mensaje)) {
             long tam = Comentarios.size();
-            Comentario coment = new Comentario(tam, mensaje, new Date(), event, user);
-            Comentarios.add(coment);
+            //Comentario coment = new Comentario(tam, mensaje, new Date(), event, user);
+            //Comentarios.add(coment);
             mensaje = "";
         }
     }

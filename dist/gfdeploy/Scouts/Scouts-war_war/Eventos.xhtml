@@ -1,0 +1,158 @@
+<ui:composition template="/WEB-INF/Templates/Plantilla.xhtml" 
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous"></link>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
+
+    <ui:define name="title">
+        <h:outputText value="#{Eventos.event.titulo}"/>
+    </ui:define>
+    <ui:define name="content">
+        <blockquote class="blockquote text-center">
+            <h1 class="display-1"><em>
+                    <h:outputText value="#{Eventos.event.titulo}"/>
+                </em></h1>
+        </blockquote>
+        <p><h:outputText value="#{Eventos.event.descripcion}"/></p>
+        <p><h:outputText value="Se hará en #{Eventos.event.localizacion} en #{Eventos.event.fecha}"/></p>
+        <h:outputText value="Precio: " />
+        <c:choose>
+            <c:when test = "#{Eventos.event.precio==0}">
+                <h:outputText value="Gratis"/> 
+            </c:when>
+            <c:otherwise>
+                <h:outputText value="#{Eventos.event.precio}" />
+            </c:otherwise>
+        </c:choose>
+        <br/><br/>
+        <img class= "ml-5" src="Senderismo.jpeg" alt="Senderismo"></img>
+        <br/><br/>
+        <c:choose>
+            <c:when test = "#{miSesion.user.eventos.contains(Eventos.event)}">
+                <p> Estás inscrito en este evento.</p>
+                <c:choose>
+                    <c:when test="#{miSesion.scouter}">
+                        <h:form>
+                            <p:dataTable id="tbl" var="inscritos" value="#{Eventos.event.usuarios}" rendered="false">
+                                <p:column headerText="DNI">
+                                    <h:outputText value="#{inscritos.NIF}" />
+                                </p:column>
+
+                                <p:column headerText="Nombre">
+                                    <h:outputText value="#{inscritos.nombre}" />
+                                </p:column>
+
+                                <p:column headerText="Apellidos">
+                                    <h:outputText value="#{inscritos.apellidos}" />
+                                </p:column>
+                            </p:dataTable>
+                            <h:commandLink value="Usuarios inscritos">
+                                <p:dataExporter type="xls" target="tbl" fileName="Inscritos" pageOnly="true"/>
+                            </h:commandLink>
+                        </h:form>
+                    </c:when>
+                </c:choose>
+            </c:when>
+            <c:otherwise>
+                <c:choose>
+                    <c:when test="#{!(miSesion.coordGen || miSesion.cordSec)}">
+                        <h:form>
+                            <p:commandButton value="Inscribirse" ajax="false" action="#{miSesion.inscribirse(Eventos.event)}"></p:commandButton>
+                        </h:form>
+                        <br></br><br></br>
+                        <c:choose>
+                            <c:when test="#{miSesion.scouter}">
+                                <h:form>
+                                    <p:dataTable id="tbl" var="inscritos" value="#{Eventos.event.usuarios}" rendered="false">
+                                        <p:column headerText="DNI">
+                                            <h:outputText value="#{inscritos.NIF}" />
+                                        </p:column>
+
+                                        <p:column headerText="Nombre">
+                                            <h:outputText value="#{inscritos.nombre}" />
+                                        </p:column>
+
+                                        <p:column headerText="Apellidos">
+                                            <h:outputText value="#{inscritos.apellidos}" />
+                                        </p:column>
+                                    </p:dataTable>
+                                    <h:commandLink value="Usuarios inscritos">
+                                        <p:dataExporter type="xls" target="tbl" fileName="Inscritos" pageOnly="true"/>
+                                    </h:commandLink>
+                                </h:form>
+                            </c:when>
+                        </c:choose>
+
+                    </c:when>
+                    <c:otherwise>
+                        <h:form>
+                            <p:commandButton value="Modificar" action="#{Eventos.modificarEvento(Eventos.event.id)}" ajax="false" />
+                            <br/><br/>
+                            <p:dataTable id="tbl" var="inscritos" value="#{Eventos.event.usuarios}" rendered="false">
+                                <p:column headerText="DNI">
+                                    <h:outputText value="#{inscritos.NIF}" />
+                                </p:column>
+
+                                <p:column headerText="Nombre">
+                                    <h:outputText value="#{inscritos.nombre}" />
+                                </p:column>
+
+                                <p:column headerText="Apellidos">
+                                    <h:outputText value="#{inscritos.apellidos}" />
+                                </p:column>
+                            </p:dataTable>
+                            <h:commandLink value="Usuarios inscritos">
+                                <p:dataExporter type="xls" target="tbl" fileName="Inscritos" pageOnly="true"/>
+                            </h:commandLink>
+                        </h:form>
+                        <br></br><br></br>
+                    </c:otherwise>
+                </c:choose>
+            </c:otherwise>
+        </c:choose>
+        <h5>Comentarios</h5>
+        <c:choose>
+            <c:when test="#{Comentarios.hayComentarios(Eventos.event)}">
+                <h:outputText value="Sea el primero en comentar"></h:outputText><br />
+            </c:when>
+            <c:otherwise>
+                <c:forEach items="#{Comentarios.verComentarios(Eventos.event)}" var="comments">
+                    <p:layout style="min-width:400px;min-height:200px;">
+                        <p:layoutUnit position="west" resizable="true" size="300" minSize="40" maxSize="500">
+                            <h:outputText value="#{comments.usuario.nombre} #{comments.usuario.apellidos} #{comments.fecha_creacion}" />
+                        </p:layoutUnit>
+                        <p:layoutUnit position="center">
+                            <h:outputText value="#{comments.texto}" style="white-space:pre;"  />
+                        </p:layoutUnit>
+                        <c:choose>
+                            <c:when test="#{miSesion.coordGen || miSesion.cordSec}">
+                                <p:layoutUnit position="east">
+                                    <h:form>
+                                        <p:commandButton value="Eliminar" ajax="false" actionListener="#{Comentarios.borrarComentario(comments.id)}"></p:commandButton>
+                                    </h:form>
+                                </p:layoutUnit>
+                            </c:when>
+                        </c:choose>
+                    </p:layout>
+                </c:forEach>
+            </c:otherwise>
+        </c:choose>
+        <br />
+        <h:form>
+            <p:inputTextarea rows="10" cols="50" value="#{Comentarios.mensaje}" />
+
+            <h:panelGrid columns="2" style="margin-top: 10px">
+
+                <p:commandButton value="Submit" update="display" ajax="false" actionListener="#{Comentarios.agnadirComentario(Eventos.event, miSesion.user)}" icon="ui-icon-disk"  />
+
+            </h:panelGrid>
+        </h:form> 
+    </ui:define>
+
+</ui:composition>

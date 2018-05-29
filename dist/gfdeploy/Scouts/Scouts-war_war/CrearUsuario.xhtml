@@ -1,0 +1,87 @@
+<ui:composition template="/WEB-INF/Templates/Plantilla.xhtml" 
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous"></link>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
+
+    <ui:define name="title">Documentos</ui:define>
+
+    <ui:define name="content">
+        <div class="container">
+            <h:form>
+                <h:panelGrid columns="2">
+                    <h:outputLabel value="Nombre: "/>
+                    <p:inputText value="#{miSesion.nombrecrear}"/>
+                    <h:outputLabel value="Apellidos: "/>
+                    <p:inputText value="#{miSesion.apellidoscrear}"/>
+                    <h:outputLabel value="Nif: "/>
+                    <p:inputText value="#{miSesion.NIFcrear}"/>
+                    <h:outputLabel value="Sexo: "/>
+                    <p:inputText value="#{miSesion.sexocrear}"/>
+                    <h:outputLabel value="Email: "/>
+                    <p:inputText value="#{miSesion.emailcrear}"/>
+                    <h:outputLabel value="Contraseña: "/>
+                    <p:inputText value="#{miSesion.contraseniacrear}"/>
+                    <h:outputLabel value="Fecha de nacimiento: "/>
+                    <p:calendar value="#{miSesion.fecha_nacimientocrear}" pattern="MM/dd/yyyy" navigator="true"/>
+                    <h:outputLabel value="Código postal: "/>
+                    <p:inputText value="#{miSesion.cod_postalcrear}"/>
+                    <h:outputLabel value="Dirección: "/>
+                    <p:inputText value="#{miSesion.direccioncrear}"/>
+                    <h:outputLabel value="Provincia: "/>
+                    <p:inputText value="#{miSesion.provinciacrear}"/>
+                    <h:outputLabel value="Localidad: "/>
+                    <p:inputText value="#{miSesion.localidadcrear}"/>
+                    <h:outputLabel value="Fecha de ingreso: "/>
+                    <p:calendar value="#{miSesion.fecha_ingresocrear}" pattern="MM/dd/yyyy" navigator="true"/>
+                    <h:outputLabel value="Cuota total: "/>
+                    <p:inputText value="#{miSesion.cuotacrear}"/>
+                    <h:outputLabel value="Teléfono: "/>
+                    <p:inputText value="#{miSesion.telefonocrear}"/>
+                    <h:outputLabel value="Móvil: "/>
+                    <p:inputText value="#{miSesion.movilcrear}"/>
+                    <h:outputLabel value="Método de pago: "/>
+                    <p:inputText value="#{miSesion.metodopagocrear}"/>
+                    <h:outputLabel value="Perfil: "/>
+                    <p:selectOneMenu value="#{miSesion.perfilcrear}">
+                        <f:selectItem itemLabel="Selecciona uno" itemValue="" />
+                        <c:choose>
+                            <c:when test="#{miSesion.coordGen}">
+                                <f:selectItem itemLabel="Coordinador general" itemValue="CoordGen" />
+                            </c:when>
+                        </c:choose>
+                        <f:selectItem itemLabel="Coordinador de sección" itemValue="CoordSec" />
+                        <f:selectItem itemLabel="Scouter" itemValue="Scouter" />
+                        <f:selectItem itemLabel="Educando" itemValue="Educando" />                        
+                    </p:selectOneMenu>
+                    <h:outputLabel value="Sección: "/>
+
+                    <p:selectOneMenu value="#{miSesion.seccioncrear}">
+                        <c:choose>
+                            <c:when test="#{miSesion.coordGen}">
+                                <f:selectItem itemLabel="Selecciona uno (si es coordinador general da igual)" itemValue="" />
+                                <f:selectItem itemLabel="Castores" itemValue="Castores" />
+                                <f:selectItem itemLabel="Lobatos" itemValue="Lobatos" />
+                                <f:selectItem itemLabel="Scouts" itemValue="Scouts" />
+                                <f:selectItem itemLabel="Escultas" itemValue="Escultas" />
+                                <f:selectItem itemLabel="Rovers" itemValue="Rovers" />
+                            </c:when>
+                            <c:otherwise>
+                                <f:selectItem itemLabel="#{miSesion.seccion}" itemValue="#{miSesion.seccion}"/>
+                            </c:otherwise>
+                        </c:choose>
+                    </p:selectOneMenu>
+
+                    <p:commandButton value="ACEPTAR" action="#{miSesion.crearUsuario}" ajax="false"/>
+                    <p:commandButton value="Cancelar" action="Lista_Usuarios.xhtml" ajax="false"/>
+                </h:panelGrid>
+            </h:form>
+        </div>
+    </ui:define>
+</ui:composition>

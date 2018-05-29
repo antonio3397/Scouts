@@ -26,10 +26,10 @@ public class Control_Documentos {
     @PostConstruct
 
     public void init() {
-        documentosj = new ArrayList<>();
+       /* documentosj = new ArrayList<>();
         documentosj.add(new Documento(100L, "Completo", "pdf", new Date(2018 - 1900, 5, 2)));
         documentosj.add(new Documento(101L, "A completar", "pdf", new Date(2018 - 1900, 3, 1)));
-        documentosj.add(new Documento(102L, "Modificado", "pdf", new Date(2018 - 1900, 2, 4)));
+        documentosj.add(new Documento(102L, "Modificado", "pdf", new Date(2018 - 1900, 2, 4)));*/
     }
 
     public List<Documento> getDocumentosj() {

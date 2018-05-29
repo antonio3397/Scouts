@@ -117,7 +117,7 @@ public class MiSesion implements Serializable {
             u = iter.next();
         }
          */
-        setOtro(new Usuario(getAuxiliar().getId(), getAuxiliar().getContrasenia(), getAuxiliar().getNIF(), getAuxiliar().getEmail(), getAuxiliar().getNombre(), getAuxiliar().getApellidos(), getAuxiliar().getSexo(), getAuxiliar().getFecha_nacimiento(), getAuxiliar().getCodigo_postal(), getAuxiliar().getDireccion(), getAuxiliar().getProvincia(), getAuxiliar().getLocalidad(), getAuxiliar().getFecha_ingreso(), getAuxiliar().getCuota_total(), getAuxiliar().getTelefono(), getAuxiliar().getMovil(), getAuxiliar().getMetodo_pago(), getAuxiliar().getPerfiles(), getAuxiliar().getSeccion()));
+       // setOtro(new Usuario(getAuxiliar().getId(), getAuxiliar().getContrasenia(), getAuxiliar().getNIF(), getAuxiliar().getEmail(), getAuxiliar().getNombre(), getAuxiliar().getApellidos(), getAuxiliar().getSexo(), getAuxiliar().getFecha_nacimiento(), getAuxiliar().getCodigo_postal(), getAuxiliar().getDireccion(), getAuxiliar().getProvincia(), getAuxiliar().getLocalidad(), getAuxiliar().getFecha_ingreso(), getAuxiliar().getCuota_total(), getAuxiliar().getTelefono(), getAuxiliar().getMovil(), getAuxiliar().getMetodo_pago(), getAuxiliar().getPerfiles(), getAuxiliar().getSeccion()));
 
         return "ModPerf.xhtml";
     }
@@ -125,7 +125,7 @@ public class MiSesion implements Serializable {
     public String aceptarmod() {
 
         Seccion sec;
-
+/*
         switch (getSeccionmod()) {
             case "Castores":
                 sec = new Seccion(1L, Seccion.Secciones.Castores);
@@ -145,10 +145,10 @@ public class MiSesion implements Serializable {
             default:
                 sec = getOtro().getSeccion();
                 break;
-        }
+        }*/
         seccionmod = null;
 
-        getOtro().setSeccion(sec);
+       // getOtro().setSeccion(sec);
 
         int i = 0;
         while (i < getUsers().size() && getOtro().getId() != getUsers().get(i).getId()) {
@@ -173,7 +173,7 @@ public class MiSesion implements Serializable {
         u.setMetodo_pago(getOtro().getMetodo_pago());
         u.setSeccion(getOtro().getSeccion());
 
-        getCtr().setUsers(getUsers());
+        //getCtr().setUsers(getUsers());
 
         return "Lista_Usuarios.xhtml";
     }
@@ -281,7 +281,7 @@ public class MiSesion implements Serializable {
     public String crearUsuario() {
         Perfil p = null;
         Seccion s = null;
-
+/*
         switch (perfilcrear) {
             case "CoordGen":
                 p = new Perfil(Perfil.Rol.COORDGEN);
@@ -320,12 +320,12 @@ public class MiSesion implements Serializable {
                     break;
                 default:
                     break;
-            }
-        }
+            /
+        }*/
 
         idcrear = users.get(users.size() - 1).getId() + 1;
 
-        Usuario u = new Usuario(idcrear, contraseniacrear, NIFcrear, emailcrear, nombrecrear, apellidoscrear, sexocrear, fecha_nacimientocrear, Integer.parseInt(cod_postalcrear), direccioncrear, provinciacrear, localidadcrear, fecha_ingresocrear, Integer.parseInt(cuotacrear), Integer.parseInt(telefonocrear), Integer.parseInt(movilcrear), metodopagocrear, p, s);
+        //Usuario u = new Usuario(idcrear, contraseniacrear, NIFcrear, emailcrear, nombrecrear, apellidoscrear, sexocrear, fecha_nacimientocrear, Integer.parseInt(cod_postalcrear), direccioncrear, provinciacrear, localidadcrear, fecha_ingresocrear, Integer.parseInt(cuotacrear), Integer.parseInt(telefonocrear), Integer.parseInt(movilcrear), metodopagocrear, p, s);
 
         idcrear = null;
         contraseniacrear = null;
@@ -347,8 +347,8 @@ public class MiSesion implements Serializable {
         perfilcrear = "";
         seccioncrear = null;
 
-        users.add(u);
-        users2.add(u);
+       // users.add(u);
+        //users2.add(u);
 
         return "Lista_Usuarios.xhtml";
     }

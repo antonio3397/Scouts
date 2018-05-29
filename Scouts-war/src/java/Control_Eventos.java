@@ -59,7 +59,7 @@ public class Control_Eventos implements Serializable {
   
     public String modificarEvento(Long id) throws EventoException {
         Evento b = buscarEvento(id);
-        setAux(new Evento(id, b.getTitulo(), b.getFecha(), b.getLocalizacion(), b.getDescripcion(), b.getPrecio(), b.getSeccion()));
+       // setAux(new Evento(id, b.getTitulo(), b.getFecha(), b.getLocalizacion(), b.getDescripcion(), b.getPrecio(), b.getSeccion()));
         
         return "ModEvento.xhtml";
     }
@@ -71,7 +71,7 @@ public class Control_Eventos implements Serializable {
         b.setFecha(aux.getFecha());
         b.setLocalizacion(aux.getLocalizacion());
         b.setPrecio(aux.getPrecio());
-
+/*
         switch (getSeccionMod()) {
             case "Castores":
                 b.setSeccion(new Seccion(1L, Seccion.Secciones.Castores));
@@ -90,7 +90,7 @@ public class Control_Eventos implements Serializable {
                 break;
             default:
                 break;
-        }
+        }*/
         seccionMod = null;
 
         return "Lista_eventos.xhtml";
@@ -118,7 +118,7 @@ public class Control_Eventos implements Serializable {
         }
         Seccion sec = null;
         int precio = Integer.parseInt(preciocrear);
-
+/*
         switch (seccioncrear) {
             case "Castores":
                 sec = new Seccion(1L, Seccion.Secciones.Castores);
@@ -137,15 +137,15 @@ public class Control_Eventos implements Serializable {
                 break;
             default:
                 break;
-        }
+        }*/
 
-        Evento ev = new Evento(idcrear, titulocrear, fechacrear, localizacioncrear, descripcioncrear, precio, sec);
+       /* Evento ev = new Evento(idcrear, titulocrear, fechacrear, localizacioncrear, descripcioncrear, precio, sec);
 
         eventosj.add(ev);
         eventosj2.add(ev);
 
         CN.addNotificame(new Notificacion(new NotificacionID(sec.getId(), idcrear), titulocrear, descripcioncrear, fechacrear));  
-        
+        */
         fechacrear = null;
         idcrear = null;
         titulocrear = null;
