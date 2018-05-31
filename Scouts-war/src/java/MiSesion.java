@@ -4,6 +4,11 @@
  * and open the template in the editor.
  */
 
+import Negocio.CuentaExistenteException;
+import Negocio.CuentaInexistenteException;
+import Negocio.Perfiles;
+import Negocio.Seccionesb;
+import Negocio.Usuarios;
 import clases.Evento;
 import clases.Perfil;
 import clases.Seccion;
@@ -11,22 +16,15 @@ import clases.Usuario;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
+import javax.ejb.EJB;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 
-/*
-Tipos de id que tiene cada sección:
-TODAS -> 0L
-CASTORES -> 1L
-LOBATOS -> 2L
-ROVERS COMPAÑEROS -> 3L
-TROPA SCOUT -> 4L
-ESCULTAS PIONEROS -> 5L
- */
 /**
  *
  * @author DavidDR
@@ -35,23 +33,16 @@ ESCULTAS PIONEROS -> 5L
 @SessionScoped
 public class MiSesion implements Serializable {
 
-    /**
-     * @return the ctre
-     */
-    public Control_Eventos getCtre() {
-        return ctre;
-    }
-
-    /**
-     * @param ctre the ctre to set
-     */
-    public void setCtre(Control_Eventos ctre) {
-        this.ctre = ctre;
-    }
-
+    //Usuario que ha iniciado sesion
     private Usuario user;
+    //Lista de todos los usuarios en la base de datos
     private List<Usuario> users;
+    //Lista con los usuarios de la seccion del usuario que ha iniciado sesion
     private List<Usuario> users2;
+    //Lista de las secciones guardadas en la base de datos
+    private List<Seccion> secciones;
+    //Lista de los perfiles guardados en la base de datos
+    private List<Perfil> perfiles;
     private Usuario otro;
     private Usuario auxiliar;
     private String seccionmod;
@@ -64,18 +55,26 @@ public class MiSesion implements Serializable {
     private String apellidoscrear;
     private String sexocrear;
     private Date fecha_nacimientocrear;
-    private String cod_postalcrear;
+    private int cod_postalcrear;
     private String direccioncrear;
     private String provinciacrear;
     private String localidadcrear;
-    private Date fecha_ingresocrear;
-    private String cuotacrear;
-    private String telefonocrear;
-    private String movilcrear;
+    private int cuotacrear;
+    private int telefonocrear;
+    private int movilcrear;
     private String metodopagocrear;
     private String perfilcrear = "";
     private String seccioncrear;
 
+    @EJB
+    private Usuarios u;
+    
+    @EJB
+    private Perfiles perfs;
+    
+    @EJB
+    private Seccionesb secs;
+    
     @Inject
     private Controlador_Login ctr;
     
@@ -183,21 +182,14 @@ public class MiSesion implements Serializable {
         return "Lista_Usuarios.xhtml";
     }
 
-    public String borrarUsuario(Long id) throws UsuarioException {
+    public String borrarUsuario(Long id) throws CuentaInexistenteException, UsuarioException {
 
         Usuario b = buscarUsuario(id);
-
-        getUsers().remove(b);
-        getUsers2().remove(b);
+        u.eliminarUsuario(b);
+        users=u.getUsuarios();
+        refrescarUsers2();
 
         return "Lista_Usuarios.xhtml";
-    }
-
-    /**
-     * @return the users
-     */
-    public List<Usuario> getUsers() {
-        return users;
     }
 
     public String verUsuario(Long id) {
@@ -219,22 +211,6 @@ public class MiSesion implements Serializable {
         e.getUsuarios().add(user);
         
         return "Eventos.xhtml";
-        
-    }
-
-    /**
-     * @param users the users to set
-     */
-    public void setUsers(List<Usuario> users) {
-        this.users = users;
-    }
-
-    public Usuario getUser() {
-        return user;
-    }
-
-    public void setUser(Usuario user) {
-        this.user = user;
     }
 
     public boolean isCoordGen() {
@@ -278,56 +254,83 @@ public class MiSesion implements Serializable {
         return salida;
     }
 
-    public String crearUsuario() {
+    public String crearUsuario() throws CuentaExistenteException {
         Perfil p = null;
         Seccion s = null;
-/*
+        
+        perfiles = perfs.getPerfiles();
+        secciones = secs.getSecciones();
+
         switch (perfilcrear) {
             case "CoordGen":
-                p = new Perfil(Perfil.Rol.COORDGEN);
+                p = perfiles.get(1);
                 break;
             case "CoordSec":
-                p = new Perfil(Perfil.Rol.COORDSEC);
+                p = perfiles.get(2);
                 break;
             case "Scouter":
-                p = new Perfil(Perfil.Rol.SCOUTER);
+                p = perfiles.get(3);
                 break;
             case "Educando":
-                p = new Perfil(Perfil.Rol.EDUCANDO);
+                p = perfiles.get(0);
                 break;
             default:
                 break;
         }
 
         if (perfilcrear.equals("CoordGen")) {
-            s = new Seccion(0L, Seccion.Secciones.TODAS);
+            s = secciones.get(5);
+            
         } else {
             switch (seccioncrear) {
                 case "Castores":
-                    s = new Seccion(1L, Seccion.Secciones.Castores);
+                    s = secciones.get(0);
                     break;
                 case "Lobatos":
-                    s = new Seccion(2L, Seccion.Secciones.Lobatos);
+                    s = secciones.get(1);
                     break;
                 case "Scouts":
-                    s = new Seccion(4L, Seccion.Secciones.Tropa_Scout);
+                    s = secciones.get(2);
                     break;
                 case "Escultas":
-                    s = new Seccion(5L, Seccion.Secciones.Escultas_Pioneros);
+                    s = secciones.get(3);
                     break;
                 case "Rovers":
-                    s = new Seccion(3L, Seccion.Secciones.Rovers_Compañeros);
+                    s = secciones.get(4);
                     break;
                 default:
                     break;
-            /
-        }*/
+            }
+        }
 
-        idcrear = users.get(users.size() - 1).getId() + 1;
+        Date fechaactual = new Date();
+        Long idcrear = users.get(users.size()-1).getId()+1;
+        
+        Usuario us = new Usuario();
+        us.setId(idcrear);
+        us.setApellidos(apellidoscrear);
+        us.setCodigo_postal(cod_postalcrear);
+        us.setContrasenia(contraseniacrear);
+        us.setCuota_total(cuotacrear);
+        us.setDireccion(direccioncrear);
+        us.setEmail(emailcrear);
+        us.setFecha_ingreso(fechaactual);
+        us.setFecha_nacimiento(fecha_nacimientocrear);
+        us.setLocalidad(localidadcrear);
+        us.setMetodo_pago(metodopagocrear);
+        us.setMovil(movilcrear);
+        us.setNIF(NIFcrear);
+        us.setNombre(nombrecrear);
+        us.setPerfiles(p);
+        us.setProvincia(provinciacrear);
+        us.setSeccion(s);
+        us.setSexo(sexocrear);
+        us.setTelefono(telefonocrear);
 
-        //Usuario u = new Usuario(idcrear, contraseniacrear, NIFcrear, emailcrear, nombrecrear, apellidoscrear, sexocrear, fecha_nacimientocrear, Integer.parseInt(cod_postalcrear), direccioncrear, provinciacrear, localidadcrear, fecha_ingresocrear, Integer.parseInt(cuotacrear), Integer.parseInt(telefonocrear), Integer.parseInt(movilcrear), metodopagocrear, p, s);
-
-        idcrear = null;
+        u.registrarUsuario(us);
+        users = u.getUsuarios();
+        refrescarUsers2();
+        
         contraseniacrear = null;
         NIFcrear = null;
         emailcrear = null;
@@ -335,26 +338,76 @@ public class MiSesion implements Serializable {
         apellidoscrear = null;
         sexocrear = null;
         fecha_nacimientocrear = null;
-        cod_postalcrear = null;
+        cod_postalcrear = 0;
         direccioncrear = null;
         provinciacrear = null;
         localidadcrear = null;
-        fecha_ingresocrear = null;
-        cuotacrear = null;
-        telefonocrear = null;
-        movilcrear = null;
+        cuotacrear = 0;
+        telefonocrear = 0;
+        movilcrear = 0;
         metodopagocrear = null;
         perfilcrear = "";
         seccioncrear = null;
-
-       // users.add(u);
-        //users2.add(u);
 
         return "Lista_Usuarios.xhtml";
     }
 
     public boolean perfCrearGeneral() {
         return perfilcrear.equals("CoordGen");
+    }
+    
+    public void refrescarUsers2(){
+        List<Usuario> auxs = new ArrayList<>();
+        if (user.getPerfiles().getRol().equals(Perfil.Rol.COORDSEC) || user.getPerfiles().getRol().equals(Perfil.Rol.SCOUTER)) {
+            for (Usuario u : users) {
+                if (!u.equals(user) && u.getSeccion().equals(user.getSeccion())) {
+                    auxs.add(u);
+                }
+            }
+        } else {
+            for (Usuario u : users) {
+                if (!u.equals(user)) {
+                    auxs.add(u);
+                }
+            }
+        }
+        users2 = auxs;
+    }
+
+    /**
+     * @return the users
+     */
+    public List<Usuario> getUsers() {
+        return users;
+    }
+
+    /**
+     * @param users the users to set
+     */
+    public void setUsers(List<Usuario> users) {
+        this.users = users;
+    }
+
+    public Usuario getUser() {
+        return user;
+    }
+
+    public void setUser(Usuario user) {
+        this.user = user;
+    }
+    
+    /**
+     * @return the ctre
+     */
+    public Control_Eventos getCtre() {
+        return ctre;
+    }
+
+    /**
+     * @param ctre the ctre to set
+     */
+    public void setCtre(Control_Eventos ctre) {
+        this.ctre = ctre;
     }
 
     /**
@@ -540,20 +593,6 @@ public class MiSesion implements Serializable {
     }
 
     /**
-     * @return the cod_postalcrear
-     */
-    public String getCod_postalcrear() {
-        return cod_postalcrear;
-    }
-
-    /**
-     * @param cod_postalcrear the cod_postalcrear to set
-     */
-    public void setCod_postalcrear(String cod_postalcrear) {
-        this.cod_postalcrear = cod_postalcrear;
-    }
-
-    /**
      * @return the direccioncrear
      */
     public String getDireccioncrear() {
@@ -596,62 +635,6 @@ public class MiSesion implements Serializable {
     }
 
     /**
-     * @return the fecha_ingresocrear
-     */
-    public Date getFecha_ingresocrear() {
-        return fecha_ingresocrear;
-    }
-
-    /**
-     * @param fecha_ingresocrear the fecha_ingresocrear to set
-     */
-    public void setFecha_ingresocrear(Date fecha_ingresocrear) {
-        this.fecha_ingresocrear = fecha_ingresocrear;
-    }
-
-    /**
-     * @return the cuotacrear
-     */
-    public String getCuotacrear() {
-        return cuotacrear;
-    }
-
-    /**
-     * @param cuotacrear the cuotacrear to set
-     */
-    public void setCuotacrear(String cuotacrear) {
-        this.cuotacrear = cuotacrear;
-    }
-
-    /**
-     * @return the telefonocrear
-     */
-    public String getTelefonocrear() {
-        return telefonocrear;
-    }
-
-    /**
-     * @param telefonocrear the telefonocrear to set
-     */
-    public void setTelefonocrear(String telefonocrear) {
-        this.telefonocrear = telefonocrear;
-    }
-
-    /**
-     * @return the movilcrear
-     */
-    public String getMovilcrear() {
-        return movilcrear;
-    }
-
-    /**
-     * @param movilcrear the movilcrear to set
-     */
-    public void setMovilcrear(String movilcrear) {
-        this.movilcrear = movilcrear;
-    }
-
-    /**
      * @return the metodopagocrear
      */
     public String getMetodopagocrear() {
@@ -691,6 +674,78 @@ public class MiSesion implements Serializable {
      */
     public void setSeccioncrear(String seccioncrear) {
         this.seccioncrear = seccioncrear;
+    }
+
+    public List<Seccion> getSecciones() {
+        return secciones;
+    }
+
+    public void setSecciones(List<Seccion> secciones) {
+        this.secciones = secciones;
+    }
+
+    public List<Perfil> getPerfiles() {
+        return perfiles;
+    }
+
+    public void setPerfiles(List<Perfil> perfiles) {
+        this.perfiles = perfiles;
+    }
+
+    public int getCod_postalcrear() {
+        return cod_postalcrear;
+    }
+
+    public void setCod_postalcrear(int cod_postalcrear) {
+        this.cod_postalcrear = cod_postalcrear;
+    }
+
+    public int getCuotacrear() {
+        return cuotacrear;
+    }
+
+    public void setCuotacrear(int cuotacrear) {
+        this.cuotacrear = cuotacrear;
+    }
+
+    public int getTelefonocrear() {
+        return telefonocrear;
+    }
+
+    public void setTelefonocrear(int telefonocrear) {
+        this.telefonocrear = telefonocrear;
+    }
+
+    public int getMovilcrear() {
+        return movilcrear;
+    }
+
+    public void setMovilcrear(int movilcrear) {
+        this.movilcrear = movilcrear;
+    }
+
+    public Usuarios getU() {
+        return u;
+    }
+
+    public void setU(Usuarios u) {
+        this.u = u;
+    }
+
+    public Perfiles getPerfs() {
+        return perfs;
+    }
+
+    public void setPerfs(Perfiles perfs) {
+        this.perfs = perfs;
+    }
+
+    public Seccionesb getSecs() {
+        return secs;
+    }
+
+    public void setSecs(Seccionesb secs) {
+        this.secs = secs;
     }
 
 }
