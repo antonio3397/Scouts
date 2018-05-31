@@ -23,18 +23,18 @@ public class Notificacion implements Serializable {
     private static final long serialVersionUID = 1L;
     @EmbeddedId
     private NotificacionID id;
-    
-    @Column(nullable=false)
+
+    @Column(nullable = false)
     private String titulo;
-    @Column(nullable=false)
+    @Column(nullable = false)
     private String texto;
-    @Column(nullable=false)
+    @Column(nullable = false)
     private Date fecha;
-    
+
     @ManyToOne
     @MapsId("usuario_id")
     private Usuario usuario;
-    
+
     @ManyToOne
     @MapsId("evento_id")
     private Evento evento;
@@ -133,7 +133,12 @@ public class Notificacion implements Serializable {
     public void setEvento(Evento evento) {
         this.evento = evento;
     }
-    
-    public Date getFecha() { return fecha; }
-    public void setEvento(Date fecha) { this.fecha = fecha; }
+
+    public Date getFecha() {
+        return fecha;
+    }
+
+    public void setFecha(Date fecha) {
+        this.fecha = fecha;
+    }
 }
