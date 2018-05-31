@@ -12,6 +12,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -37,6 +38,20 @@ public class Documento implements Serializable {
     private Evento evento;
     @ManyToOne
     private Usuario usuario;
+    
+    @Lob
+    @Column(name="DOCUMENTO", nullable=false)
+    private byte[] documento;
+
+    public byte[] getDocumento() {
+        return documento;
+    }
+
+    public void setDocumento(byte[] documento) {
+        this.documento = documento;
+    }
+    
+   
     
     public Date getFecha_entrega() {
         return fecha_entrega;
