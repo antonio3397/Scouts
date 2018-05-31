@@ -8,9 +8,12 @@ import Negocio.ContraseniaInvalidaException;
 import Negocio.CuentaInexistenteException;
 import Negocio.Login;
 import Negocio.ScoutsException;
+import Negocio.Usuarios;
 import clases.Evento;
+import clases.Perfil;
 import clases.Usuario;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import javax.ejb.EJB;
@@ -35,6 +38,9 @@ public class Controlador_Login implements Serializable {
     @EJB
     private Login log;
     
+    @EJB
+    private Usuarios u;
+    
     @Inject
     private MiSesion ctrl;
 
@@ -48,7 +54,26 @@ public class Controlador_Login implements Serializable {
             usuario.setEmail(email);
             usuario.setContrasenia(password);
             log.compruebaLogin(usuario);
-            ctrl.setUser(log.refrescarUsuario(usuario));
+            Usuario aux = log.refrescarUsuario(usuario);
+            ctrl.setUser(aux);
+            List<Usuario> users = u.getUsuarios();
+            ctrl.setUsers(users);
+            List<Usuario> auxs = new ArrayList<>();
+            if (aux.getPerfiles().getRol().equals(Perfil.Rol.COORDSEC) || aux.getPerfiles().getRol().equals(Perfil.Rol.SCOUTER)) {
+                for (Usuario u : users) {
+                    if (!u.equals(aux) && u.getSeccion().equals(aux.getSeccion())) {
+                        auxs.add(u);
+                    }
+                }
+            } else {
+                for (Usuario u : users) {
+                    if (!u.equals(aux)) {
+                        auxs.add(u);
+                    }
+                }
+            }
+            ctrl.setUsers2(auxs);
+            
             return "Inicio.xhtml";
 
         } catch (CuentaInexistenteException e) {

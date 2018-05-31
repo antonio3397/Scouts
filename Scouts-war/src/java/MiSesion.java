@@ -4,6 +4,13 @@
  * and open the template in the editor.
  */
 
+import Negocio.CuentaExistenteException;
+import Negocio.CuentaInexistenteException;
+import Negocio.PerfilInexistenteException;
+import Negocio.Perfiles;
+import Negocio.SeccionInexistenteException;
+import Negocio.Seccionesb;
+import Negocio.Usuarios;
 import clases.Evento;
 import clases.Perfil;
 import clases.Seccion;
@@ -11,22 +18,18 @@ import clases.Usuario;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
+import javax.ejb.EJB;
+import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 
 /*
-Tipos de id que tiene cada sección:
-TODAS -> 0L
-CASTORES -> 1L
-LOBATOS -> 2L
-ROVERS COMPAÑEROS -> 3L
-TROPA SCOUT -> 4L
-ESCULTAS PIONEROS -> 5L
- */
+*/
 /**
  *
  * @author DavidDR
@@ -35,47 +38,31 @@ ESCULTAS PIONEROS -> 5L
 @SessionScoped
 public class MiSesion implements Serializable {
 
-    /**
-     * @return the ctre
-     */
-    public Control_Eventos getCtre() {
-        return ctre;
-    }
-
-    /**
-     * @param ctre the ctre to set
-     */
-    public void setCtre(Control_Eventos ctre) {
-        this.ctre = ctre;
-    }
-
+    //Usuario que ha iniciado sesion
     private Usuario user;
+    //Lista de todos los usuarios en la base de datos
     private List<Usuario> users;
+    //Lista con los usuarios de la seccion del usuario que ha iniciado sesion
     private List<Usuario> users2;
     private Usuario otro;
+    //Usuario que se quiere ver
     private Usuario auxiliar;
     private String seccionmod;
 
-    private Long idcrear;
-    private String contraseniacrear;
-    private String NIFcrear;
-    private String emailcrear;
-    private String nombrecrear;
-    private String apellidoscrear;
-    private String sexocrear;
-    private Date fecha_nacimientocrear;
-    private String cod_postalcrear;
-    private String direccioncrear;
-    private String provinciacrear;
-    private String localidadcrear;
-    private Date fecha_ingresocrear;
-    private String cuotacrear;
-    private String telefonocrear;
-    private String movilcrear;
-    private String metodopagocrear;
-    private String perfilcrear = "";
+    //Usuario que se va a crear
+    private Usuario usercrear = new Usuario();
     private String seccioncrear;
+    private String perfilcrear="";
 
+    @EJB
+    private Usuarios u;
+    
+    @EJB
+    private Perfiles perfs;
+    
+    @EJB
+    private Seccionesb secs;
+    
     @Inject
     private Controlador_Login ctr;
     
@@ -90,7 +77,7 @@ public class MiSesion implements Serializable {
         return "login.xhtml";
     }
 
-    public Usuario buscarUsuario(Long id) throws UsuarioException {
+    /*public Usuario buscarUsuario(Long id) throws UsuarioException {
 
         Usuario aux = null;
 
@@ -107,7 +94,7 @@ public class MiSesion implements Serializable {
         }
 
         return aux;
-    }
+    }*/
 
     public String modificarboton() {
 
@@ -148,7 +135,7 @@ public class MiSesion implements Serializable {
         }*/
         seccionmod = null;
 
-       // getOtro().setSeccion(sec);
+       //getOtro().setSeccion(sec);
 
         int i = 0;
         while (i < getUsers().size() && getOtro().getId() != getUsers().get(i).getId()) {
@@ -183,33 +170,19 @@ public class MiSesion implements Serializable {
         return "Lista_Usuarios.xhtml";
     }
 
-    public String borrarUsuario(Long id) throws UsuarioException {
+    public String borrarUsuario(Long id) throws CuentaInexistenteException, UsuarioException {
 
-        Usuario b = buscarUsuario(id);
-
-        getUsers().remove(b);
-        getUsers2().remove(b);
+        Usuario b = u.buscarUsuario(id);
+        u.eliminarUsuario(b);
+        users=u.getUsuarios();
+        refrescarUsers2();
 
         return "Lista_Usuarios.xhtml";
     }
 
-    /**
-     * @return the users
-     */
-    public List<Usuario> getUsers() {
-        return users;
-    }
-
     public String verUsuario(Long id) {
 
-        Iterator<Usuario> iter = getUsers().iterator();
-        Usuario u = iter.next();
-        while (iter.hasNext() && !Objects.equals(id, u.getId())) {
-            u = iter.next();
-        }
-        if (Objects.equals(id, u.getId())) {
-            setAuxiliar(u);
-        }
+        auxiliar=u.buscarUsuario(id);
 
         return "OtroPerfil.xhtml";
     }
@@ -219,22 +192,6 @@ public class MiSesion implements Serializable {
         e.getUsuarios().add(user);
         
         return "Eventos.xhtml";
-        
-    }
-
-    /**
-     * @param users the users to set
-     */
-    public void setUsers(List<Usuario> users) {
-        this.users = users;
-    }
-
-    public Usuario getUser() {
-        return user;
-    }
-
-    public void setUser(Usuario user) {
-        this.user = user;
     }
 
     public boolean isCoordGen() {
@@ -278,83 +235,121 @@ public class MiSesion implements Serializable {
         return salida;
     }
 
-    public String crearUsuario() {
-        Perfil p = null;
-        Seccion s = null;
-/*
+    public String crearUsuario() throws CuentaExistenteException, PerfilInexistenteException, SeccionInexistenteException {
+
         switch (perfilcrear) {
             case "CoordGen":
-                p = new Perfil(Perfil.Rol.COORDGEN);
+                usercrear.setPerfiles(perfs.getSeccion(Perfil.Rol.COORDGEN));
                 break;
             case "CoordSec":
-                p = new Perfil(Perfil.Rol.COORDSEC);
+                usercrear.setPerfiles(perfs.getSeccion(Perfil.Rol.COORDSEC));
                 break;
             case "Scouter":
-                p = new Perfil(Perfil.Rol.SCOUTER);
+                usercrear.setPerfiles(perfs.getSeccion(Perfil.Rol.SCOUTER));
                 break;
             case "Educando":
-                p = new Perfil(Perfil.Rol.EDUCANDO);
+                usercrear.setPerfiles(perfs.getSeccion(Perfil.Rol.EDUCANDO));
                 break;
             default:
                 break;
         }
 
         if (perfilcrear.equals("CoordGen")) {
-            s = new Seccion(0L, Seccion.Secciones.TODAS);
+            usercrear.setSeccion(secs.getSeccion(0L));
+            
         } else {
             switch (seccioncrear) {
                 case "Castores":
-                    s = new Seccion(1L, Seccion.Secciones.Castores);
+                    usercrear.setSeccion(secs.getSeccion(1L));
                     break;
                 case "Lobatos":
-                    s = new Seccion(2L, Seccion.Secciones.Lobatos);
+                    usercrear.setSeccion(secs.getSeccion(2L));
                     break;
                 case "Scouts":
-                    s = new Seccion(4L, Seccion.Secciones.Tropa_Scout);
+                    usercrear.setSeccion(secs.getSeccion(3L));
                     break;
                 case "Escultas":
-                    s = new Seccion(5L, Seccion.Secciones.Escultas_Pioneros);
+                    usercrear.setSeccion(secs.getSeccion(4L));
                     break;
                 case "Rovers":
-                    s = new Seccion(3L, Seccion.Secciones.Rovers_Compañeros);
+                    usercrear.setSeccion(secs.getSeccion(5L));
                     break;
                 default:
                     break;
-            /
-        }*/
+            }
+        }
 
-        idcrear = users.get(users.size() - 1).getId() + 1;
+        Date fechaactual = new Date();
+        usercrear.setFecha_ingreso(fechaactual);
+        Long idcrear = users.get(users.size()-1).getId()+1;
+        usercrear.setId(idcrear);
 
-        //Usuario u = new Usuario(idcrear, contraseniacrear, NIFcrear, emailcrear, nombrecrear, apellidoscrear, sexocrear, fecha_nacimientocrear, Integer.parseInt(cod_postalcrear), direccioncrear, provinciacrear, localidadcrear, fecha_ingresocrear, Integer.parseInt(cuotacrear), Integer.parseInt(telefonocrear), Integer.parseInt(movilcrear), metodopagocrear, p, s);
-
-        idcrear = null;
-        contraseniacrear = null;
-        NIFcrear = null;
-        emailcrear = null;
-        nombrecrear = null;
-        apellidoscrear = null;
-        sexocrear = null;
-        fecha_nacimientocrear = null;
-        cod_postalcrear = null;
-        direccioncrear = null;
-        provinciacrear = null;
-        localidadcrear = null;
-        fecha_ingresocrear = null;
-        cuotacrear = null;
-        telefonocrear = null;
-        movilcrear = null;
-        metodopagocrear = null;
+        u.registrarUsuario(usercrear);
+        users = u.getUsuarios();
+        refrescarUsers2();
+        usercrear=new Usuario();
         perfilcrear = "";
         seccioncrear = null;
-
-       // users.add(u);
-        //users2.add(u);
 
         return "Lista_Usuarios.xhtml";
     }
 
     public boolean perfCrearGeneral() {
         return perfilcrear.equals("CoordGen");
+    }
+    
+    public void refrescarUsers2(){
+        List<Usuario> auxs = new ArrayList<>();
+        if (user.getPerfiles().getRol().equals(Perfil.Rol.COORDSEC) || user.getPerfiles().getRol().equals(Perfil.Rol.SCOUTER)) {
+            for (Usuario u : users) {
+                if (!u.equals(user) && u.getSeccion().equals(user.getSeccion())) {
+                    auxs.add(u);
+                }
+            }
+        } else {
+            for (Usuario u : users) {
+                if (!u.equals(user)) {
+                    auxs.add(u);
+                }
+            }
+        }
+        users2 = auxs;
+    }
+
+    /**
+     * @return the users
+     */
+    public List<Usuario> getUsers() {
+        return users;
+    }
+
+    /**
+     * @param users the users to set
+     */
+    public void setUsers(List<Usuario> users) {
+        this.users = users;
+    }
+
+    public Usuario getUser() {
+        return user;
+    }
+
+    public void setUser(Usuario user) {
+        this.user = user;
+    }
+    
+    /**
+     * @return the ctre
+     */
+    public Control_Eventos getCtre() {
+        return ctre;
+    }
+
+    /**
+     * @param ctre the ctre to set
+     */
+    public void setCtre(Control_Eventos ctre) {
+        this.ctre = ctre;
     }
 
     /**
@@ -427,270 +422,52 @@ public class MiSesion implements Serializable {
         this.auxiliar = auxiliar;
     }
 
-    /**
-     * @return the idcrear
-     */
-    public Long getIdcrear() {
-        return idcrear;
+    public Usuarios getU() {
+        return u;
     }
 
-    /**
-     * @param idcrear the idcrear to set
-     */
-    public void setIdcrear(Long idcrear) {
-        this.idcrear = idcrear;
+    public void setU(Usuarios u) {
+        this.u = u;
     }
 
-    /**
-     * @return the contraseniacrear
-     */
-    public String getContraseniacrear() {
-        return contraseniacrear;
+    public Perfiles getPerfs() {
+        return perfs;
     }
 
-    /**
-     * @param contraseniacrear the contraseniacrear to set
-     */
-    public void setContraseniacrear(String contraseniacrear) {
-        this.contraseniacrear = contraseniacrear;
+    public void setPerfs(Perfiles perfs) {
+        this.perfs = perfs;
     }
 
-    /**
-     * @return the NIFcrear
-     */
-    public String getNIFcrear() {
-        return NIFcrear;
+    public Seccionesb getSecs() {
+        return secs;
     }
 
-    /**
-     * @param NIFcrear the NIFcrear to set
-     */
-    public void setNIFcrear(String NIFcrear) {
-        this.NIFcrear = NIFcrear;
+    public void setSecs(Seccionesb secs) {
+        this.secs = secs;
     }
 
-    /**
-     * @return the emailcrear
-     */
-    public String getEmailcrear() {
-        return emailcrear;
+    public Usuario getUsercrear() {
+        return usercrear;
     }
 
-    /**
-     * @param emailcrear the emailcrear to set
-     */
-    public void setEmailcrear(String emailcrear) {
-        this.emailcrear = emailcrear;
+    public void setUsercrear(Usuario usercrear) {
+        this.usercrear = usercrear;
     }
 
-    /**
-     * @return the nombrecrear
-     */
-    public String getNombrecrear() {
-        return nombrecrear;
-    }
-
-    /**
-     * @param nombrecrear the nombrecrear to set
-     */
-    public void setNombrecrear(String nombrecrear) {
-        this.nombrecrear = nombrecrear;
-    }
-
-    /**
-     * @return the apellidoscrear
-     */
-    public String getApellidoscrear() {
-        return apellidoscrear;
-    }
-
-    /**
-     * @param apellidoscrear the apellidoscrear to set
-     */
-    public void setApellidoscrear(String apellidoscrear) {
-        this.apellidoscrear = apellidoscrear;
-    }
-
-    /**
-     * @return the sexocrear
-     */
-    public String getSexocrear() {
-        return sexocrear;
-    }
-
-    /**
-     * @param sexocrear the sexocrear to set
-     */
-    public void setSexocrear(String sexocrear) {
-        this.sexocrear = sexocrear;
-    }
-
-    /**
-     * @return the fecha_nacimientocrear
-     */
-    public Date getFecha_nacimientocrear() {
-        return fecha_nacimientocrear;
-    }
-
-    /**
-     * @param fecha_nacimientocrear the fecha_nacimientocrear to set
-     */
-    public void setFecha_nacimientocrear(Date fecha_nacimientocrear) {
-        this.fecha_nacimientocrear = fecha_nacimientocrear;
-    }
-
-    /**
-     * @return the cod_postalcrear
-     */
-    public String getCod_postalcrear() {
-        return cod_postalcrear;
-    }
-
-    /**
-     * @param cod_postalcrear the cod_postalcrear to set
-     */
-    public void setCod_postalcrear(String cod_postalcrear) {
-        this.cod_postalcrear = cod_postalcrear;
-    }
-
-    /**
-     * @return the direccioncrear
-     */
-    public String getDireccioncrear() {
-        return direccioncrear;
-    }
-
-    /**
-     * @param direccioncrear the direccioncrear to set
-     */
-    public void setDireccioncrear(String direccioncrear) {
-        this.direccioncrear = direccioncrear;
-    }
-
-    /**
-     * @return the provinciacrear
-     */
-    public String getProvinciacrear() {
-        return provinciacrear;
-    }
-
-    /**
-     * @param provinciacrear the provinciacrear to set
-     */
-    public void setProvinciacrear(String provinciacrear) {
-        this.provinciacrear = provinciacrear;
-    }
-
-    /**
-     * @return the localidadcrear
-     */
-    public String getLocalidadcrear() {
-        return localidadcrear;
-    }
-
-    /**
-     * @param localidadcrear the localidadcrear to set
-     */
-    public void setLocalidadcrear(String localidadcrear) {
-        this.localidadcrear = localidadcrear;
-    }
-
-    /**
-     * @return the fecha_ingresocrear
-     */
-    public Date getFecha_ingresocrear() {
-        return fecha_ingresocrear;
-    }
-
-    /**
-     * @param fecha_ingresocrear the fecha_ingresocrear to set
-     */
-    public void setFecha_ingresocrear(Date fecha_ingresocrear) {
-        this.fecha_ingresocrear = fecha_ingresocrear;
-    }
-
-    /**
-     * @return the cuotacrear
-     */
-    public String getCuotacrear() {
-        return cuotacrear;
-    }
-
-    /**
-     * @param cuotacrear the cuotacrear to set
-     */
-    public void setCuotacrear(String cuotacrear) {
-        this.cuotacrear = cuotacrear;
-    }
-
-    /**
-     * @return the telefonocrear
-     */
-    public String getTelefonocrear() {
-        return telefonocrear;
-    }
-
-    /**
-     * @param telefonocrear the telefonocrear to set
-     */
-    public void setTelefonocrear(String telefonocrear) {
-        this.telefonocrear = telefonocrear;
-    }
-
-    /**
-     * @return the movilcrear
-     */
-    public String getMovilcrear() {
-        return movilcrear;
-    }
-
-    /**
-     * @param movilcrear the movilcrear to set
-     */
-    public void setMovilcrear(String movilcrear) {
-        this.movilcrear = movilcrear;
-    }
-
-    /**
-     * @return the metodopagocrear
-     */
-    public String getMetodopagocrear() {
-        return metodopagocrear;
-    }
-
-    /**
-     * @param metodopagocrear the metodopagocrear to set
-     */
-    public void setMetodopagocrear(String metodopagocrear) {
-        this.metodopagocrear = metodopagocrear;
-    }
-
-    /**
-     * @return the perfilcrear
-     */
-    public String getPerfilcrear() {
-        return perfilcrear;
-    }
-
-    /**
-     * @param perfilcrear the perfilcrear to set
-     */
-    public void setPerfilcrear(String perfilcrear) {
-        this.perfilcrear = perfilcrear;
-    }
-
-    /**
-     * @return the seccioncrear
-     */
     public String getSeccioncrear() {
         return seccioncrear;
     }
 
-    /**
-     * @param seccioncrear the seccioncrear to set
-     */
     public void setSeccioncrear(String seccioncrear) {
         this.seccioncrear = seccioncrear;
+    }
+
+    public String getPerfilcrear() {
+        return perfilcrear;
+    }
+
+    public void setPerfilcrear(String perfilcrear) {
+        this.perfilcrear = perfilcrear;
     }
 
 }
