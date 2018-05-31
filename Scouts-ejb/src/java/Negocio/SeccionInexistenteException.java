@@ -5,18 +5,10 @@
  */
 package Negocio;
 
-import clases.Perfil;
-import java.util.List;
-import javax.ejb.Local;
-
 /**
  *
  * @author anton
  */
-@Local
-public interface Perfiles {
-    
-    public List<Perfil> getPerfiles();
-    public Perfil getSeccion(Perfil.Rol id) throws PerfilInexistenteException;
+public class SeccionInexistenteException extends ScoutsException {
     
 }

@@ -20,5 +20,6 @@ public interface Usuarios {
     public void registrarUsuario(Usuario u) throws CuentaExistenteException;
     public boolean estaUsuario(Usuario u);
     public void eliminarUsuario(Usuario u) throws CuentaInexistenteException;
+    public Usuario buscarUsuario(Long id);
     
 }

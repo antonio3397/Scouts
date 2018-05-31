@@ -31,4 +31,12 @@ public class SeccionesImpl implements Seccionesb {
         return sec;
     } 
     
+    @Override
+    public Seccion getSeccion(Long id) throws SeccionInexistenteException{
+        Seccion sec = em.find(Seccion.class, id);
+        if(sec==null){
+            throw new SeccionInexistenteException();
+        }
+        return sec;
+    } 
 }

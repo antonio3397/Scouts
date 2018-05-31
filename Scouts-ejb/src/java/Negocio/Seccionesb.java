@@ -17,5 +17,6 @@ import javax.ejb.Local;
 public interface Seccionesb {
     
     public List<Seccion> getSecciones();
+    public Seccion getSeccion(Long id) throws SeccionInexistenteException;
     
 }

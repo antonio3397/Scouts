@@ -45,7 +45,7 @@ public class UsuariosImpl implements Usuarios {
     @Override
     public void eliminarUsuario(Usuario u) throws CuentaInexistenteException{
         if(estaUsuario(u)){
-            em.remove(u);
+            em.remove(em.merge(u));
         } else {
             throw new CuentaInexistenteException();
         }
@@ -54,11 +54,12 @@ public class UsuariosImpl implements Usuarios {
     
     @Override
     public boolean estaUsuario(Usuario u){
-        boolean exist = false;
-        if(em.find(Usuario.class, u.getId()).equals(u)){
-            exist = true;
-        }
-        return exist;
+        return em.find(Usuario.class, u.getId())!=null;
+    }
+    
+    @Override
+    public Usuario buscarUsuario(Long id){
+        return em.find(Usuario.class, id);
     }
     
 }

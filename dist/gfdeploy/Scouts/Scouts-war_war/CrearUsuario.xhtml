@@ -10,42 +10,49 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
 
-    <ui:define name="title">Documentos</ui:define>
+    <ui:define name="title">Crear Usuario</ui:define>
 
     <ui:define name="content">
         <div class="container">
             <h:form>
                 <h:panelGrid columns="2">
                     <h:outputLabel value="Nombre: "/>
-                    <p:inputText value="#{miSesion.nombrecrear}"/>
+                    <p:inputText value="#{miSesion.usercrear.nombre}"/>
                     <h:outputLabel value="Apellidos: "/>
-                    <p:inputText value="#{miSesion.apellidoscrear}"/>
-                    <h:outputLabel value="Nif: "/>
-                    <p:inputText value="#{miSesion.NIFcrear}"/>
+                    <p:inputText value="#{miSesion.usercrear.apellidos}"/>
+                    <h:outputLabel value="NIF: "/>
+                    <p:inputText value="#{miSesion.usercrear.NIF}"/>
                     <h:outputLabel value="Sexo: "/>
-                    <p:inputText value="#{miSesion.sexocrear}"/>
+                    <p:selectOneMenu value="#{miSesion.usercrear.sexo}">
+                        <f:selectItem itemLabel="Masc" itemValue="Masc" />
+                        <f:selectItem itemLabel="Fem" itemValue="Fem" />
+                    </p:selectOneMenu>
                     <h:outputLabel value="Email: "/>
-                    <p:inputText value="#{miSesion.emailcrear}"/>
+                    <p:inputText value="#{miSesion.usercrear.email}"/>
                     <h:outputLabel value="Contraseña: "/>
-                    <p:inputText value="#{miSesion.contraseniacrear}"/>
+                    <p:inputText value="#{miSesion.usercrear.contrasenia}"/>
                     <h:outputLabel value="Fecha de nacimiento: "/>
-                    <p:calendar value="#{miSesion.fecha_nacimientocrear}" pattern="MM/dd/yyyy" navigator="true"/>
+                    <p:calendar value="#{miSesion.usercrear.fecha_nacimiento}" pattern="MM/dd/yyyy" navigator="true"/>
                     <h:outputLabel value="Código postal: "/>
-                    <p:inputText value="#{miSesion.cod_postalcrear}"/>
+                    <p:inputText value="#{miSesion.usercrear.codigo_postal}"/>
                     <h:outputLabel value="Dirección: "/>
-                    <p:inputText value="#{miSesion.direccioncrear}"/>
+                    <p:inputText value="#{miSesion.usercrear.direccion}"/>
                     <h:outputLabel value="Provincia: "/>
-                    <p:inputText value="#{miSesion.provinciacrear}"/>
+                    <p:inputText value="#{miSesion.usercrear.provincia}"/>
                     <h:outputLabel value="Localidad: "/>
-                    <p:inputText value="#{miSesion.localidadcrear}"/>
+                    <p:inputText value="#{miSesion.usercrear.localidad}"/>
                     <h:outputLabel value="Cuota total: "/>
-                    <p:inputText value="#{miSesion.cuotacrear}"/>
+                    <p:inputText value="#{miSesion.usercrear.cuota_total}"/>
                     <h:outputLabel value="Teléfono: "/>
-                    <p:inputText value="#{miSesion.telefonocrear}"/>
+                    <p:inputText value="#{miSesion.usercrear.telefono}"/>
                     <h:outputLabel value="Móvil: "/>
-                    <p:inputText value="#{miSesion.movilcrear}"/>
+                    <p:inputText value="#{miSesion.usercrear.movil}"/>
                     <h:outputLabel value="Método de pago: "/>
-                    <p:inputText value="#{miSesion.metodopagocrear}"/>
+                    <p:selectOneMenu value="#{miSesion.usercrear.metodo_pago}">
+                        <f:selectItem itemLabel="Tarjeta" itemValue="Tarjeta" />
+                        <f:selectItem itemLabel="Efectivo" itemValue="Efectivo" />
+                        <f:selectItem itemLabel="Ingreso" itemValue="Ingreso" />
+                    </p:selectOneMenu>
                     <h:outputLabel value="Perfil: "/>
                     <p:selectOneMenu value="#{miSesion.perfilcrear}">
                         <f:selectItem itemLabel="Selecciona uno" itemValue="" />
@@ -58,12 +65,11 @@
                         <f:selectItem itemLabel="Scouter" itemValue="Scouter" />
                         <f:selectItem itemLabel="Educando" itemValue="Educando" />                        
                     </p:selectOneMenu>
-                    <h:outputLabel value="Sección: "/>
-
+                    <h:outputLabel value="Sección (no es necesario si has seleccionado coordinador general): "/>
                     <p:selectOneMenu value="#{miSesion.seccioncrear}">
                         <c:choose>
                             <c:when test="#{miSesion.coordGen}">
-                                <f:selectItem itemLabel="Selecciona uno (si es coordinador general da igual)" itemValue="" />
+                                <f:selectItem itemLabel="Selecciona uno" itemValue="" />
                                 <f:selectItem itemLabel="Castores" itemValue="Castores" />
                                 <f:selectItem itemLabel="Lobatos" itemValue="Lobatos" />
                                 <f:selectItem itemLabel="Scouts" itemValue="Scouts" />

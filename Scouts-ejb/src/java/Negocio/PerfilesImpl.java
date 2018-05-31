@@ -30,4 +30,13 @@ public class PerfilesImpl implements Perfiles {
         p = q.getResultList();
         return p;
     } 
+    
+    @Override
+    public Perfil getSeccion(Perfil.Rol id) throws PerfilInexistenteException{
+        Perfil perf = em.find(Perfil.class, id);
+        if(perf==null){
+            throw new PerfilInexistenteException();
+        }
+        return perf;
+    } 
 }
