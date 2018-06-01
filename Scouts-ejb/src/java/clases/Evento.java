@@ -42,6 +42,7 @@ public class Evento implements Serializable {
     private String descripcion;
     private Integer precio;
     @Lob
+    @Column(name="Imagen")
     private byte [] imagen;
     
     @OneToMany(mappedBy = "evento")

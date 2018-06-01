@@ -107,26 +107,8 @@ public class Control_Eventos implements Serializable {
 
         Seccion sec = null;
         int precio = Integer.parseInt(preciocrear);
-/*
-        switch (seccioncrear) {
-            case "Castores":
-                //sec = new Seccion(1L, Seccion.Secciones.Castores);
-                break;
-            case "Lobatos":
-                //sec = new Seccion(2L, Seccion.Secciones.Lobatos);
-                break;
-            case "Scouts":
-                //sec = new Seccion(4L, Seccion.Secciones.Tropa_Scout);
-                break;
-            case "Escultas":
-                //sec = new Seccion(5L, Seccion.Secciones.Escultas_Pioneros);
-                break;
-            case "Rovers":
-                //sec = new Seccion(3L, Seccion.Secciones.Rovers_Compañeros);
-                break;
-            default:
-                break;
-        }*/
+
+        
 
         Evento ev = new Evento();
         ev.setTitulo(titulocrear);
