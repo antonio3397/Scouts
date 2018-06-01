@@ -23,9 +23,13 @@
                 <h:outputLabel value="#{control_Responsable.ver.NIF}"/>
                 <h:outputLabel value="Email: "/>
                 <h:outputLabel value="#{control_Responsable.ver.email}"/>
-                <h:form>
-                    <p:commandButton value="Modificar" action="#{control_Responsable.modificarBoton()}" ajax="false"/>
-                </h:form>
+                <c:choose>
+                    <c:when test="#{miSesion.coordGen||miSesion.cordSec}">
+                        <h:form>
+                            <p:commandButton value="Modificar" action="#{control_Responsable.modificarBoton()}" ajax="false"/>
+                        </h:form>
+                    </c:when>
+                </c:choose>
             </h:panelGrid>
         </div>    
     </ui:define>

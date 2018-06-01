@@ -51,6 +51,11 @@
                     <h:outputLabel value="#{miSesion.user.metodo_pago}"/>                
                     <h:outputLabel value="Sección: "/>
                     <h:outputLabel value="#{miSesion.user.seccion.nombre}"/>
+                    <c:choose>
+                        <c:when test="#{miSesion.tieneResponsable(miSesion.user)}">
+                            <p:commandButton value="Ver responsable legal" action="#{control_Responsable.verResponsable(miSesion.user.responsable.id)}" ajax="false"/>
+                        </c:when>
+                    </c:choose>
                 </h:panelGrid>
             </h:form>
         </div>

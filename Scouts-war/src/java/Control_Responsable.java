@@ -5,7 +5,6 @@
  */
 
 import Negocio.Responsable;
-import Negocio.ResponsableExistenteException;
 import Negocio.ResponsableInexistenteException;
 import Negocio.ScoutsException;
 import Negocio.Usuarios;
@@ -95,6 +94,8 @@ public class Control_Responsable implements Serializable {
     public String aceptarmod() throws ScoutsException{
         
         res.modificarResponsable(modificar);
+        ms.setUsers(u.getUsuarios());
+        ms.refrescarUsers2();
         
         return "OtroPerfil.xhtml";
     }

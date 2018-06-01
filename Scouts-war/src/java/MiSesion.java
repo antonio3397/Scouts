@@ -5,11 +5,9 @@
  */
 
 import Negocio.CuentaExistenteException;
-import Negocio.CuentaInexistenteException;
 import Negocio.PerfilInexistenteException;
 import Negocio.Perfiles;
 import Negocio.Responsable;
-import Negocio.ResponsableInexistenteException;
 import Negocio.ScoutsException;
 import Negocio.SeccionInexistenteException;
 import Negocio.Seccionesb;
