@@ -17,6 +17,6 @@ import javax.ejb.Local;
 public interface Perfiles {
     
     public List<Perfil> getPerfiles();
-    public Perfil getSeccion(Perfil.Rol id) throws PerfilInexistenteException;
+    public Perfil getPerfil(Perfil.Rol id) throws PerfilInexistenteException;
     
 }

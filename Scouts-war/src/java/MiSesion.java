@@ -20,11 +20,8 @@ import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Objects;
 import javax.ejb.EJB;
-import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 
@@ -44,10 +41,11 @@ public class MiSesion implements Serializable {
     private List<Usuario> users;
     //Lista con los usuarios de la seccion del usuario que ha iniciado sesion
     private List<Usuario> users2;
+    //Usuario a modificar
     private Usuario otro;
+    private String seccionmod;
     //Usuario que se quiere ver
     private Usuario auxiliar;
-    private String seccionmod;
 
     //Usuario que se va a crear
     private Usuario usercrear = new Usuario();
@@ -77,90 +75,37 @@ public class MiSesion implements Serializable {
         return "login.xhtml";
     }
 
-    /*public Usuario buscarUsuario(Long id) throws UsuarioException {
-
-        Usuario aux = null;
-
-        Iterator<Usuario> iter = getUsers().iterator();
-        while (iter.hasNext() && aux == null) {
-            Usuario it = iter.next();
-            if (it.getId().equals(id)) {
-                aux = it;
-            }
-        }
-
-        if (aux == null) {
-            throw new UsuarioException("Usuarios no existente");
-        }
-
-        return aux;
-    }*/
-
     public String modificarboton() {
 
-        /*        Iterator<Usuario> iter = users.iterator();
-        u = iter.next();
-        while (iter.hasNext() && u.getId() == id) {
-            u = iter.next();
-        }
-         */
-       // setOtro(new Usuario(getAuxiliar().getId(), getAuxiliar().getContrasenia(), getAuxiliar().getNIF(), getAuxiliar().getEmail(), getAuxiliar().getNombre(), getAuxiliar().getApellidos(), getAuxiliar().getSexo(), getAuxiliar().getFecha_nacimiento(), getAuxiliar().getCodigo_postal(), getAuxiliar().getDireccion(), getAuxiliar().getProvincia(), getAuxiliar().getLocalidad(), getAuxiliar().getFecha_ingreso(), getAuxiliar().getCuota_total(), getAuxiliar().getTelefono(), getAuxiliar().getMovil(), getAuxiliar().getMetodo_pago(), getAuxiliar().getPerfiles(), getAuxiliar().getSeccion()));
-
+        otro = auxiliar;
+        
         return "ModPerf.xhtml";
     }
 
-    public String aceptarmod() {
+    public String aceptarmod() throws SeccionInexistenteException, CuentaExistenteException {
 
-        Seccion sec;
-/*
-        switch (getSeccionmod()) {
+        switch (seccionmod) {
             case "Castores":
-                sec = new Seccion(1L, Seccion.Secciones.Castores);
+                otro.setSeccion(secs.getSeccion(1L));
                 break;
             case "Lobatos":
-                sec = new Seccion(2L, Seccion.Secciones.Lobatos);
+                otro.setSeccion(secs.getSeccion(2L));
                 break;
             case "Scouts":
-                sec = new Seccion(4L, Seccion.Secciones.Tropa_Scout);
+                otro.setSeccion(secs.getSeccion(3L));
                 break;
             case "Escultas":
-                sec = new Seccion(5L, Seccion.Secciones.Escultas_Pioneros);
+                otro.setSeccion(secs.getSeccion(4L));
                 break;
             case "Rovers":
-                sec = new Seccion(3L, Seccion.Secciones.Rovers_Compañeros);
+                otro.setSeccion(secs.getSeccion(5L));
                 break;
             default:
-                sec = getOtro().getSeccion();
                 break;
-        }*/
+        }
         seccionmod = null;
 
-       //getOtro().setSeccion(sec);
-
-        int i = 0;
-        while (i < getUsers().size() && getOtro().getId() != getUsers().get(i).getId()) {
-            i++;
-        }
-
-        Usuario u = getUsers().get(i);
-        u.setNombre(getOtro().getNombre());
-        u.setApellidos(getOtro().getApellidos());
-        u.setNIF(getOtro().getNIF());
-        u.setSexo(getOtro().getSexo());
-        u.setEmail(getOtro().getEmail());
-        u.setFecha_nacimiento(getOtro().getFecha_nacimiento());
-        u.setCodigo_postal(getOtro().getCodigo_postal());
-        u.setDireccion(getOtro().getDireccion());
-        u.setProvincia(getOtro().getProvincia());
-        u.setLocalidad(getOtro().getLocalidad());
-        u.setFecha_ingreso(getOtro().getFecha_ingreso());
-        u.setCuota_total(getOtro().getCuota_total());
-        u.setTelefono(getOtro().getTelefono());
-        u.setMovil(getOtro().getMovil());
-        u.setMetodo_pago(getOtro().getMetodo_pago());
-        u.setSeccion(getOtro().getSeccion());
-
-        //getCtr().setUsers(getUsers());
+        u.modificarUsuario(otro);
 
         return "Lista_Usuarios.xhtml";
     }
@@ -239,16 +184,16 @@ public class MiSesion implements Serializable {
 
         switch (perfilcrear) {
             case "CoordGen":
-                usercrear.setPerfiles(perfs.getSeccion(Perfil.Rol.COORDGEN));
+                usercrear.setPerfiles(perfs.getPerfil(Perfil.Rol.COORDGEN));
                 break;
             case "CoordSec":
-                usercrear.setPerfiles(perfs.getSeccion(Perfil.Rol.COORDSEC));
+                usercrear.setPerfiles(perfs.getPerfil(Perfil.Rol.COORDSEC));
                 break;
             case "Scouter":
-                usercrear.setPerfiles(perfs.getSeccion(Perfil.Rol.SCOUTER));
+                usercrear.setPerfiles(perfs.getPerfil(Perfil.Rol.SCOUTER));
                 break;
             case "Educando":
-                usercrear.setPerfiles(perfs.getSeccion(Perfil.Rol.EDUCANDO));
+                usercrear.setPerfiles(perfs.getPerfil(Perfil.Rol.EDUCANDO));
                 break;
             default:
                 break;
