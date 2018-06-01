@@ -154,6 +154,8 @@ public class Control_Eventos implements Serializable {
         preciocrear = null;
         seccioncrear = null;
 
+        CN.crearNotificacion(null);
+        
         return "Lista_eventos.xhtml";
     }
 
