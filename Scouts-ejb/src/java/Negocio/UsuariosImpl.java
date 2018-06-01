@@ -39,7 +39,15 @@ public class UsuariosImpl implements Usuarios {
         } else {
             throw new CuentaExistenteException();
         }
-        
+    }
+    
+    @Override
+    public void modificarUsuario(Usuario u) throws CuentaExistenteException{
+        if(estaUsuario(u)){
+            em.merge(u);
+        } else {
+            throw new CuentaExistenteException();
+        }
     }
     
     @Override

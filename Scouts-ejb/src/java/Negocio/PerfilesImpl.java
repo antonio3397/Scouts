@@ -32,7 +32,7 @@ public class PerfilesImpl implements Perfiles {
     } 
     
     @Override
-    public Perfil getSeccion(Perfil.Rol id) throws PerfilInexistenteException{
+    public Perfil getPerfil(Perfil.Rol id) throws PerfilInexistenteException{
         Perfil perf = em.find(Perfil.class, id);
         if(perf==null){
             throw new PerfilInexistenteException();

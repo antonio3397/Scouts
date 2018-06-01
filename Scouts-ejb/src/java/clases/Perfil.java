@@ -22,7 +22,7 @@ import javax.persistence.OneToMany;
 public class Perfil implements Serializable {
 
     public enum Rol {
-        EDUCANDO, COORDGEN, COORDSEC, SCOUTER;
+        EDUCANDO, SCOUTER, COORDSEC,  COORDGEN;
     }
 
     private static final long serialVersionUID = 1L;
