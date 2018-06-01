@@ -260,6 +260,24 @@ public class MiSesion implements Serializable {
         }
         users2 = auxs;
     }
+    
+    public String verSexo(){
+        if(otro.getSexo().equals("Masc")){
+            return "Fem";
+        } else {
+            return "Masc";
+        }
+    }
+    
+    public int comprobarMetodo(){
+        if(otro.getMetodo_pago().equals("Tarjeta")){
+            return 1;
+        } else if (otro.getMetodo_pago().equals("Efectivo")){
+            return 2;
+        } else {
+            return 3;
+        }
+    }
 
     /**
      * @return the users

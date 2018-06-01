@@ -23,7 +23,10 @@
                     <h:outputLabel value="Nif: "/>
                     <p:inputText value="#{miSesion.otro.NIF}"/>
                     <h:outputLabel value="Sexo: "/>
-                    <p:inputText value="#{miSesion.otro.sexo}"/>
+                    <p:selectOneMenu value="#{miSesion.otro.sexo}">
+                        <f:selectItem itemLabel="#{miSesion.otro.sexo}" itemValue="#{miSesion.otro.sexo}" />
+                        <f:selectItem itemLabel="#{miSesion.verSexo()}" itemValue="#{miSesion.verSexo()}" />
+                    </p:selectOneMenu>
                     <h:outputLabel value="Email: "/>
                     <p:inputText value="#{miSesion.otro.email}"/>
                     <h:outputLabel value="Fecha de nacimiento: "/>
@@ -38,14 +41,30 @@
                     <p:inputText value="#{miSesion.otro.localidad}"/>
                     <h:outputLabel value="Fecha de ingreso: "/>
                     <p:calendar value="#{miSesion.otro.fecha_ingreso}" pattern="MM/dd/yyyy" navigator="true"/>
-                    <h:outputLabel value="Cuota total: "/>
+                    <h:outputLabel value="Cuota mensual: "/>
                     <p:inputText value="#{miSesion.otro.cuota_total}"/>
                     <h:outputLabel value="Teléfono: "/>
                     <p:inputText value="#{miSesion.otro.telefono}"/>
                     <h:outputLabel value="Móvil: "/>
                     <p:inputText value="#{miSesion.otro.movil}"/>
                     <h:outputLabel value="Método de pago: "/>
-                    <p:inputText value="#{miSesion.otro.metodo_pago}"/>
+                    <p:selectOneMenu value="#{miSesion.otro.metodo_pago}">
+                        <f:selectItem itemLabel="#{miSesion.otro.metodo_pago}" itemValue="#{miSesion.otro.metodo_pago}" />
+                        <c:choose>
+                            <c:when test="#{miSesion.comprobarMetodo()==1}">
+                                <f:selectItem itemLabel="Efectivo" itemValue="Efectivo" />
+                                <f:selectItem itemLabel="Ingreso" itemValue="Ingreso" />
+                            </c:when>
+                            <c:when test="#{miSesion.comprobarMetodo()==2}">
+                                <f:selectItem itemLabel="Tarjeta" itemValue="Tarjeta" />
+                                <f:selectItem itemLabel="Ingreso" itemValue="Ingreso" />
+                            </c:when>
+                            <c:otherwise>
+                                <f:selectItem itemLabel="Tarjeta" itemValue="Tarjeta" />
+                                <f:selectItem itemLabel="Efectivo" itemValue="Efectivo" />
+                            </c:otherwise>
+                        </c:choose>
+                    </p:selectOneMenu>
                     <h:outputLabel value="Sección: "/>
                     <p:selectOneMenu value="#{miSesion.seccionmod}">
                         <f:selectItem itemLabel="Dejar asi para no modificar" itemValue="antigua" />
