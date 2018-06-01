@@ -22,5 +22,6 @@ public interface Usuarios {
     public void eliminarUsuario(Usuario u) throws CuentaInexistenteException;
     public Usuario buscarUsuario(Long id);
     public void modificarUsuario(Usuario u) throws CuentaExistenteException;
+    public Usuario refrescarUsuario(Usuario u) throws ScoutsException;
     
 }

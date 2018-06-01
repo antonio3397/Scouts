@@ -53,6 +53,11 @@
                             <p:commandButton value="Modificar" action="#{miSesion.modificarboton()}" ajax="false"/>
                         </c:when>
                     </c:choose>
+                    <c:choose>
+                        <c:when test="#{miSesion.tieneResponsable(miSesion.auxiliar)}">
+                            <p:commandButton value="Ver responsable legal" action="#{control_Responsable.verResponsable(miSesion.auxiliar.responsable.id)}" ajax="false"/>
+                        </c:when>
+                    </c:choose>
                 </h:panelGrid>
             </h:form>
         </div>
