@@ -11,6 +11,8 @@ package Negocio;
  * @author franc
  */
 import clases.Evento;
+import clases.Seccion;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import javax.ejb.Stateless;
@@ -52,6 +54,16 @@ public class EventosImpl implements Eventos{
         return list.getResultList();
     }
     
+     @Override
+    public List<Evento> verEventos(Seccion sc) {
+        List<Evento> lista = verEventos();
+        List<Evento> listaSeccion = new ArrayList<>();
+        for(Evento event: lista)
+            if(event.getSeccion().equals(sc))
+                listaSeccion.add(event);
+        return listaSeccion;
+    }
+    
     private boolean estaEvento(Evento e){
         List<Evento> lista = verEventos();
         Iterator it = lista.iterator();
@@ -62,4 +74,7 @@ public class EventosImpl implements Eventos{
         }
         return esta;
     }
+    
+   
+    
 }
