@@ -8,12 +8,15 @@ import Negocio.CuentaExistenteException;
 import Negocio.CuentaInexistenteException;
 import Negocio.PerfilInexistenteException;
 import Negocio.Perfiles;
+import Negocio.Responsable;
+import Negocio.ResponsableInexistenteException;
+import Negocio.ScoutsException;
 import Negocio.SeccionInexistenteException;
 import Negocio.Seccionesb;
 import Negocio.Usuarios;
 import clases.Evento;
 import clases.Perfil;
-import clases.Seccion;
+import clases.Responsable_Legal;
 import clases.Usuario;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
@@ -46,6 +49,8 @@ public class MiSesion implements Serializable {
     private String seccionmod;
     //Usuario que se quiere ver
     private Usuario auxiliar;
+    //Mira si es necesario un responsable legal
+    private boolean necesario;
 
     //Usuario que se va a crear
     private Usuario usercrear = new Usuario();
@@ -61,11 +66,11 @@ public class MiSesion implements Serializable {
     @EJB
     private Seccionesb secs;
     
-    @Inject
-    private Controlador_Login ctr;
+    @EJB
+    private Responsable r;
     
     @Inject
-    private Control_Eventos ctre;
+    private Control_Responsable res;
 
     public String logout() {
         // Destruye la sesión (y con ello, el ámbito de este bean)
@@ -82,7 +87,7 @@ public class MiSesion implements Serializable {
         return "ModPerf.xhtml";
     }
 
-    public String aceptarmod() throws SeccionInexistenteException, CuentaExistenteException {
+    public String aceptarmod() throws ScoutsException {
 
         switch (seccionmod) {
             case "Castores":
@@ -110,18 +115,34 @@ public class MiSesion implements Serializable {
         return "Lista_Usuarios.xhtml";
     }
     
-    public String cancerlarMod () {
+    public String cancerlarMod () throws ScoutsException {
         seccionmod = null;
         return "Lista_Usuarios.xhtml";
     }
 
-    public String borrarUsuario(Long id) throws CuentaInexistenteException, UsuarioException {
+    public String borrarUsuario(Long id) throws ScoutsException {
 
         Usuario b = u.buscarUsuario(id);
-        u.eliminarUsuario(b);
-        users=u.getUsuarios();
-        refrescarUsers2();
-
+        if(b.getResponsable()!=null){
+            Responsable_Legal respon = b.getResponsable();
+            respon.getUsuarios().remove(b);
+            if(respon.getUsuarios().isEmpty()){
+                u.eliminarUsuario(b);
+                r.eliminarResponsable(respon);
+                users=u.getUsuarios();
+                refrescarUsers2();
+            } else {
+                u.eliminarUsuario(b);
+                r.modificarResponsable(respon);
+                users=u.getUsuarios();
+                refrescarUsers2();
+            }
+        } else {
+            u.eliminarUsuario(b);
+            users=u.getUsuarios();
+            refrescarUsers2();
+        }
+        
         return "Lista_Usuarios.xhtml";
     }
 
@@ -178,6 +199,60 @@ public class MiSesion implements Serializable {
         }
 
         return salida;
+    }
+    
+    public String necesarioResponsable() throws CuentaExistenteException, PerfilInexistenteException, SeccionInexistenteException{
+        if(necesario){
+            switch (perfilcrear) {
+            case "CoordGen":
+                usercrear.setPerfiles(perfs.getPerfil(Perfil.Rol.COORDGEN));
+                break;
+            case "CoordSec":
+                usercrear.setPerfiles(perfs.getPerfil(Perfil.Rol.COORDSEC));
+                break;
+            case "Scouter":
+                usercrear.setPerfiles(perfs.getPerfil(Perfil.Rol.SCOUTER));
+                break;
+            case "Educando":
+                usercrear.setPerfiles(perfs.getPerfil(Perfil.Rol.EDUCANDO));
+                break;
+            default:
+                break;
+            }
+
+            if (perfilcrear.equals("CoordGen")) {
+                usercrear.setSeccion(secs.getSeccion(0L));
+            } else {
+                switch (seccioncrear) {
+                    case "Castores":
+                        usercrear.setSeccion(secs.getSeccion(1L));
+                        break;
+                    case "Lobatos":
+                        usercrear.setSeccion(secs.getSeccion(2L));
+                        break;
+                    case "Scouts":
+                        usercrear.setSeccion(secs.getSeccion(3L));
+                        break;
+                    case "Escultas":
+                        usercrear.setSeccion(secs.getSeccion(4L));
+                        break;
+                    case "Rovers":
+                        usercrear.setSeccion(secs.getSeccion(5L));
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            Date fechaactual = new Date();
+            usercrear.setFecha_ingreso(fechaactual);
+            Long idcrear = users.get(users.size()-1).getId()+1;
+            usercrear.setId(idcrear);
+            res.setCrearuser(usercrear);
+            return "crearResponsable.xhtml";
+        } else {
+            return crearUsuario();
+        }
     }
 
     public String crearUsuario() throws CuentaExistenteException, PerfilInexistenteException, SeccionInexistenteException {
@@ -278,6 +353,17 @@ public class MiSesion implements Serializable {
             return 3;
         }
     }
+    public boolean tieneResponsable(Usuario us){
+        return us.getResponsable()!=null;
+    }
+    
+    public String salidaResponsable(Usuario us){
+        if(tieneResponsable(us)){
+            return us.getNIF();
+        } else {
+            return "No tiene responsable legal";
+        }
+    }
 
     /**
      * @return the users
@@ -299,20 +385,6 @@ public class MiSesion implements Serializable {
 
     public void setUser(Usuario user) {
         this.user = user;
-    }
-    
-    /**
-     * @return the ctre
-     */
-    public Control_Eventos getCtre() {
-        return ctre;
-    }
-
-    /**
-     * @param ctre the ctre to set
-     */
-    public void setCtre(Control_Eventos ctre) {
-        this.ctre = ctre;
     }
 
     /**
@@ -356,21 +428,7 @@ public class MiSesion implements Serializable {
     public void setSeccionmod(String seccionmod) {
         this.seccionmod = seccionmod;
     }
-
-    /**
-     * @return the ctr
-     */
-    public Controlador_Login getCtr() {
-        return ctr;
-    }
-
-    /**
-     * @param ctr the ctr to set
-     */
-    public void setCtr(Controlador_Login ctr) {
-        this.ctr = ctr;
-    }
-
+    
     /**
      * @return the auxiliar
      */
@@ -431,6 +489,14 @@ public class MiSesion implements Serializable {
 
     public void setPerfilcrear(String perfilcrear) {
         this.perfilcrear = perfilcrear;
+    }
+
+    public boolean isNecesario() {
+        return necesario;
+    }
+
+    public void setNecesario(boolean necesario) {
+        this.necesario = necesario;
     }
 
 }

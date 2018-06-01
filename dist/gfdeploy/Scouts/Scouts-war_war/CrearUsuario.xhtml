@@ -15,7 +15,7 @@
     <ui:define name="content">
         <div class="container">
             <h:form>
-                <h:panelGrid columns="2">
+                <h:panelGrid columns="2" cellpadding="5">
                     <h:outputLabel value="Nombre: "/>
                     <p:inputText value="#{miSesion.usercrear.nombre}"/>
                     <h:outputLabel value="Apellidos: "/>
@@ -32,7 +32,7 @@
                     <h:outputLabel value="Contraseña: "/>
                     <p:inputText value="#{miSesion.usercrear.contrasenia}"/>
                     <h:outputLabel value="Fecha de nacimiento: "/>
-                    <p:calendar value="#{miSesion.usercrear.fecha_nacimiento}" pattern="MM/dd/yyyy" navigator="true"/>
+                    <p:calendar value="#{miSesion.usercrear.fecha_nacimiento}" pattern="dd/MM/yyyy" navigator="true"/>
                     <h:outputLabel value="Código postal: "/>
                     <p:inputText value="#{miSesion.usercrear.codigo_postal}"/>
                     <h:outputLabel value="Dirección: "/>
@@ -81,8 +81,10 @@
                             </c:otherwise>
                         </c:choose>
                     </p:selectOneMenu>
+                    <h:outputLabel value="Tiene responsable legal: "/>
+                    <p:selectBooleanButton value="#{miSesion.necesario}" onLabel="Si" offLabel="No" style="width:60px" />
 
-                    <p:commandButton value="ACEPTAR" action="#{miSesion.crearUsuario}" ajax="false"/>
+                    <p:commandButton value="ACEPTAR" action="#{miSesion.necesarioResponsable()}" ajax="false"/>
                     <p:commandButton value="Cancelar" action="Lista_Usuarios.xhtml" ajax="false"/>
                 </h:panelGrid>
             </h:form>
