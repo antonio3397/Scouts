@@ -65,6 +65,14 @@
                             </c:otherwise>
                         </c:choose>
                     </p:selectOneMenu>
+                    <h:outputLabel value="Perfil: "/>
+                    <p:selectOneMenu value="#{miSesion.perfilmod}">
+                        <f:selectItem itemLabel="No modificar" itemValue="antigua" />
+                        <f:selectItem itemLabel="Educando" itemValue="Educando" />
+                        <f:selectItem itemLabel="Scouter" itemValue="Scouter" />
+                        <f:selectItem itemLabel="Coordinador de Seccion" itemValue="CoordSec" />
+                        <f:selectItem itemLabel="Coordinador de General" itemValue="CoordGen" />
+                    </p:selectOneMenu>
                     <h:outputLabel value="Sección: "/>
                     <p:selectOneMenu value="#{miSesion.seccionmod}">
                         <f:selectItem itemLabel="No modificar" itemValue="antigua" />
@@ -74,6 +82,7 @@
                         <f:selectItem itemLabel="Escultas" itemValue="Escultas" />
                         <f:selectItem itemLabel="Rovers" itemValue="Rovers" />
                     </p:selectOneMenu>
+                    
                     <p:commandButton value="ACEPTAR" action="#{miSesion.aceptarmod()}" ajax="false"/>
                     <p:commandButton value="Cancelar" action="#{miSesion.cancerlarMod()}" ajax="false"/>
                 </h:panelGrid>
