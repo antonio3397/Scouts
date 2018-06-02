@@ -10,7 +10,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
 
-    <ui:define name="title">Documentos</ui:define>
+    <ui:define name="title">Ver Perfil</ui:define>
 
     <ui:define name="content">
         <div class="container">
@@ -60,9 +60,15 @@
                             <p:commandButton value="Ver responsable legal" action="#{control_Responsable.verResponsable(miSesion.auxiliar.responsable.id)}" ajax="false"/>
                         </c:when>
                     </c:choose>
-                    <c:when test="#{!miSesion.scouter}">
-                        <p:commandButton value="Verificar usuario" action="#{miSesion.verificarUser(miSesion.auxiliar.id)}" ajax="false"/>
-                    </c:when>
+                    <c:choose>
+                        <c:when test="#{!miSesion.scouter}">
+                            <c:choose>
+                                <c:when test="#{!miSesion.auxiliar.verificado}">
+                                    <p:commandButton value="Verificar usuario" action="#{miSesion.verificarUser(miSesion.auxiliar.id)}" ajax="false"/>
+                                </c:when>
+                            </c:choose>
+                        </c:when>
+                    </c:choose>
                 </h:panelGrid>
             </h:form>
         </div>

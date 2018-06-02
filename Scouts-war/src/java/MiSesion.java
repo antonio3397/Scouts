@@ -29,6 +29,7 @@ import java.util.List;
 import javax.ejb.EJB;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
+import org.apache.commons.codec.digest.DigestUtils;
 
 /*
 */
@@ -161,8 +162,9 @@ public class MiSesion implements Serializable {
             }
         } else {
             u.eliminarUsuario(b);
-            users=u.getUsuarios();
+            users = u.getUsuarios();
             refrescarUsers2();
+            refrescarUsers3();
         }
         
         return "Lista_Usuarios.xhtml";
@@ -261,6 +263,9 @@ public class MiSesion implements Serializable {
             Long idcrear = users.get(users.size()-1).getId()+1;
             usercrear.setId(idcrear);
             usercrear.setVerificado(true);
+            String password = usercrear.getContrasenia();
+            String cifrado = DigestUtils.sha256Hex(password);
+            usercrear.setContrasenia(cifrado);
             
             res.setCrearuser(usercrear);
             return "crearResponsable.xhtml";
@@ -307,10 +312,14 @@ public class MiSesion implements Serializable {
         Long idcrear = users.get(users.size()-1).getId()+1;
         usercrear.setId(idcrear);
         usercrear.setVerificado(true);
+        String password = usercrear.getContrasenia();
+        String cifrado = DigestUtils.sha256Hex(password);
+        usercrear.setContrasenia(cifrado);
 
         u.registrarUsuario(usercrear);
         users = u.getUsuarios();
         refrescarUsers2();
+        refrescarUsers3();
         usercrear=new Usuario();
         perfilcrear = "";
         seccioncrear = null;
@@ -325,15 +334,15 @@ public class MiSesion implements Serializable {
     public void refrescarUsers2(){
         List<Usuario> auxs = new ArrayList<>();
         if (user.getPerfiles().getRol().equals(Perfil.Rol.COORDSEC) || user.getPerfiles().getRol().equals(Perfil.Rol.SCOUTER)) {
-            for (Usuario u : users) {
-                if (!u.equals(user) && u.getSeccion().equals(user.getSeccion())) {
-                    auxs.add(u);
+            for (Usuario us : users) {
+                if (!us.equals(user) && us.getSeccion().equals(user.getSeccion()) && us.isVerificado()) {
+                    auxs.add(us);
                 }
             }
         } else if(user.getPerfiles().getRol().equals(Perfil.Rol.COORDGEN)) {
-            for (Usuario u : users) {
-                if (!u.equals(user)) {
-                    auxs.add(u);
+            for (Usuario us : users) {
+                if (!us.equals(user) && us.isVerificado()) {
+                    auxs.add(us);
                 }
             }
         }

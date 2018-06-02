@@ -29,6 +29,7 @@ import javax.inject.Named;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
+import org.apache.commons.codec.digest.DigestUtils;
 
 /**
  *
@@ -68,7 +69,8 @@ public class Controlador_Login implements Serializable {
         try {
             Usuario usuario = new Usuario();
             usuario.setEmail(email);
-            usuario.setContrasenia(password);
+            String cifrado = DigestUtils.sha256Hex(password);
+            usuario.setContrasenia(cifrado);
             log.compruebaLogin(usuario);
             Usuario aux = log.refrescarUsuario(usuario);
             
@@ -110,36 +112,8 @@ public class Controlador_Login implements Serializable {
             ctrl.setUser(aux);
             List<Usuario> users = u.getUsuarios();
             ctrl.setUsers(users);
-            List<Usuario> auxs = new ArrayList<>();
-            if (aux.getPerfiles().getRol().equals(Perfil.Rol.COORDSEC) || aux.getPerfiles().getRol().equals(Perfil.Rol.SCOUTER)) {
-                for (Usuario us : users) {
-                    if (!us.equals(aux) && us.getSeccion().equals(aux.getSeccion()) && us.isVerificado()) {
-                        auxs.add(us);
-                    }
-                }
-            } else if(aux.getPerfiles().getRol().equals(Perfil.Rol.COORDGEN)) {
-                for (Usuario us : users) {
-                    if (!us.equals(aux) && us.isVerificado()) {
-                        auxs.add(us);
-                    }
-                }
-            }
-            ctrl.setUsers2(auxs);
-            List<Usuario> auxs1 = new ArrayList<>();
-            if (aux.getPerfiles().getRol().equals(Perfil.Rol.COORDSEC)) {
-                for (Usuario us : users) {
-                    if (!us.equals(aux) && us.getSeccion().equals(aux.getSeccion())&& !us.isVerificado()) {
-                        auxs1.add(us);
-                    }
-                }
-            } else if(aux.getPerfiles().getRol().equals(Perfil.Rol.COORDGEN)) {
-                for (Usuario us : users) {
-                    if (!us.equals(aux) && !us.isVerificado()) {
-                        auxs1.add(us);
-                    }
-                }
-            }
-            ctrl.setUsers3(auxs1);
+            ctrl.refrescarUsers2();
+            ctrl.refrescarUsers3();
             
             return "Inicio.xhtml";
 
