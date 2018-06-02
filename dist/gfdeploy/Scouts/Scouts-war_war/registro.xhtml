@@ -18,36 +18,36 @@
         <div class="container">
             <h:form>
                 <h:panelGrid columns="2" cellpadding="5">
-                    <h:outputLabel value="Nombre: "/>
+                    <h:outputLabel value="Nombre*: "/>
                     <p:inputText value="#{control_Registro.registrar.nombre}"/>
-                    <h:outputLabel value="Apellidos: "/>
+                    <h:outputLabel value="Apellidos*: "/>
                     <p:inputText value="#{control_Registro.registrar.apellidos}"/>
-                    <h:outputLabel value="NIF: "/>
+                    <h:outputLabel value="NIF*: "/>
                     <p:inputText value="#{control_Registro.registrar.NIF}"/>
-                    <h:outputLabel value="Sexo: "/>
+                    <h:outputLabel value="Sexo*: "/>
                     <p:selectOneMenu value="#{control_Registro.registrar.sexo}">
                         <f:selectItem itemLabel="Masc" itemValue="Masc" />
                         <f:selectItem itemLabel="Fem" itemValue="Fem" />
                     </p:selectOneMenu>
-                    <h:outputLabel value="Email: "/>
+                    <h:outputLabel value="Email*: "/>
                     <p:inputText value="#{control_Registro.registrar.email}"/>
-                    <h:outputLabel value="Contraseña: "/>
+                    <h:outputLabel value="Contraseña*: "/>
                     <p:inputText value="#{control_Registro.registrar.contrasenia}"/>
-                    <h:outputLabel value="Fecha de nacimiento: "/>
+                    <h:outputLabel value="Fecha de nacimiento*: "/>
                     <p:calendar value="#{control_Registro.registrar.fecha_nacimiento}" pattern="dd/MM/yyyy" navigator="true"/>
-                    <h:outputLabel value="Código postal: "/>
+                    <h:outputLabel value="Código postal*: "/>
                     <p:inputText value="#{control_Registro.registrar.codigo_postal}"/>
-                    <h:outputLabel value="Dirección: "/>
+                    <h:outputLabel value="Dirección*: "/>
                     <p:inputText value="#{control_Registro.registrar.direccion}"/>
-                    <h:outputLabel value="Provincia: "/>
+                    <h:outputLabel value="Provincia*: "/>
                     <p:inputText value="#{control_Registro.registrar.provincia}"/>
-                    <h:outputLabel value="Localidad: "/>
+                    <h:outputLabel value="Localidad*: "/>
                     <p:inputText value="#{control_Registro.registrar.localidad}"/>
                     <h:outputLabel value="Teléfono: "/>
                     <p:inputText value="#{control_Registro.registrar.telefono}"/>
-                    <h:outputLabel value="Móvil: "/>
+                    <h:outputLabel value="Móvil*: "/>
                     <p:inputText value="#{control_Registro.registrar.movil}"/>
-                    <h:outputLabel value="Método de pago: "/>
+                    <h:outputLabel value="Método de pago*: "/>
                     <p:selectOneMenu value="#{control_Registro.registrar.metodo_pago}">
                         <f:selectItem itemLabel="Tarjeta" itemValue="Tarjeta" />
                         <f:selectItem itemLabel="Efectivo" itemValue="Efectivo" />

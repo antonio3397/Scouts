@@ -6,6 +6,7 @@
 
 import Negocio.ContraseniaInvalidaException;
 import Negocio.CuentaInexistenteException;
+import Negocio.CuentaNoVerificadaException;
 import Negocio.Login;
 import Negocio.Perfiles;
 import Negocio.Responsable;
@@ -148,10 +149,13 @@ public class Controlador_Login implements Serializable {
         } catch (ContraseniaInvalidaException e) {
             FacesMessage fm = new FacesMessage("La contraseña no es correcta");
             FacesContext.getCurrentInstance().addMessage("login:pass", fm);
+        } catch (CuentaNoVerificadaException e) {
+            FacesMessage fm = new FacesMessage("Cuenta no verificada");
+            FacesContext.getCurrentInstance().addMessage(null, fm);
         } catch (ScoutsException e) {
             FacesMessage fm = new FacesMessage("Error: " + e);
             FacesContext.getCurrentInstance().addMessage(null, fm);
-        }
+        } 
         return null;
         
         

@@ -62,7 +62,6 @@ public class Usuario implements Serializable {
     private Date fecha_baja;
     @Column(nullable=false)
     private Integer cuota_total;
-    @Column(nullable=false)
     private Integer telefono;
     @Column(nullable=false)
     private Integer movil;

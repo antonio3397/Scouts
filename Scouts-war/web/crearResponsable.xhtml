@@ -21,13 +21,13 @@
             </h4>
             <h:form>
                 <h:panelGrid columns="2" cellpadding="5">
-                    <h:outputLabel value="Nombre: "/>
+                    <h:outputLabel value="Nombre*: "/>
                     <p:inputText value="#{control_Responsable.crear.nombre}"/>
-                    <h:outputLabel value="Apellidos: "/>
+                    <h:outputLabel value="Apellidos*: "/>
                     <p:inputText value="#{control_Responsable.crear.apellidos}"/>
-                    <h:outputLabel value="NIF: "/>
+                    <h:outputLabel value="NIF*: "/>
                     <p:inputText value="#{control_Responsable.crear.NIF}"/>
-                    <h:outputLabel value="Email: "/>
+                    <h:outputLabel value="Email*: "/>
                     <p:inputText value="#{control_Responsable.crear.email}"/>
                     
                     <p:commandButton value="ACEPTAR" action="#{control_Responsable.crearResponsable()}" ajax="false"/>
