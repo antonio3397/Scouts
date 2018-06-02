@@ -43,6 +43,11 @@
                                 <p:commandButton value="Ver Perfil" action="#{miSesion.verUsuario(users.id)}" ajax="false"/>
                             </h:form>
                         </p:column>
+                        <p:column headerText="Eliminar">
+                            <h:form>
+                                <p:commandButton value="Eliminar" action="#{miSesion.borrarUsuario(users.id)}" ajax="false"/>
+                            </h:form>
+                        </p:column>
                     </p:dataTable>
                 </div>
             </c:when>

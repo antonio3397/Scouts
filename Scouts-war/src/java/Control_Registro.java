@@ -23,6 +23,7 @@ import javax.enterprise.context.SessionScoped;
 import javax.faces.bean.RequestScoped;
 import javax.inject.Named;
 import javax.inject.Inject;
+import org.apache.commons.codec.digest.DigestUtils;
 
 /**
  *
@@ -93,6 +94,9 @@ public class Control_Registro implements Serializable{
             Long idcrear = u.getUsuarios().get(u.getUsuarios().size()-1).getId()+1;
             registrar.setId(idcrear);
             registrar.setVerificado(false);
+            String password = registrar.getContrasenia();
+            String cifrado = DigestUtils.sha256Hex(password);
+            registrar.setContrasenia(cifrado);
             
             res.setCrearuser(registrar);
             
@@ -140,6 +144,9 @@ public class Control_Registro implements Serializable{
         Long idcrear = u.getUsuarios().get(u.getUsuarios().size()-1).getId()+1;
         registrar.setId(idcrear);
         registrar.setVerificado(false);
+        String password = registrar.getContrasenia();
+        String cifrado = DigestUtils.sha256Hex(password);
+        registrar.setContrasenia(cifrado);
 
         u.registrarUsuario(registrar);
 
