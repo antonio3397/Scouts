@@ -6,7 +6,6 @@
 package clases;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.Column;
@@ -68,6 +67,7 @@ public class Usuario implements Serializable {
     @Column(nullable=false)
     private Integer movil;
     private String metodo_pago;
+    private boolean verificado;
   
     @OneToMany (mappedBy = "usuario")
     @JoinColumn(nullable=true)
@@ -512,6 +512,14 @@ public class Usuario implements Serializable {
      */
     public void setResponsable(Responsable_Legal responsable) {
         this.responsable = responsable;
+    }
+
+    public boolean isVerificado() {
+        return verificado;
+    }
+
+    public void setVerificado(boolean verificado) {
+        this.verificado = verificado;
     }
     
 }

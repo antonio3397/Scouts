@@ -11,7 +11,7 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
 
 
-    <ui:define name="title">Eventos</ui:define>
+    <ui:define name="title">Usuarios verificados</ui:define>
 
     <ui:define name="content">
 
@@ -19,6 +19,7 @@
             <c:when test="#{miSesion.coordGen || miSesion.cordSec}">
                 <div class = "container-fluid">
                     <a class="btn btn-success" href="CrearUsuario.xhtml" role="button">CREAR USUARIO +</a>
+                    <a class="btn btn-secondary" href="Lista_UsuariosNV.xhtml" role="button">Ver usuarios no verificados</a>
                 </div>
                 <br/>
                 <div class="container-fluid">
@@ -39,13 +40,13 @@
                         </p:column>
                         <p:column headerText="Más">
                             <h:form>
-                                <p:commandButton value="Ver perfil" action="#{miSesion.verUsuario(users.id)}" ajax="false"/>
+                                <p:commandButton value="Ver Perfil" action="#{miSesion.verUsuario(users.id)}" ajax="false"/>
                             </h:form>
                         </p:column>
-                        <p:column headerText="Borrar">
-                            <p:link outcome="OtroPerfil" value="Ver perfil">
-                                <f:param name="us" value="#{miSesion.verUsuario(users.id)}"/>
-                            </p:link>
+                        <p:column headerText="Dar de baja">
+                            <h:form>
+                                <p:commandButton value="Dar de baja" action="#{miSesion.borrarUsuario(users.id)}" ajax="false"/>
+                            </h:form>
                         </p:column>
                     </p:dataTable>
                 </div>

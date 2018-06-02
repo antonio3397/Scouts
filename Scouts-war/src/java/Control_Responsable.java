@@ -43,6 +43,9 @@ public class Control_Responsable implements Serializable {
     @Inject
     private MiSesion ms;
     
+    @Inject
+    private Control_Registro cr;
+    
     public String verResponsable(Long id) throws ResponsableInexistenteException{
         
         ver = res.getResponsable(id);
@@ -80,8 +83,40 @@ public class Control_Responsable implements Serializable {
         crear = new Responsable_Legal();
         ms.setUsers(u.getUsuarios());
         ms.refrescarUsers2();
+        ms.refrescarUsers3();
         
         return "Lista_Usuarios.xhtml";
+    }
+    
+    public String registrarResponsable() throws ScoutsException{
+        
+        Responsable_Legal crear1;
+        
+        u.registrarUsuario(crearuser);
+        Usuario user = u.refrescarUsuario(crearuser);
+        
+        if(res.estaResponsableNIF(crear)){
+            System.out.println("aqui");
+            crear1 = res.refrescarResponsable(crear);
+            crear1.getUsuarios().add(u.buscarUsuario(user.getId()));
+            res.modificarResponsable(crear1);
+            user.setResponsable(crear1);
+            u.modificarUsuario(user);
+        } else {
+            List<Usuario> users = new ArrayList<>();
+            users.add(user);
+            crear.setUsuarios(users);
+            Long idcrear = res.getResponsables().get(res.getResponsables().size()-1).getId()+1;
+            crear.setId(idcrear);
+            res.registrarResponsable(crear);
+            user.setResponsable(crear);
+            u.modificarUsuario(user);
+        }
+        
+        cr.setRegistrar(new Usuario());
+        crear = new Responsable_Legal();
+        
+        return "exitoRegistro.xhtml";
     }
     
     public String modificarBoton(){

@@ -48,6 +48,8 @@
                     <h:outputLabel value="#{miSesion.auxiliar.metodo_pago}"/>
                     <h:outputLabel value="Sección: "/>
                     <h:outputLabel value="#{miSesion.auxiliar.seccion.nombre}"/>
+                </h:panelGrid>
+                <h:panelGrid columns="3">
                     <c:choose>
                         <c:when test="#{!miSesion.scouter}">
                             <p:commandButton value="Modificar" action="#{miSesion.modificarboton()}" ajax="false"/>
@@ -58,6 +60,9 @@
                             <p:commandButton value="Ver responsable legal" action="#{control_Responsable.verResponsable(miSesion.auxiliar.responsable.id)}" ajax="false"/>
                         </c:when>
                     </c:choose>
+                    <c:when test="#{!miSesion.scouter}">
+                        <p:commandButton value="Verificar usuario" action="#{miSesion.verificarUser(miSesion.auxiliar.id)}" ajax="false"/>
+                    </c:when>
                 </h:panelGrid>
             </h:form>
         </div>
