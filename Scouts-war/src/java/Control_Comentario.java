@@ -87,7 +87,7 @@ public class Control_Comentario {
     public void agnadirComentario(Evento event, Usuario user) {
         if (!"".equals(mensaje)) {
             Comentario comentario = new Comentario();
-            comentario.setId(comment.idMax()+1);
+            comentario.setId(comment.idMax());
             comentario.setTexto(mensaje);
             comentario.setFecha_creacion(new Date());
             comentario.setEvento(event);
