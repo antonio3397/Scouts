@@ -1,0 +1,47 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html  xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Educando sin padres</title>
+    </h:head>
+    <h:body>
+        
+        <h1>EDUCANDO MAYORES DE EDAD</h1>
+        <h:panelGrid columns="2">
+                <h:outputLabel value="Nombre"/>
+                <h:inputText value="#{control_Registro.user.nombre}"/>
+                <h:outputLabel value="Apellido"/>
+                <h:inputText value="#{control_Registro.user.apellidos}"/>
+                <h:outputLabel value="NIF"/>
+                <h:inputText value="#{control_Registro.user.NIF}"/>
+                <h:outputLabel value="SEXO"/>
+                <h:inputText value="#{control_Registro.user.sexo}"/>
+                <h:outputLabel value="EMAIL"/>
+                <h:inputText value="#{control_Registro.user.email}"/>
+                <h:outputLabel value="FECHA NACIMIENTO"/>
+               <p:calendar value="#{control_Registro.user.fecha_nacimiento}" locale="de" navigator="true" pattern="MM/dd/yyyy"/>
+                <h:outputLabel value="CODIGO POSTAL"/>
+                <h:inputText value="#{control_Registro.user.codigo_postal}"/>
+                <h:outputLabel value="DIRRECIÓN"/>
+                <h:inputText value="#{control_Registro.user.direccion}"/>
+                <h:outputLabel value="PROVINCIA"/>
+                <h:inputText value="#{control_Registro.user.provincia}"/>
+                <h:outputLabel value="LOCALIDAD"/>
+                <h:inputText value="#{control_Registro.user.localidad}"/>
+                <h:outputLabel value="FECHA DE INGRESO"/>
+                <p:calendar  value="#{control_Registro.user.fecha_ingreso}" pattern="MM/dd/yyyy" />
+                <h:outputLabel value="TELÉFONO"/>
+                <h:inputText value="#{control_Registro.user.telefono}"/>
+                <h:outputLabel value="MÓVIL"/>
+                <h:inputText value="#{control_Registro.user.movil}"/>
+                <h:outputLabel value="METODO DE PAGO"/>
+                <h:inputText value="#{control_Registro.user.metodo_pago}"/>
+                    </h:panelGrid>
+      <h:form>
+            <h:commandButton value="Registrase" action="#{control_Registro.agregarPersona()}"/>
+        </h:form>
+    </h:body>
+</html>
+
