@@ -23,23 +23,30 @@
             </c:when>
         </c:choose>
         <div class="container-fluid">
-            <c:forEach var="events" items="#{Eventos.eventosj2}">
-                <h:outputText value="#{events.titulo}" />
-                <div class="col-80 text-truncate">
+            <c:forEach var="events" items="#{Eventos.verEventos()}">
+                <p:layoutUnit position="west">
+                    <h:outputText value="#{events.titulo}" />
+                    <div class="col-80 text-truncate">
                         #{events.descripcion}
-                </div>
-                <h:outputText value="#{events.fecha}" />
-                <h:outputText value="#{events.localizacion}" />
-                <h:form>
-                    <p:commandButton value="Ver más" action="#{Eventos.verEvento(events.id)}" ajax="false"/>
-                </h:form>
+                    </div>
+                    <h:outputText value="#{events.fecha}" />
+                    <br/>
+                    <h:outputText value="#{events.localizacion}" />
+                    <h:form>
+                        <p:link outcome="Eventos" value="Ver mas">
+                            <f:param name="eventoId" value="#{events.id}" />
+                        </p:link>
+                    </h:form>
+                </p:layoutUnit>
                 <c:choose>
                     <c:when test="#{miSesion.coordGen || miSesion.cordSec}">
+                        <p:layoutUnit position="east">
                         <p:column headerText="Borrar">
                             <h:form>
                                 <p:commandButton value="Eliminar" ajax="false" actionListener="#{Eventos.borrarEvento(events.id)}"></p:commandButton>
                             </h:form>
                         </p:column>
+                        </p:layoutUnit>
                     </c:when>
                 </c:choose>
                 

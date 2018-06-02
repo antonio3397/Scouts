@@ -175,6 +175,10 @@ public class Control_Eventos implements Serializable {
 
         return "Eventos.xhtml";
     }
+    
+    public List<Evento> verEventos(){
+        return evento.verEventos();
+    }
 
     /**
      * @return the eventosj
