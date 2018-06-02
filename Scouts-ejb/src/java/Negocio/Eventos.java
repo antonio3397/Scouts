@@ -6,6 +6,7 @@
 package Negocio;
 
 import clases.Evento;
+import clases.Seccion;
 import java.util.List;
 import javax.ejb.Local;
 
@@ -20,4 +21,6 @@ public interface Eventos {
     public void eliminar (Evento e);
     public Evento obtenerEvento(Long id);
     public List<Evento> verEventos();
+    public List<Evento> verEventos(Seccion sc);
+    public Long idMax();
 }
