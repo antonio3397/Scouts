@@ -125,9 +125,7 @@
                 <c:forEach items="#{Comentarios.verComentarios(Eventos.event)}" var="comments">
                     <p:layout style="min-width:400px;min-height:200px;">
                         <p:layoutUnit position="west" resizable="true" size="300" minSize="40" maxSize="500">
-                            <h:outputText value="#{comments.usuario.nombre} #{comments.usuario.apellidos} #{comments.fecha_creacion}" >
-                                <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss"
-                            </h:outputText>
+                            <h:outputText value="#{comments.usuario.nombre} #{comments.usuario.apellidos} #{comments.fecha_creacion}" />
                         </p:layoutUnit>
                         <p:layoutUnit position="center">
                             <h:outputText value="#{comments.texto}" style="white-space:pre;"  />

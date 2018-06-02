@@ -135,6 +135,7 @@ public class Control_Eventos implements Serializable {
         
 
         Evento ev = new Evento();
+        ev.setId(evento.idMax()+1);
         ev.setTitulo(titulocrear);
         ev.setFecha(fechacrear);
         ev.setLocalizacion(localizacioncrear);
@@ -142,8 +143,8 @@ public class Control_Eventos implements Serializable {
         ev.setPrecio(precio);
         ev.setSeccion(sec);
         evento.insertar(ev);
-
-        //CN.addNotificame(new Notificacion(new NotificacionID(sec.getId(), idcrear), titulocrear, descripcioncrear, fechacrear));  
+        
+       // CN.addNotificame(ev);  
         
         fechacrear = null;
         idcrear = null;

@@ -55,5 +55,11 @@ public class ComentariosImpl implements Comentarios{
     public Comentario buscarComentario(Long id) {
         return em.find(Comentario.class, id);
     }
+
+    @Override
+    public Long idMax() {
+        Query query = em.createQuery("SELECT MAX(c.id) FROM Comentario c");
+        return query.unwrap(Long.class);
+    }
     
 }

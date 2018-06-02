@@ -75,6 +75,12 @@ public class EventosImpl implements Eventos{
         return esta;
     }
     
-   
+    @Override
+    public Long idMax() {
+        Query query = em.createQuery("SELECT MAX(e.id) FROM Evento e");
+        return query.unwrap(Long.class);   
+    }
+    
+    
     
 }
