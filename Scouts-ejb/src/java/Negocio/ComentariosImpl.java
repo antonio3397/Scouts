@@ -56,10 +56,15 @@ public class ComentariosImpl implements Comentarios{
         return em.find(Comentario.class, id);
     }
 
+    private static Long id=0L;
     @Override
     public Long idMax() {
-        Query query = em.createQuery("SELECT MAX(c.id) FROM Comentario c");
-        return query.unwrap(Long.class);
+        increase();
+        return id;   
+    }
+
+    private void increase() {
+        id+=1L;
     }
     
 }

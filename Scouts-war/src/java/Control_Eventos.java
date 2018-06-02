@@ -135,7 +135,7 @@ public class Control_Eventos implements Serializable {
         
 
         Evento ev = new Evento();
-        ev.setId(evento.idMax()+1);
+        ev.setId(evento.idMax());
         ev.setTitulo(titulocrear);
         ev.setFecha(fechacrear);
         ev.setLocalizacion(localizacioncrear);

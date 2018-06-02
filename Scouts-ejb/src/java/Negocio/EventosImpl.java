@@ -50,7 +50,7 @@ public class EventosImpl implements Eventos{
     
     @Override
     public List<Evento> verEventos() {
-        Query list = em.createNativeQuery("SELECT e FROM Evento e");
+        Query list = em.createQuery("SELECT e FROM Evento e");
         return list.getResultList();
     }
     
@@ -75,10 +75,15 @@ public class EventosImpl implements Eventos{
         return esta;
     }
     
+    private static Long id=0L;
     @Override
     public Long idMax() {
-        Query query = em.createQuery("SELECT MAX(e.id) FROM Evento e");
-        return query.unwrap(Long.class);   
+        increase();
+        return id;   
+    }
+
+    private void increase() {
+        id+=1L;
     }
     
     
