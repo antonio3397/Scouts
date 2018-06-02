@@ -5,6 +5,8 @@
  * and open the template in the editor.
  */
 import Negocio.Eventos;
+import Negocio.SeccionInexistenteException;
+import Negocio.Seccionesb;
 import clases.Evento;
 import clases.Notificacion;
 import clases.NotificacionID;
@@ -27,7 +29,7 @@ import javax.inject.Inject;
 @SessionScoped
 @Named(value = "Eventos")
 public class Control_Eventos implements Serializable {
-
+    
     private List<Evento> eventosj;
     private List<Evento> eventosj2;
     private Evento event;
@@ -39,113 +41,111 @@ public class Control_Eventos implements Serializable {
     private String preciocrear;
     private String seccioncrear;
     private Evento aux;
-
+    
     private String seccionMod;
     
     @EJB
     private Eventos evento;
     
+    @EJB
+    private Seccionesb seccion;
+    
     @Inject
-    Control_Notificaciones CN;
-
+            Control_Notificaciones CN;
+    
     public Evento buscarEvento(Long id) throws EventoException {
         Evento enc = evento.obtenerEvento(id);
-
+        
         if (enc == null) {
             throw new EventoException("Evento no encontrado");
         }
         return enc;
     }
-  
+    
     public String modificarEvento(Long id) throws EventoException {
-        Evento b = buscarEvento(id);
-       // setAux(new Evento(id, b.getTitulo(), b.getFecha(), b.getLocalizacion(), b.getDescripcion(), b.getPrecio(), b.getSeccion()));
-        
+        aux = evento.obtenerEvento(id);
         return "ModEvento.xhtml";
     }
-
-    public String aceptarMod() throws EventoException {
-        Evento b = buscarEvento(aux.getId());
-
+    
+    public String aceptarMod() throws EventoException, SeccionInexistenteException {
+        Evento b = evento.obtenerEvento(aux.getId());
         b.setTitulo(aux.getTitulo());
         b.setFecha(aux.getFecha());
         b.setLocalizacion(aux.getLocalizacion());
         b.setPrecio(aux.getPrecio());
-/*
-        switch (getSeccionMod()) {
+        
+        switch (seccionMod) {
             case "Castores":
-                b.setSeccion(new Seccion(1L, Seccion.Secciones.Castores));
+                b.setSeccion(seccion.getSeccion(1L));
                 break;
             case "Lobatos":
-                b.setSeccion(new Seccion(2L, Seccion.Secciones.Lobatos));
+                b.setSeccion(seccion.getSeccion(2L));
                 break;
             case "Scouts":
-                b.setSeccion(new Seccion(4L, Seccion.Secciones.Tropa_Scout));
+                b.setSeccion(seccion.getSeccion(3L));
                 break;
             case "Escultas":
-                b.setSeccion(new Seccion(5L, Seccion.Secciones.Escultas_Pioneros));
+                b.setSeccion(seccion.getSeccion(4L));
                 break;
             case "Rovers":
-                b.setSeccion(new Seccion(3L, Seccion.Secciones.Rovers_Compañeros));
+                b.setSeccion(seccion.getSeccion(5L));
                 break;
             default:
                 break;
-        }*/
+        }
+        evento.modificar(b);
         seccionMod = null;
-
+        
         return "Lista_eventos.xhtml";
     }
-
+    
     public String cancelarMod() {
-
         return "Eventos.xhtml";
     }
-
+    
     public String borrarEvento(Long id) throws EventoException {
-        Evento b = buscarEvento(id);
-        eventosj.remove(b);
-        eventosj2.remove(b);
+        evento.eliminar(evento.obtenerEvento(id));
         return "Lista_eventos.xhtml";
     }
-
-    public String CrearEvento() {
-
-        if (eventosj.isEmpty() || eventosj == null) {
-            Random rd = new Random();
-            idcrear = (long) rd.nextInt(2000);
-        } else {
-            idcrear = eventosj.get(eventosj.size() - 1).getId() + 1L;
-        }
+    
+    public String CrearEvento() throws SeccionInexistenteException {
+        
         Seccion sec = null;
         int precio = Integer.parseInt(preciocrear);
-/*
+        
         switch (seccioncrear) {
             case "Castores":
-                sec = new Seccion(1L, Seccion.Secciones.Castores);
+                sec = seccion.getSeccion(1L);
                 break;
             case "Lobatos":
-                sec = new Seccion(2L, Seccion.Secciones.Lobatos);
+                sec = seccion.getSeccion(2L);
                 break;
             case "Scouts":
-                sec = new Seccion(4L, Seccion.Secciones.Tropa_Scout);
+                sec = seccion.getSeccion(3L);
                 break;
             case "Escultas":
-                sec = new Seccion(5L, Seccion.Secciones.Escultas_Pioneros);
+                sec = seccion.getSeccion(4L);
                 break;
             case "Rovers":
-                sec = new Seccion(3L, Seccion.Secciones.Rovers_Compañeros);
+                sec = seccion.getSeccion(5L);
                 break;
             default:
                 break;
-        }*/
+        }
+        
 
-       /* Evento ev = new Evento(idcrear, titulocrear, fechacrear, localizacioncrear, descripcioncrear, precio, sec);
-
-        eventosj.add(ev);
-        eventosj2.add(ev);
-
-        CN.addNotificame(new Notificacion(new NotificacionID(sec.getId(), idcrear), titulocrear, descripcioncrear, fechacrear));  
-        */
+        Evento ev = new Evento();
+        ev.setId(evento.idMax()+1);
+        ev.setTitulo(titulocrear);
+        ev.setFecha(fechacrear);
+        ev.setLocalizacion(localizacioncrear);
+        ev.setDescripcion(descripcioncrear);
+        ev.setPrecio(precio);
+        ev.setSeccion(sec);
+        evento.insertar(ev);
+        
+       // CN.addNotificame(ev);  
+        
         fechacrear = null;
         idcrear = null;
         titulocrear = null;
@@ -171,16 +171,9 @@ public class Control_Eventos implements Serializable {
         return "Lista_eventos.xhtml";
     }
 
-    public String verEvento(Long id) {
+    public String verEvento(Long id) throws EventoException {
 
-        Iterator<Evento> iter = eventosj.iterator();
-        Evento u = iter.next();
-        while (iter.hasNext() && !Objects.equals(id, u.getId())) {
-            u = iter.next();
-        }
-        if (Objects.equals(id, u.getId())) {
-            setEvent(u);
-        }
+        event=buscarEvento(id);
 
         return "Eventos.xhtml";
     }
