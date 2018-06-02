@@ -18,4 +18,5 @@ import javax.ejb.Local;
 public interface Inscripciones {
 
     public List<Evento> inscripciones(Long id);
+    public void inscribirse (Evento ev, Usuario user);
 }

@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 
+import Negocio.Inscripciones;
 import clases.Evento;
 import clases.Perfil;
 import clases.Seccion;
@@ -15,6 +16,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
+import javax.ejb.EJB;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 
@@ -76,9 +78,12 @@ public class MiSesion implements Serializable {
     private String perfilcrear = "";
     private String seccioncrear;
 
+    @EJB
+    private Inscripciones insc;
+
     @Inject
     private Controlador_Login ctr;
-    
+
     @Inject
     private Control_Eventos ctre;
 
@@ -117,15 +122,14 @@ public class MiSesion implements Serializable {
             u = iter.next();
         }
          */
-       // setOtro(new Usuario(getAuxiliar().getId(), getAuxiliar().getContrasenia(), getAuxiliar().getNIF(), getAuxiliar().getEmail(), getAuxiliar().getNombre(), getAuxiliar().getApellidos(), getAuxiliar().getSexo(), getAuxiliar().getFecha_nacimiento(), getAuxiliar().getCodigo_postal(), getAuxiliar().getDireccion(), getAuxiliar().getProvincia(), getAuxiliar().getLocalidad(), getAuxiliar().getFecha_ingreso(), getAuxiliar().getCuota_total(), getAuxiliar().getTelefono(), getAuxiliar().getMovil(), getAuxiliar().getMetodo_pago(), getAuxiliar().getPerfiles(), getAuxiliar().getSeccion()));
-
+        // setOtro(new Usuario(getAuxiliar().getId(), getAuxiliar().getContrasenia(), getAuxiliar().getNIF(), getAuxiliar().getEmail(), getAuxiliar().getNombre(), getAuxiliar().getApellidos(), getAuxiliar().getSexo(), getAuxiliar().getFecha_nacimiento(), getAuxiliar().getCodigo_postal(), getAuxiliar().getDireccion(), getAuxiliar().getProvincia(), getAuxiliar().getLocalidad(), getAuxiliar().getFecha_ingreso(), getAuxiliar().getCuota_total(), getAuxiliar().getTelefono(), getAuxiliar().getMovil(), getAuxiliar().getMetodo_pago(), getAuxiliar().getPerfiles(), getAuxiliar().getSeccion()));
         return "ModPerf.xhtml";
     }
 
     public String aceptarmod() {
 
         Seccion sec;
-/*
+        /*
         switch (getSeccionmod()) {
             case "Castores":
                 sec = new Seccion(1L, Seccion.Secciones.Castores);
@@ -148,8 +152,7 @@ public class MiSesion implements Serializable {
         }*/
         seccionmod = null;
 
-       // getOtro().setSeccion(sec);
-
+        // getOtro().setSeccion(sec);
         int i = 0;
         while (i < getUsers().size() && getOtro().getId() != getUsers().get(i).getId()) {
             i++;
@@ -174,11 +177,10 @@ public class MiSesion implements Serializable {
         u.setSeccion(getOtro().getSeccion());
 
         //getCtr().setUsers(getUsers());
-
         return "Lista_Usuarios.xhtml";
     }
-    
-    public String cancerlarMod () {
+
+    public String cancerlarMod() {
         seccionmod = null;
         return "Lista_Usuarios.xhtml";
     }
@@ -213,13 +215,13 @@ public class MiSesion implements Serializable {
 
         return "OtroPerfil.xhtml";
     }
-    
-    public String inscribirse(Evento e) throws EventoException{
-        user.getEventos().add(e);
-        e.getUsuarios().add(user);
-        
+
+    public String inscribirse(Evento e, Usuario u) throws EventoException {
+        //user.getEventos().add(e);
+        //e.getUsuarios().add(user);
+
+        insc.inscribirse(e, u);
         return "Eventos.xhtml";
-        
     }
 
     /**
@@ -281,7 +283,7 @@ public class MiSesion implements Serializable {
     public String crearUsuario() {
         Perfil p = null;
         Seccion s = null;
-/*
+        /*
         switch (perfilcrear) {
             case "CoordGen":
                 p = new Perfil(Perfil.Rol.COORDGEN);
@@ -326,7 +328,6 @@ public class MiSesion implements Serializable {
         idcrear = users.get(users.size() - 1).getId() + 1;
 
         //Usuario u = new Usuario(idcrear, contraseniacrear, NIFcrear, emailcrear, nombrecrear, apellidoscrear, sexocrear, fecha_nacimientocrear, Integer.parseInt(cod_postalcrear), direccioncrear, provinciacrear, localidadcrear, fecha_ingresocrear, Integer.parseInt(cuotacrear), Integer.parseInt(telefonocrear), Integer.parseInt(movilcrear), metodopagocrear, p, s);
-
         idcrear = null;
         contraseniacrear = null;
         NIFcrear = null;
@@ -347,9 +348,8 @@ public class MiSesion implements Serializable {
         perfilcrear = "";
         seccioncrear = null;
 
-       // users.add(u);
+        // users.add(u);
         //users2.add(u);
-
         return "Lista_Usuarios.xhtml";
     }
 

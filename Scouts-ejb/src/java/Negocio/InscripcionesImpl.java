@@ -24,7 +24,17 @@ public class InscripcionesImpl implements Inscripciones {
 
     @Override
     public List<Evento> inscripciones(Long id) {
-        return em.createQuery("SELECT inscripciones FROM Usuario u WHERE u.id = '" + id + "'").getResultList();
+        return em.createQuery("SELECT e FROM EVENTO e, INSCRIPCION i WHERE i.ID_EVENTO = e.id AND i.ID_USUARIO = '" + id + "'").getResultList();
+    }
+
+    @Override
+    public void inscribirse(Evento ev, Usuario user) {
+        List<Evento> inscripciones = user.getEventos();
+        inscripciones.add(ev);
+        em.persist(user);
+        em.merge(user);
+        
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }
