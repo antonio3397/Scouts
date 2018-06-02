@@ -56,7 +56,16 @@ and open the template in the editor.
                                 </c:when>
                             </c:choose>
                             <div class="dropdown-divider"></div>
-                            <h:form>
+                           <!-- <h:form>-->
+                            <h:form enctype="multipart/form-data">
+                                <c:choose>
+                                    <c:when test="#{miSesion.educando}">
+                                        <p:growl id="messages" showDetail="true" />
+                                        <p:fileUpload value="#{subirArchivo.file}" mode="simple"/>
+                                        <p:commandButton value="Enviar" ajax="false" actionListener="#{subirArchivo.upload}"/>
+                                        <br/><br/>
+                                    </c:when>
+                                </c:choose>
                                 <p:commandButton value="Cerrar Sesión" action="#{miSesion.logout()}" ajax="false" styleClass="ui-priority-primary"/>
                             </h:form>
                         </div>
