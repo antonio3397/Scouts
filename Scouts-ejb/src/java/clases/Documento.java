@@ -12,6 +12,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -28,11 +29,14 @@ public class Documento implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     @Column(nullable=false)
-    private String estado;
-    @Column(nullable=false)
     private String tipo;
     @Temporal(TemporalType.DATE)
+    @Column(nullable=false)
     private Date fecha_entrega;
+    @Lob
+    @Column(nullable=false)
+    private byte[] documento;
+    
     @ManyToOne
     private Evento evento;
     @ManyToOne
@@ -47,20 +51,6 @@ public class Documento implements Serializable {
      */
     public void setFecha_entrega(Date fecha_entrega) {
         this.fecha_entrega = fecha_entrega;
-    }
-
-    /**
-     * @return the estado
-     */
-    public String getEstado() {
-        return estado;
-    }
-
-    /**
-     * @param estado the estado to set
-     */
-    public void setEstado(String estado) {
-        this.estado = estado;
     }
 
     /**
@@ -137,5 +127,14 @@ public class Documento implements Serializable {
     public String toString() {
         return "trabajo.Documento[ id=" + id + " ]";
     }
+
+    public byte[] getDocumento() {
+        return documento;
+    }
+
+    public void setDocumento(byte[] documento) {
+        this.documento = documento;
+    }
+    
         
 }

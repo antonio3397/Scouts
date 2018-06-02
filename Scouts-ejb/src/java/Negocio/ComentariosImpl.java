@@ -43,7 +43,7 @@ public class ComentariosImpl implements Comentarios{
 
     @Override
     public List<Comentario> verComentarios(Evento event) {
-        Query list = em.createNativeQuery("SELECT c FROM Comentario c");
+        Query list = em.createQuery("SELECT c FROM Comentario c");
         List<Comentario> comments = new ArrayList<>();
         for(Comentario aux : (List<Comentario>)list.getResultList()){
             if(aux.getEvento().equals(event))comments.add(aux);

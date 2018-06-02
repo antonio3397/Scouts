@@ -18,25 +18,25 @@
             <h:form>
                 <h:outputText value="Titulo:" />
                 <br/>
-                <p:inputText value="#{Eventos.titulocrear}"/>
+                <p:inputText value="#{Eventos.crear.titulo}"/>
                 <br/><br/>
                 <h:outputText value="Fecha:" />
                 <br/>
-                <p:calendar value="#{Eventos.fechacrear}" locale="es" pattern="MM/dd/yyyy HH:mm" navigator="true"/>
+                <p:calendar value="#{Eventos.crear.fecha}" locale="es" pattern="MM/dd/yyyy HH:mm" navigator="true"/>
                 <br/><br/>
                 <h:outputText value="Localización:" />
                 <br/>
-                <p:inputText value="#{Eventos.localizacioncrear}"/>
+                <p:inputText value="#{Eventos.crear.localizacion}"/>
                 <br/><br/>
                 <h:outputText value="Descripción:" />
                 <br/>
-                <p:inputTextarea rows="10" cols="60" counter="display" maxlength="1200" counterTemplate="{0} Carácteres restantes." value="#{Eventos.descripcioncrear}"/>
+                <p:inputTextarea rows="10" cols="60" counter="display" maxlength="1200" counterTemplate="{0} Carácteres restantes." value="#{Eventos.crear.descripcion}"/>
                 <br/>
                 <h:outputText id="display" />
                 <br/><br/>
                 <h:outputText value="Precio:" />
                 <br/>
-                <p:inputText value="#{Eventos.preciocrear}"/>
+                <p:inputText value="#{Eventos.crear.precio}"/>
                 <br/><br/>
                 <h:outputText value="Sección:" />
                 <br/>
@@ -55,8 +55,12 @@
                         </c:otherwise>
                     </c:choose>
                 </p:selectOneMenu>
+                <br/><br/>
+                <h:outputText value="¿Documentos necesarios?:" />
+                <br/>
+                <p:selectBooleanButton value="#{Eventos.necdoc}" onLabel="Si" offLabel="No" style="width:60px" />
                 <br/><br/><br/><br/>
-                <p:commandButton value="CREAR" action="#{Eventos.CrearEvento()}" ajax="false"/>
+                <p:commandButton value="Aceptar" action="#{Eventos.necesitaDocumentos()}" ajax="false"/>
                 <p:commandButton value="Cancelar" action="#{Eventos.cancelarcrear()}" ajax="false"/>
             </h:form>
         </div>

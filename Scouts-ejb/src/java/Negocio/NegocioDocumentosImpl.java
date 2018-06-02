@@ -7,6 +7,7 @@ package Negocio;
 
 import clases.Documento;
 import java.util.List;
+import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
@@ -15,6 +16,7 @@ import javax.persistence.Query;
  *
  * @author migue
  */
+@Stateless
 public class NegocioDocumentosImpl implements NegocioDocumentos{
 
     @PersistenceContext(unitName = "Scouts-EntidadesPU")
@@ -23,13 +25,19 @@ public class NegocioDocumentosImpl implements NegocioDocumentos{
    
     @Override
     public void agnadirDocumento(Documento doc) {
-        em.merge(doc);
+        em.persist(doc);
     }
 
     @Override
     public void eliminarDocumento(Documento doc) {
         if(em.contains(doc))
-            em.remove(doc);
+            em.remove(em.merge(doc));
+    }
+    
+    @Override
+    public void modificarDocumento(Documento doc) {
+        if(em.contains(doc))
+            em.merge(doc);
     }
 
     @Override
@@ -40,7 +48,7 @@ public class NegocioDocumentosImpl implements NegocioDocumentos{
     
     @Override
     public List<Documento> verDocumentos(){
-        Query list = em.createNativeQuery("SELECT doc FROM Documento doc");
+        Query list = em.createQuery("SELECT doc FROM Documento doc");
         return list.getResultList();
     }
     
