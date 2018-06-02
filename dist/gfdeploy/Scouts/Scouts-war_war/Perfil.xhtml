@@ -18,7 +18,7 @@
     <ui:define name="content">
         <div class="container">
             <h:form>
-                <h:panelGrid columns="2">
+                <h:panelGrid columns="2" cellpadding="5">
                     <h:outputLabel value="Nombre: "/>
                     <h:outputLabel value="#{miSesion.user.nombre}"/>
                     <h:outputLabel value="Apellidos: "/>
@@ -30,7 +30,7 @@
                     <h:outputLabel value="Email: "/>
                     <h:outputLabel value="#{miSesion.user.email}"/>
                     <h:outputLabel value="Fecha de nacimiento: "/>
-                    <h:outputLabel value="#{miSesion.user.fecha_nacimiento}"/>
+                    <h:outputLabel value="#{miSesion.cambioFormato(miSesion.user.fecha_nacimiento)}"/>
                     <h:outputLabel value="Código postal: "/>
                     <h:outputLabel value="#{miSesion.user.codigo_postal}"/>
                     <h:outputLabel value="Dirección: "/>
@@ -40,7 +40,7 @@
                     <h:outputLabel value="Localidad: "/>
                     <h:outputLabel value="#{miSesion.user.localidad}"/>
                     <h:outputLabel value="Fecha de ingreso: "/>
-                    <h:outputLabel value="#{miSesion.user.fecha_ingreso}"/>
+                    <h:outputLabel value="#{miSesion.cambioFormato(miSesion.user.fecha_ingreso)}"/>
                     <h:outputLabel value="Cuota mensual: "/>
                     <h:outputLabel value="#{miSesion.user.cuota_total}"/>
                     <h:outputLabel value="Teléfono: "/>
@@ -51,6 +51,11 @@
                     <h:outputLabel value="#{miSesion.user.metodo_pago}"/>                
                     <h:outputLabel value="Sección: "/>
                     <h:outputLabel value="#{miSesion.user.seccion.nombre}"/>
+                    <c:choose>
+                        <c:when test="#{miSesion.tieneResponsable(miSesion.user)}">
+                            <p:commandButton value="Ver responsable legal" action="#{control_Responsable.verResponsable(miSesion.user.responsable.id)}" ajax="false"/>
+                        </c:when>
+                    </c:choose>
                 </h:panelGrid>
             </h:form>
         </div>

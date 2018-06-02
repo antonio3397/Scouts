@@ -70,4 +70,13 @@ public class UsuariosImpl implements Usuarios {
         return em.find(Usuario.class, id);
     }
     
+    @Override
+    public Usuario refrescarUsuario(Usuario u) throws ScoutsException {
+        Query q = em.createQuery("SELECT u FROM Usuario u WHERE u.email LIKE '"+u.getEmail()+"'");
+        List<Usuario> users = q.getResultList();
+        Usuario user = users.get(0);
+        em.refresh(user);
+        return user;
+    }
+    
 }

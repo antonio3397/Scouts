@@ -36,6 +36,10 @@ public class LoginImpl implements Login {
         if (!user.getContrasenia().equals(u.getContrasenia())) {
             throw new ContraseniaInvalidaException();
         }
+        
+        if (!user.isVerificado()) {
+            throw new CuentaNoVerificadaException();
+        }
     }
     
     @Override

@@ -20,7 +20,7 @@
                     <p:inputText value="#{miSesion.otro.nombre}"/>
                     <h:outputLabel value="Apellidos: "/>
                     <p:inputText value="#{miSesion.otro.apellidos}"/>
-                    <h:outputLabel value="Nif: "/>
+                    <h:outputLabel value="NIF: "/>
                     <p:inputText value="#{miSesion.otro.NIF}"/>
                     <h:outputLabel value="Sexo: "/>
                     <p:selectOneMenu value="#{miSesion.otro.sexo}">
@@ -30,7 +30,7 @@
                     <h:outputLabel value="Email: "/>
                     <p:inputText value="#{miSesion.otro.email}"/>
                     <h:outputLabel value="Fecha de nacimiento: "/>
-                    <p:calendar value="#{miSesion.otro.fecha_nacimiento}" pattern="MM/dd/yyyy" navigator="true"/>
+                    <p:calendar value="#{miSesion.otro.fecha_nacimiento}" pattern="dd/MM/yyyy" navigator="true"/>
                     <h:outputLabel value="Código postal: "/>
                     <p:inputText value="#{miSesion.otro.codigo_postal}"/>
                     <h:outputLabel value="Dirección: "/>
@@ -40,7 +40,7 @@
                     <h:outputLabel value="Localidad: "/>
                     <p:inputText value="#{miSesion.otro.localidad}"/>
                     <h:outputLabel value="Fecha de ingreso: "/>
-                    <p:calendar value="#{miSesion.otro.fecha_ingreso}" pattern="MM/dd/yyyy" navigator="true"/>
+                    <p:calendar value="#{miSesion.otro.fecha_ingreso}" pattern="dd/MM/yyyy" navigator="true"/>
                     <h:outputLabel value="Cuota mensual: "/>
                     <p:inputText value="#{miSesion.otro.cuota_total}"/>
                     <h:outputLabel value="Teléfono: "/>
@@ -65,15 +65,24 @@
                             </c:otherwise>
                         </c:choose>
                     </p:selectOneMenu>
+                    <h:outputLabel value="Perfil: "/>
+                    <p:selectOneMenu value="#{miSesion.perfilmod}">
+                        <f:selectItem itemLabel="No modificar" itemValue="antigua" />
+                        <f:selectItem itemLabel="Educando" itemValue="Educando" />
+                        <f:selectItem itemLabel="Scouter" itemValue="Scouter" />
+                        <f:selectItem itemLabel="Coordinador de Seccion" itemValue="CoordSec" />
+                        <f:selectItem itemLabel="Coordinador de General" itemValue="CoordGen" />
+                    </p:selectOneMenu>
                     <h:outputLabel value="Sección: "/>
                     <p:selectOneMenu value="#{miSesion.seccionmod}">
-                        <f:selectItem itemLabel="Dejar asi para no modificar" itemValue="antigua" />
+                        <f:selectItem itemLabel="No modificar" itemValue="antigua" />
                         <f:selectItem itemLabel="Castores" itemValue="Castores" />
                         <f:selectItem itemLabel="Lobatos" itemValue="Lobatos" />
                         <f:selectItem itemLabel="Scouts" itemValue="Scouts" />
                         <f:selectItem itemLabel="Escultas" itemValue="Escultas" />
                         <f:selectItem itemLabel="Rovers" itemValue="Rovers" />
                     </p:selectOneMenu>
+                    
                     <p:commandButton value="ACEPTAR" action="#{miSesion.aceptarmod()}" ajax="false"/>
                     <p:commandButton value="Cancelar" action="#{miSesion.cancerlarMod()}" ajax="false"/>
                 </h:panelGrid>
