@@ -22,6 +22,7 @@ import javax.inject.Named;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
+import org.apache.commons.codec.digest.DigestUtils;
 
 /**
  *
@@ -52,27 +53,15 @@ public class Controlador_Login implements Serializable {
         try {
             Usuario usuario = new Usuario();
             usuario.setEmail(email);
-            usuario.setContrasenia(password);
+            String cifrado = DigestUtils.sha256Hex(password);
+            usuario.setContrasenia(cifrado);
             log.compruebaLogin(usuario);
             Usuario aux = log.refrescarUsuario(usuario);
             ctrl.setUser(aux);
             List<Usuario> users = u.getUsuarios();
             ctrl.setUsers(users);
-            List<Usuario> auxs = new ArrayList<>();
-            if (aux.getPerfiles().getRol().equals(Perfil.Rol.COORDSEC) || aux.getPerfiles().getRol().equals(Perfil.Rol.SCOUTER)) {
-                for (Usuario u : users) {
-                    if (!u.equals(aux) && u.getSeccion().equals(aux.getSeccion())) {
-                        auxs.add(u);
-                    }
-                }
-            } else {
-                for (Usuario u : users) {
-                    if (!u.equals(aux)) {
-                        auxs.add(u);
-                    }
-                }
-            }
-            ctrl.setUsers2(auxs);
+            ctrl.refrescarUsers2();
+            ctrl.refrescarUsers3();
             
             return "Inicio.xhtml";
 

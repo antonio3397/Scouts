@@ -24,6 +24,7 @@ import java.util.List;
 import javax.ejb.EJB;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
+import org.apache.commons.codec.digest.DigestUtils;
 
 /*
 */
@@ -118,10 +119,27 @@ public class MiSesion implements Serializable {
     public String borrarUsuario(Long id) throws CuentaInexistenteException, UsuarioException {
 
         Usuario b = u.buscarUsuario(id);
-        u.eliminarUsuario(b);
-        users=u.getUsuarios();
-        refrescarUsers2();
-
+        if(b.getResponsable()!=null){
+            Responsable_Legal respon = b.getResponsable();
+            respon.getUsuarios().remove(b);
+            if(respon.getUsuarios().isEmpty()){
+                u.eliminarUsuario(b);
+                r.eliminarResponsable(respon);
+                users=u.getUsuarios();
+                refrescarUsers2();
+            } else {
+                u.eliminarUsuario(b);
+                r.modificarResponsable(respon);
+                users=u.getUsuarios();
+                refrescarUsers2();
+            }
+        } else {
+            u.eliminarUsuario(b);
+            users = u.getUsuarios();
+            refrescarUsers2();
+            refrescarUsers3();
+        }
+        
         return "Lista_Usuarios.xhtml";
     }
 
@@ -179,6 +197,55 @@ public class MiSesion implements Serializable {
 
         return salida;
     }
+    
+    public String necesarioResponsable() throws CuentaExistenteException, PerfilInexistenteException, SeccionInexistenteException{
+        
+        Date fechaactual = new Date();
+        Date fechanac = usercrear.getFecha_nacimiento();
+        LocalDate fn = fechanac.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        LocalDate fa = fechaactual.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        Period edad = Period.between(fn, fa);
+        
+        if(edad.getYears()<18){
+            if(edad.getYears()<=21){
+                usercrear.setPerfiles(perfs.getPerfil(Perfil.Rol.EDUCANDO));
+            if(secs.getSeccion(1L).getEdad_minima()<=edad.getYears()&& edad.getYears()<secs.getSeccion(1L).getEdad_maxima()){
+                usercrear.setSeccion(secs.getSeccion(1L));
+            } else if(secs.getSeccion(2L).getEdad_minima()<=edad.getYears()&& edad.getYears()<secs.getSeccion(2L).getEdad_maxima()){
+                usercrear.setSeccion(secs.getSeccion(2L));
+            } else if(secs.getSeccion(3L).getEdad_minima()<=edad.getYears()&& edad.getYears()<secs.getSeccion(3L).getEdad_maxima()){
+                usercrear.setSeccion(secs.getSeccion(3L));
+            } else if(secs.getSeccion(4L).getEdad_minima()<=edad.getYears()&& edad.getYears()<secs.getSeccion(4L).getEdad_maxima()){
+                usercrear.setSeccion(secs.getSeccion(4L));
+            } else if(secs.getSeccion(5L).getEdad_minima()<=edad.getYears()&& edad.getYears()<=secs.getSeccion(5L).getEdad_maxima()){
+                usercrear.setSeccion(secs.getSeccion(5L));
+            }
+            } else {
+                usercrear.setPerfiles(perfs.getPerfil(Perfil.Rol.SCOUTER));
+                usercrear.setSeccion(secs.getSeccion(5L));
+            }
+            if(usercrear.getPerfiles().equals(perfs.getPerfil(Perfil.Rol.EDUCANDO))){
+                usercrear.setCuota_total(15);
+            } else if (usercrear.getPerfiles().equals(perfs.getPerfil(Perfil.Rol.SCOUTER))){
+                usercrear.setCuota_total(20);
+            } else {
+                usercrear.setCuota_total(0);
+            }
+
+            usercrear.setFecha_ingreso(fechaactual);
+            Long idcrear = users.get(users.size()-1).getId()+1;
+            usercrear.setId(idcrear);
+            usercrear.setVerificado(true);
+            String password = usercrear.getContrasenia();
+            String cifrado = DigestUtils.sha256Hex(password);
+            usercrear.setContrasenia(cifrado);
+            
+            res.setCrearuser(usercrear);
+            return "crearResponsable.xhtml";
+        } else {
+            return crearUsuario();
+        }
+    }
 
     public String crearUsuario() throws CuentaExistenteException, PerfilInexistenteException, SeccionInexistenteException {
 
@@ -228,10 +295,15 @@ public class MiSesion implements Serializable {
         usercrear.setFecha_ingreso(fechaactual);
         Long idcrear = users.get(users.size()-1).getId()+1;
         usercrear.setId(idcrear);
+        usercrear.setVerificado(true);
+        String password = usercrear.getContrasenia();
+        String cifrado = DigestUtils.sha256Hex(password);
+        usercrear.setContrasenia(cifrado);
 
         u.registrarUsuario(usercrear);
         users = u.getUsuarios();
         refrescarUsers2();
+        refrescarUsers3();
         usercrear=new Usuario();
         perfilcrear = "";
         seccioncrear = null;
@@ -246,15 +318,15 @@ public class MiSesion implements Serializable {
     public void refrescarUsers2(){
         List<Usuario> auxs = new ArrayList<>();
         if (user.getPerfiles().getRol().equals(Perfil.Rol.COORDSEC) || user.getPerfiles().getRol().equals(Perfil.Rol.SCOUTER)) {
-            for (Usuario u : users) {
-                if (!u.equals(user) && u.getSeccion().equals(user.getSeccion())) {
-                    auxs.add(u);
+            for (Usuario us : users) {
+                if (!us.equals(user) && us.getSeccion().equals(user.getSeccion()) && us.isVerificado()) {
+                    auxs.add(us);
                 }
             }
-        } else {
-            for (Usuario u : users) {
-                if (!u.equals(user)) {
-                    auxs.add(u);
+        } else if(user.getPerfiles().getRol().equals(Perfil.Rol.COORDGEN)) {
+            for (Usuario us : users) {
+                if (!us.equals(user) && us.isVerificado()) {
+                    auxs.add(us);
                 }
             }
         }
