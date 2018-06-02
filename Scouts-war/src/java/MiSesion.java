@@ -19,6 +19,7 @@ import clases.Usuario;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -361,6 +362,11 @@ public class MiSesion implements Serializable {
         } else {
             return "No tiene responsable legal";
         }
+    }
+    
+    public String cambioFormato(Date fecha){
+        SimpleDateFormat formateador = new SimpleDateFormat("dd/MM/yyyy");
+        return formateador.format(fecha);
     }
 
     /**

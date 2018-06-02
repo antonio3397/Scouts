@@ -43,9 +43,9 @@
                             </h:form>
                         </p:column>
                         <p:column headerText="Borrar">
-                            <h:form>
-                                <p:commandButton value="Eliminar" ajax="false" actionListener="#{miSesion.borrarUsuario(users.id)}"></p:commandButton>
-                            </h:form>
+                            <p:link outcome="OtroPerfil" value="Ver perfil">
+                                <f:param name="us" value="#{miSesion.verUsuario(users.id)}"/>
+                            </p:link>
                         </p:column>
                     </p:dataTable>
                 </div>
@@ -65,7 +65,7 @@
                             <h:outputText value="#{users.apellidos}" />
                         </p:column>
                         <p:column headerText="NIF de su responsable legal">
-                            <h:outputText value="#{users.responsable.NIF}" />
+                            <h:outputText value="#{miSesion.salidaResponsable(users)}" />
                         </p:column>
                         <p:column headerText="Más">                          
                             <p:link outcome="OtroPerfil" value="Ver perfil">
