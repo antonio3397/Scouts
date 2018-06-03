@@ -7,13 +7,8 @@
 import Negocio.Comentarios;
 import clases.*;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -70,7 +65,14 @@ public class Control_Comentario {
     public void agnadirComentario(Evento event, Usuario user) {
         if (!"".equals(mensaje)) {
             Comentario comentario = new Comentario();
-            comentario.setId(comment.idMax());
+            Long idcrear;
+        
+            if(comment.verComentariosTodos().isEmpty()){
+                idcrear=1L;
+            } else {
+                idcrear = comment.verComentariosTodos().get(comment.verComentariosTodos().size()-1).getId()+1;
+            }
+            comentario.setId(idcrear);
             comentario.setTexto(mensaje);
             comentario.setFecha_creacion(new Date());
             comentario.setEvento(event);

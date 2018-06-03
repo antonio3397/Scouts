@@ -20,6 +20,6 @@ public interface Comentarios {
     public void modificar(Comentario c);
     public void eliminar(Long id);
     public Comentario buscarComentario(Long id);
-    public Long idMax();
     public List<Comentario> verComentarios(Evento event);
+    public List<Comentario> verComentariosTodos();
 }
