@@ -38,11 +38,6 @@
                         <p:column headerText="Lugar">
                             <h:outputText value="#{events.localizacion}" />
                         </p:column>
-                        <p:column headerText="Más">
-                            <p:link outcome="Eventos" value="Ver más">
-                                <f:param name="Evento" value="#{events.id}"/>
-                            </p:link>	
-                        </p:column>
                     </p:dataTable>
                 </c:otherwise>
             </c:choose>

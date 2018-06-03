@@ -7,6 +7,7 @@
 import Negocio.ContraseniaInvalidaException;
 import Negocio.CuentaInexistenteException;
 import Negocio.CuentaNoVerificadaException;
+import Negocio.Eventos;
 import Negocio.Login;
 import Negocio.NegocioDocumentos;
 import Negocio.Perfiles;
@@ -14,6 +15,7 @@ import Negocio.Responsable;
 import Negocio.ScoutsException;
 import Negocio.Seccionesb;
 import Negocio.Usuarios;
+import clases.Evento;
 import clases.Perfil;
 import clases.Responsable_Legal;
 import clases.Usuario;
@@ -21,6 +23,7 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.ejb.EJB;
@@ -48,6 +51,9 @@ public class Controlador_Login implements Serializable {
     
     @EJB
     private Usuarios u;
+    
+    @EJB
+    private Eventos ev;
     
     @EJB
     private Perfiles perfs;
@@ -120,6 +126,9 @@ public class Controlador_Login implements Serializable {
             ctrl.setUsers(users);
             ctrl.refrescarUsers2();
             ctrl.refrescarUsers3();
+            
+            ctrle.setEventosj(ev.verEventos());
+            ctrle.refrescarEventosj2();
             
             if(aux.getPerfiles().getRol().equals(Perfil.Rol.COORDGEN)||aux.getPerfiles().getRol().equals(Perfil.Rol.COORDSEC)){
                 arch.setListd(nd.verDocumentos());
