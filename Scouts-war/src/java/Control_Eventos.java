@@ -14,6 +14,7 @@ import Negocio.Usuarios;
 import clases.Comentario;
 import clases.Documento;
 import clases.Evento;
+import clases.Perfil;
 import clases.Usuario;
 import java.io.IOException;
 import java.io.Serializable;
@@ -60,6 +61,9 @@ public class Control_Eventos implements Serializable {
     
     @Inject
     private Archivos arch;
+    
+    @Inject
+    private MiSesion ms;
     
     @Inject
     private Control_Notificaciones CN;
@@ -152,6 +156,8 @@ public class Control_Eventos implements Serializable {
         b.setComentarios(null);
         b.setUsuarios(null);
         evento.eliminar(b);
+        eventosj = evento.verEventos();
+        refrescarEventosj2();
         return "Lista_eventos.xhtml";
     }
 
@@ -237,6 +243,8 @@ public class Control_Eventos implements Serializable {
         
         crear = new Evento();
         seccioncrear = null;
+        eventosj = evento.verEventos();
+        refrescarEventosj2();
 
         return "Lista_eventos.xhtml";
     }
@@ -278,7 +286,26 @@ public class Control_Eventos implements Serializable {
     }
     
     public List<Evento> verEventos(){
-        return evento.verEventos();
+        return eventosj2;
+    }
+    
+    public void refrescarEventosj2(){
+        
+        List<Evento> events2 = new ArrayList<>();
+        
+        if (ms.getUser().getPerfiles().getRol().equals(Perfil.Rol.COORDGEN)) {
+                for (Evento e : eventosj) {
+                        events2.add(e);
+                }
+            } else {
+                for (Evento e : eventosj) {
+                    if (ms.getUser().getSeccion().equals(e.getSeccion())) {
+                        events2.add(e);
+                    }
+                }
+            }
+
+            eventosj2 = events2;
     }
 
     /**
