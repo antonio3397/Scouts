@@ -79,9 +79,6 @@ public class Usuario implements Serializable {
     @ManyToOne
     private Perfil perfiles;
     
-    @OneToMany (mappedBy="usuarios")
-    private List<Pago_cuota> pago;
-    
     @ManyToOne
     private Seccion seccion;
     
@@ -441,20 +438,6 @@ public class Usuario implements Serializable {
      */
     public void setPerfiles(Perfil perfiles) {
         this.perfiles = perfiles;
-    }
-
-    /**
-     * @return the pago
-     */
-    public List<Pago_cuota> getPago() {
-        return pago;
-    }
-
-    /**
-     * @param pago the pago to set
-     */
-    public void setPago(List<Pago_cuota> pago) {
-        this.pago = pago;
     }
 
     /**

@@ -160,7 +160,7 @@ public class Control_Registro implements Serializable{
         
         registrar = new Usuario();
         
-        return "login.xhtml";
+        return "faces/InicioSinLogin.xhtml";
     }
     
     public Usuario getRegistrar() {

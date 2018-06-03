@@ -1,0 +1,45 @@
+<!--<?xml version="1.0" encoding="UTF-8"?>-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="/WEB-INF/Templates/nuevo.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+                xmlns:p="http://primefaces.org/ui">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous"></link>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
+
+    <ui:define name="title">Sobre nosotros</ui:define>  
+    <ui:define name="content">
+        <h:form>
+            <h3 style="margin-top:0">SOBRE NOSOTROS</h3>
+            <p:tabView>
+                <p:tab title="Castores">
+                    <h:outputText value="El grupo de Castores lo constituyen los niños de entre 6 y 8 años, recién iniciados en nuestro grupo de scouts. Nos esperan numerosas experiencias y diversión que harán que en todo momento te lo pases genial a la vez que feliz de pertenecer a esta pequeña gran familia." />
+                </p:tab>
+                <p:tab title="Lobatos">
+                    <h:outputText value="Está constituido por niños entre 8 y 11 años de edad. Siendo uno de los grupos más jovenes, se adentrará en miles de aventuras con la vigilancia de un monitor experto en pasarlo bien con seguridad." />
+                </p:tab>
+                <p:tab title="Scouts/Tropa Scout">
+                    <h:outputText value="Hemos llegado a la madurez necesaria para aprender cosas por uno mismo sin la necesidad de tener siempre a un monitor con nosotros, en esta etapa se tiene que madurar para ser un gran Scout." />
+                </p:tab>
+                <p:tab title="Escultas/Pioneros">
+                    <h:outputText value="Constituido por miembros entre 14 y 17, ven el mundo de otra manera, aprenden a conocer la naturaleza a la vez que a uno mismo, y disfrutan juntos antes de la mayoría de edad." />
+                </p:tab>
+                <p:tab title="Rovers/Compañeros">
+                        <h:outputText value="Somos la ultima etapa de la gran vida que es ser educandos (17-21 años)."/>
+                        <br/>
+                        <h:outputText value="Se acerca la hora de que dejemos atras esta vida pero hasta entonces nos divertiremos al maximo."/>
+                        <br/>
+                        <h:outputText value="Disfrutemos juntos de nuestros ultimos dias juntos." />
+                </p:tab>
+                <p:tab title="Scouters de apoyo">
+                    <h:outputText value="Los Scouters son los de mayor edad, tienen que tener mas de 21 años y son colaboradores en nuestras excursiones, sin esto quitar toda la diversion que ser un Scouts ofrece." />
+                </p:tab>
+            </p:tabView>
+        </h:form>
+    </ui:define>
+</ui:composition>
