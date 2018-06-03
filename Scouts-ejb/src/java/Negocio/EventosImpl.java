@@ -69,22 +69,8 @@ public class EventosImpl implements Eventos{
         boolean esta = false;
         while(it.hasNext()&&!esta){
             Evento aux = (Evento) it.next();
-            if(aux.getTitulo().equals(e.getTitulo())&&aux.getFecha().equals(e.getFecha()))esta=true;
+            if(aux.getTitulo().equals(e.getTitulo())&&aux.getFecha().equals(e.getFecha())&&aux.getSeccion().equals(e.getSeccion()))esta=true;
         }
         return esta;
     }
-    
-    private static Long id=0L;
-    @Override
-    public Long idMax() {
-        increase();
-        return id;   
-    }
-
-    private void increase() {
-        id+=1L;
-    }
-    
-    
-    
 }

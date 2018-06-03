@@ -15,30 +15,31 @@
 
     <ui:define name="content">
         <div class="container-fluid">
-            <p:dataTable var="documents" value="#{Documentos.documentosj}">
-                <p:column headerText="ID">
-                    <h:outputText value="#{documents.id}" />
+            <p:dataTable var="documents" value="#{archivos.listd}">
+                <p:column headerText="Nombre">
+                    <h:outputText value="#{documents.nombre}" />
                 </p:column>
-                <p:column headerText="Estado">
-                    <h:outputText value="#{documents.estado}" />
-                </p:column>
-
                 <p:column headerText="Tipo">
                     <h:outputText value="#{documents.tipo}" />
                 </p:column>
-
                 <p:column headerText="Fecha de aportación">
-                    <h:outputText value="#{documents.fecha_entrega}" />
+                    <h:outputText value="#{miSesion.cambioFormato(documents.fecha_entrega)}" />
                 </p:column>
-                
+                <p:column headerText="Subido por">
+                    <h:outputText value="DNI: #{documents.usuario.NIF} Nombre: #{documents.usuario.nombre} Apellidos: #{documents.usuario.apellidos}" />
+                </p:column>
                 <p:column headerText="Descargas">
                     <h:form>
-                        <h:commandLink>
-                            <a href="Archivo.jpg" download="Archivo.jpg"><img src="pdf.png" width="50"/>Descargar PDF</a>
-                        </h:commandLink>
+                        <p:commandButton value="Descarga" ajax="false" onclick="PrimeFaces.monitorDownload(start, stop);" icon="ui-icon-arrowthick-1-s">
+                            <p:fileDownload value="#{archivos.bajarArchivosDoc(documents)}" />
+                        </p:commandButton>
                     </h:form>
                 </p:column>
-                
+                <p:column headerText="Eliminar">
+                    <h:form>
+                        <p:commandButton value="Eliminar" action="#{archivos.borrarArchivo(documents)}" ajax="false"/>
+                    </h:form>
+                </p:column>
             </p:dataTable>
         </div>
     </ui:define>

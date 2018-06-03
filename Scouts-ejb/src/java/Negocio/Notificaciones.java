@@ -19,8 +19,9 @@ import javax.ejb.Local;
 @Local
 public interface Notificaciones {
 
+    public List<Notificacion> Notificaciones ();
     public List<Notificacion> buscarNotificaciones(Usuario user) throws NotificacionesException;
     public Notificacion buscarNotificacion (NotificacionID id);
-    public void borrarNotificacion(NotificacionID id);
-    public void crearNotificacion (Evento ev);
+    public void borrarNotificacion(Notificacion n);
+    public void crearNotificacion (Notificacion n);
 }

@@ -29,6 +29,8 @@ public class Documento implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     @Column(nullable=false)
+    private String nombre;
+    @Column(nullable=false)
     private String tipo;
     @Temporal(TemporalType.DATE)
     @Column(nullable=false)
@@ -134,6 +136,14 @@ public class Documento implements Serializable {
 
     public void setDocumento(byte[] documento) {
         this.documento = documento;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
     }
     
         

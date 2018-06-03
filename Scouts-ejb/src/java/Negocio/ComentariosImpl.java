@@ -38,7 +38,7 @@ public class ComentariosImpl implements Comentarios{
     @Override
     public void eliminar(Long id) {
         Comentario c = buscarComentario(id);
-        em.remove(c);
+        em.remove(em.merge(c));
     }
 
     @Override
@@ -50,21 +50,19 @@ public class ComentariosImpl implements Comentarios{
         }
         return comments;
     }
+    
+    @Override
+    public List<Comentario> verComentariosTodos() {
+        Query list = em.createQuery("SELECT c FROM Comentario c");
+        List<Comentario> comments = new ArrayList<>();
+        comments = list.getResultList();
+        
+        return comments;
+    }
 
     @Override
     public Comentario buscarComentario(Long id) {
         return em.find(Comentario.class, id);
-    }
-
-    private static Long id=0L;
-    @Override
-    public Long idMax() {
-        increase();
-        return id;   
-    }
-
-    private void increase() {
-        id+=1L;
     }
     
 }
