@@ -142,6 +142,7 @@ public class Control_Eventos implements Serializable {
                 us.modificarUsuario(u);
             }
         }
+        CN.borrarNotificacionesEvento(b);
         //Borra evento
         b.setDocumentos(null);
         evento.eliminar(b);
@@ -226,7 +227,7 @@ public class Control_Eventos implements Serializable {
         crear.setId(idcrear);
         evento.insertar(crear);
         
-       // CN.addNotificame(crear);  
+        CN.crearNotificacion(crear);  
         
         crear = new Evento();
         seccioncrear = null;

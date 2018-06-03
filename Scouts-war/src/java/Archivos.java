@@ -45,6 +45,9 @@ public class Archivos implements Serializable{
     @Inject
     private MiSesion ms;
     
+    @Inject
+    private Control_Notificaciones CN;
+    
     public StreamedContent bajarArchivos(Evento e) throws DocumentoNoExistenteException{
         List<Documento> ld = nd.verDocumentos();
         StreamedContent docum = null;
@@ -110,6 +113,8 @@ public class Archivos implements Serializable{
         doc = new Documento();
         crear = new Evento();
         listd = nd.verDocumentos();
+        
+        CN.crearNotificacion(crear);
         
         return "Lista_eventos.xhtml";
     }

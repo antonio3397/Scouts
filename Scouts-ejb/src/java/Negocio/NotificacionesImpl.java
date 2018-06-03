@@ -26,6 +26,11 @@ public class NotificacionesImpl implements Notificaciones {
     private EntityManager em;
 
     @Override
+    public List<Notificacion> Notificaciones() {
+        return em.createQuery("SELECT n from Notificacion n").getResultList();
+    }
+
+    @Override
     public List<Notificacion> buscarNotificaciones(Usuario user) throws NotificacionesException {
         return em.createQuery("SELECT n FROM Notificacion n WHERE n.usuario.id = '" + user.getId() + "'").getResultList();
     }
@@ -36,29 +41,13 @@ public class NotificacionesImpl implements Notificaciones {
     }
 
     @Override
-    public void borrarNotificacion(NotificacionID id) {
-        Query q = em.createQuery("DELETE FROM Notificacion n WHERE n.id = " + id);
-        q.executeUpdate();
-        em.remove(em.merge(id));
+    public void crearNotificacion(Notificacion n) {
+        em.persist(n);
     }
 
     @Override
-    public void crearNotificacion(Evento ev) {
-        Query q = em.createQuery("SELECT u FROM Usuario u WHERE u.seccion = '" + ev.getSeccion() + "'");
-        List<Usuario> users = q.getResultList();
-        for (Usuario u : users) {
-            NotificacionID id = new NotificacionID();
-            id.setEvento_id(ev.getId());
-            id.setEvento_id(u.getId());
-            Notificacion n = new Notificacion();
-            n.setEvento(ev);
-            n.setFecha(ev.getFecha());
-            n.setId(id);
-            n.setTitulo("Nuevo evento");
-            n.setUsuario(u);
-            n.setTexto("Se ha creado el evento " + ev.getTitulo());
-            em.persist(n);
-        }
+    public void borrarNotificacion(Notificacion n) {
+        em.remove(em.merge(n));
     }
 
 }
