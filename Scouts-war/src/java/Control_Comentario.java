@@ -26,34 +26,6 @@ import javax.inject.Inject;
 @SessionScoped
 public class Control_Comentario {
 
-    /**
-     * @return the ev
-     */
-    public Control_Eventos getEv() {
-        return ev;
-    }
-
-    /**
-     * @param ev the ev to set
-     */
-    public void setEv(Control_Eventos ev) {
-        this.ev = ev;
-    }
-
-    /**
-     * @return the lg
-     */
-    public MiSesion getLg() {
-        return lg;
-    }
-
-    /**
-     * @param lg the lg to set
-     */
-    public void setLg(MiSesion lg) {
-        this.lg = lg;
-    }
-
     private String mensaje;
     private List<Comentario> Comentarios;
     @Inject
@@ -114,9 +86,13 @@ public class Control_Comentario {
 
     public void agnadirComentario(Evento event, Usuario user) {
         if (!"".equals(mensaje)) {
-            long tam = Comentarios.size();
-            //Comentario coment = new Comentario(tam, mensaje, new Date(), event, user);
-            //Comentarios.add(coment);
+            Comentario comentario = new Comentario();
+            comentario.setId(comment.idMax());
+            comentario.setTexto(mensaje);
+            comentario.setFecha_creacion(new Date());
+            comentario.setEvento(event);
+            comentario.setUsuario(user);
+            comment.insertar(comentario);
             mensaje = "";
         }
     }

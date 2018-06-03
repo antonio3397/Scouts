@@ -5,16 +5,11 @@
  * and open the template in the editor.
  */
 import Negocio.Eventos;
+import Negocio.SeccionInexistenteException;
+import Negocio.Seccionesb;
 import clases.Evento;
-import clases.Notificacion;
-import clases.NotificacionID;
-import clases.Seccion;
 import java.io.Serializable;
-import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Objects;
-import java.util.Random;
 import javax.ejb.EJB;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
@@ -27,160 +22,167 @@ import javax.inject.Inject;
 @SessionScoped
 @Named(value = "Eventos")
 public class Control_Eventos implements Serializable {
-
+    
     private List<Evento> eventosj;
     private List<Evento> eventosj2;
     private Evento event;
-    private Long idcrear;
-    private Date fechacrear;
-    private String titulocrear;
-    private String localizacioncrear;
-    private String descripcioncrear;
-    private String preciocrear;
+    private Evento crear = new Evento();
     private String seccioncrear;
     private Evento aux;
-
+    private boolean necdoc;
+    
     private String seccionMod;
     
     @EJB
     private Eventos evento;
     
+    @EJB
+    private Seccionesb seccion;
+    
     @Inject
-    Control_Notificaciones CN;
-
+    private Archivos arch;
+    
+    @Inject
+    private Control_Notificaciones CN;
+    
     public Evento buscarEvento(Long id) throws EventoException {
         Evento enc = evento.obtenerEvento(id);
-
+        
         if (enc == null) {
             throw new EventoException("Evento no encontrado");
         }
         return enc;
     }
-  
+    
     public String modificarEvento(Long id) throws EventoException {
-        Evento b = buscarEvento(id);
-       // setAux(new Evento(id, b.getTitulo(), b.getFecha(), b.getLocalizacion(), b.getDescripcion(), b.getPrecio(), b.getSeccion()));
-        
+        aux = evento.obtenerEvento(id);
         return "ModEvento.xhtml";
     }
-
-    public String aceptarMod() throws EventoException {
-        Evento b = buscarEvento(aux.getId());
-
+    
+    public String aceptarMod() throws EventoException, SeccionInexistenteException {
+        Evento b = evento.obtenerEvento(aux.getId());
         b.setTitulo(aux.getTitulo());
         b.setFecha(aux.getFecha());
         b.setLocalizacion(aux.getLocalizacion());
         b.setPrecio(aux.getPrecio());
-/*
-        switch (getSeccionMod()) {
+        
+        switch (seccionMod) {
             case "Castores":
-                b.setSeccion(new Seccion(1L, Seccion.Secciones.Castores));
+                b.setSeccion(seccion.getSeccion(1L));
                 break;
             case "Lobatos":
-                b.setSeccion(new Seccion(2L, Seccion.Secciones.Lobatos));
+                b.setSeccion(seccion.getSeccion(2L));
                 break;
             case "Scouts":
-                b.setSeccion(new Seccion(4L, Seccion.Secciones.Tropa_Scout));
+                b.setSeccion(seccion.getSeccion(3L));
                 break;
             case "Escultas":
-                b.setSeccion(new Seccion(5L, Seccion.Secciones.Escultas_Pioneros));
+                b.setSeccion(seccion.getSeccion(4L));
                 break;
             case "Rovers":
-                b.setSeccion(new Seccion(3L, Seccion.Secciones.Rovers_Compañeros));
+                b.setSeccion(seccion.getSeccion(5L));
                 break;
             default:
                 break;
-        }*/
+        }
+        evento.modificar(b);
         seccionMod = null;
-
+        
         return "Lista_eventos.xhtml";
     }
-
+    
     public String cancelarMod() {
-
         return "Eventos.xhtml";
     }
-
+    
     public String borrarEvento(Long id) throws EventoException {
-        Evento b = buscarEvento(id);
-        eventosj.remove(b);
-        eventosj2.remove(b);
+        evento.eliminar(evento.obtenerEvento(id));
         return "Lista_eventos.xhtml";
     }
 
-    public String CrearEvento() {
-
-        if (eventosj.isEmpty() || eventosj == null) {
-            Random rd = new Random();
-            idcrear = (long) rd.nextInt(2000);
-        } else {
-            idcrear = eventosj.get(eventosj.size() - 1).getId() + 1L;
-        }
-        Seccion sec = null;
-        int precio = Integer.parseInt(preciocrear);
-/*
-        switch (seccioncrear) {
+    public String necesitaDocumentos() throws SeccionInexistenteException{
+        
+        if(necdoc){
+            switch (seccioncrear) {
             case "Castores":
-                sec = new Seccion(1L, Seccion.Secciones.Castores);
+                crear.setSeccion(seccion.getSeccion(1L));
                 break;
             case "Lobatos":
-                sec = new Seccion(2L, Seccion.Secciones.Lobatos);
+                crear.setSeccion(seccion.getSeccion(2L));
                 break;
             case "Scouts":
-                sec = new Seccion(4L, Seccion.Secciones.Tropa_Scout);
+                crear.setSeccion(seccion.getSeccion(3L));
                 break;
             case "Escultas":
-                sec = new Seccion(5L, Seccion.Secciones.Escultas_Pioneros);
+                crear.setSeccion(seccion.getSeccion(4L));
                 break;
             case "Rovers":
-                sec = new Seccion(3L, Seccion.Secciones.Rovers_Compañeros);
+                crear.setSeccion(seccion.getSeccion(5L));
                 break;
             default:
                 break;
-        }*/
-
-       /* Evento ev = new Evento(idcrear, titulocrear, fechacrear, localizacioncrear, descripcioncrear, precio, sec);
-
-        eventosj.add(ev);
-        eventosj2.add(ev);
-
-        CN.addNotificame(new Notificacion(new NotificacionID(sec.getId(), idcrear), titulocrear, descripcioncrear, fechacrear));  
-        */
-        fechacrear = null;
-        idcrear = null;
-        titulocrear = null;
-        localizacioncrear = null;
-        descripcioncrear = null;
-        preciocrear = null;
+            }
+        
+            crear.setId(evento.idMax());
+            arch.setCrear(crear);
+            
+            return "anadirDoc.xhtml";
+        } else {
+            return CrearEvento();
+        }
+        
+    }
+    
+    public String CrearEvento() throws SeccionInexistenteException {
+        
+        switch (seccioncrear) {
+            case "Castores":
+                crear.setSeccion(seccion.getSeccion(1L));
+                break;
+            case "Lobatos":
+                crear.setSeccion(seccion.getSeccion(2L));
+                break;
+            case "Scouts":
+                crear.setSeccion(seccion.getSeccion(3L));
+                break;
+            case "Escultas":
+                crear.setSeccion(seccion.getSeccion(4L));
+                break;
+            case "Rovers":
+                crear.setSeccion(seccion.getSeccion(5L));
+                break;
+            default:
+                break;
+        }
+        
+        crear.setId(evento.idMax());
+        evento.insertar(crear);
+        
+       // CN.addNotificame(crear);  
+        
+        crear = new Evento();
         seccioncrear = null;
 
         return "Lista_eventos.xhtml";
     }
 
     public String cancelarcrear() {
-        fechacrear = null;
-        idcrear = null;
-        titulocrear = null;
-        localizacioncrear = null;
-        descripcioncrear = null;
-        preciocrear = null;
+        
+        crear = new Evento();
         seccioncrear = null;
 
         return "Lista_eventos.xhtml";
     }
 
-    public String verEvento(Long id) {
+    public String verEvento(Long id) throws EventoException {
 
-        Iterator<Evento> iter = eventosj.iterator();
-        Evento u = iter.next();
-        while (iter.hasNext() && !Objects.equals(id, u.getId())) {
-            u = iter.next();
-        }
-        if (Objects.equals(id, u.getId())) {
-            setEvent(u);
-        }
+        event=buscarEvento(id);
 
         return "Eventos.xhtml";
+    }
+    
+    public List<Evento> verEventos(){
+        return evento.verEventos();
     }
 
     /**
@@ -203,76 +205,6 @@ public class Control_Eventos implements Serializable {
 
     public void setEvent(Evento event) {
         this.event = event;
-    }
-
-    /**
-     * @return the idcrear
-     */
-    public Long getIdcrear() {
-        return idcrear;
-    }
-
-    /**
-     * @param idcrear the idcrear to set
-     */
-    public void setIdcrear(Long idcrear) {
-        this.idcrear = idcrear;
-    }
-
-    /**
-     * @return the titulocrear
-     */
-    public String getTitulocrear() {
-        return titulocrear;
-    }
-
-    /**
-     * @param titulocrear the titulocrear to set
-     */
-    public void setTitulocrear(String titulocrear) {
-        this.titulocrear = titulocrear;
-    }
-
-    /**
-     * @return the localizacioncrear
-     */
-    public String getLocalizacioncrear() {
-        return localizacioncrear;
-    }
-
-    /**
-     * @param localizacioncrear the localizacioncrear to set
-     */
-    public void setLocalizacioncrear(String localizacioncrear) {
-        this.localizacioncrear = localizacioncrear;
-    }
-
-    /**
-     * @return the descripcioncrear
-     */
-    public String getDescripcioncrear() {
-        return descripcioncrear;
-    }
-
-    /**
-     * @param descripcioncrear the descripcioncrear to set
-     */
-    public void setDescripcioncrear(String descripcioncrear) {
-        this.descripcioncrear = descripcioncrear;
-    }
-
-    /**
-     * @return the preciocrear
-     */
-    public String getPreciocrear() {
-        return preciocrear;
-    }
-
-    /**
-     * @param preciocrear the preciocrear to set
-     */
-    public void setPreciocrear(String preciocrear) {
-        this.preciocrear = preciocrear;
     }
 
     /**
@@ -304,20 +236,6 @@ public class Control_Eventos implements Serializable {
     }
 
     /**
-     * @return the fechacrear
-     */
-    public Date getFechacrear() {
-        return fechacrear;
-    }
-
-    /**
-     * @param fechacrear the fechacrear to set
-     */
-    public void setFechacrear(Date fechacrear) {
-        this.fechacrear = fechacrear;
-    }
-
-    /**
      * @return the aux
      */
     public Evento getAux() {
@@ -343,5 +261,53 @@ public class Control_Eventos implements Serializable {
      */
     public void setSeccionMod(String seccionMod) {
         this.seccionMod = seccionMod;
+    }
+
+    public boolean isNecdoc() {
+        return necdoc;
+    }
+
+    public void setNecdoc(boolean necdoc) {
+        this.necdoc = necdoc;
+    }
+
+    public Eventos getEvento() {
+        return evento;
+    }
+
+    public void setEvento(Eventos evento) {
+        this.evento = evento;
+    }
+
+    public Seccionesb getSeccion() {
+        return seccion;
+    }
+
+    public void setSeccion(Seccionesb seccion) {
+        this.seccion = seccion;
+    }
+
+    public Control_Notificaciones getCN() {
+        return CN;
+    }
+
+    public void setCN(Control_Notificaciones CN) {
+        this.CN = CN;
+    }
+
+    public Evento getCrear() {
+        return crear;
+    }
+
+    public void setCrear(Evento crear) {
+        this.crear = crear;
+    }
+
+    public Archivos getArch() {
+        return arch;
+    }
+
+    public void setArch(Archivos arch) {
+        this.arch = arch;
     }
 }

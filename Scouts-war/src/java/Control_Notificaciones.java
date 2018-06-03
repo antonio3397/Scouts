@@ -4,14 +4,16 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
+import Negocio.Notificaciones;
+import Negocio.NotificacionesException;
+import clases.Evento;
 import clases.Notificacion;
 import clases.NotificacionID;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import javax.annotation.PostConstruct;
+import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -20,9 +22,20 @@ import javax.inject.Named;
  *
  * @author anton
  */
-@Named(value="notificaciones")
+@Named(value = "notificaciones")
 @SessionScoped
-public class Control_Notificaciones implements Serializable{
+public class Control_Notificaciones implements Serializable {
+
+    //private List<Notificacion> notificame;
+
+    
+    
+    @Inject
+    private MiSesion login;
+    
+    @EJB
+    private Notificaciones notif;
+    
 
     /**
      * @return the login
@@ -38,11 +51,6 @@ public class Control_Notificaciones implements Serializable{
         this.login = login;
     }
 
-    private List<Notificacion> notificame;
-    
-    @Inject
-    private MiSesion login;
-
     @PostConstruct
     public void init() {/*
         notificame = new ArrayList<>();            
@@ -52,40 +60,53 @@ public class Control_Notificaciones implements Serializable{
         
         // Para secciones
         notificame.add(new Notificacion(new NotificacionID(1L,125L), "Comunicación para educandos de una sección","Mensaje de prueba para los educandos de la sección: Castores.",new Date(2018-1900,3,24,9,30)));
-    */}
+         */
+    }
 
-    public List<Notificacion> buscarNotificaciones() throws NotificacionException{
-        List<Notificacion> misNotificaciones = new ArrayList<>();
+    public List<Notificacion> buscarNotificaciones() throws NotificacionException, NotificacionesException {
+        /*List<Notificacion> misNotificaciones = new ArrayList<>();
         Long miID = getLogin().getUser().getId();
-        for(Notificacion noti: notificame){
-            if(noti.getId().getUsuario_id().equals(miID)){  // Va entrando las notificaciones de Eventos
+        for (Notificacion noti : notificame) {
+            if (noti.getId().getUsuario_id().equals(miID)) {  // Va entrando las notificaciones de Eventos
                 misNotificaciones.add(noti);
-            } else if(noti.getId().getUsuario_id().equals(getLogin().getUser().getSeccion().getId())){  // Va entrando las notificaciones de la Seccion
+            } else if (noti.getId().getUsuario_id().equals(getLogin().getUser().getSeccion().getId())) {  // Va entrando las notificaciones de la Seccion
                 misNotificaciones.add(noti);
             }
         }
         return misNotificaciones;
+*/
+        
+        return notif.buscarNotificaciones(login.getUser());
     }
-    
-    public Notificacion buscarNotificacion(NotificacionID id) throws NotificacionException{
-        Notificacion enc = null;
-        for(Notificacion e : notificame){
-            if(e.getId().equals(id)){
-                enc=e;
+
+    public Notificacion buscarNotificacion(NotificacionID id) throws NotificacionException {
+        /*Notificacion enc = null;
+        for (Notificacion e : notificame) {
+            if (e.getId().equals(id)) {
+                enc = e;
             }
         }
-        if(enc == null){
+        if (enc == null) {
             throw new NotificacionException("Notificion no encontrada");
         }
         return enc;
+        */
+        Notificacion n = notif.buscarNotificacion(id);
+        if (n == null)
+            throw new NotificacionException("Notificacion no encontrada");
+        return n;
     }
+
+
     
-    public String borrarNotificacion(NotificacionID id) throws NotificacionException{
-        Notificacion b = buscarNotificacion(id);
-        notificame.remove(b);
+    public String borrarNotificacion(NotificacionID id) throws NotificacionException {
+        //Notificacion b = buscarNotificacion(id);
+        //notificame.remove(b);
+        notif.borrarNotificacion(id);
         return "Lista_notificaciones.xhtml";
     }
-    
+
+    /*
     public List<Notificacion> getNotificame() {
         return notificame;
     }
@@ -93,8 +114,12 @@ public class Control_Notificaciones implements Serializable{
     public void setNotificame(List<Notificacion> notificame) {
         this.notificame = notificame;
     }
-    
-    public void addNotificame(Notificacion n){
+
+    public void addNotificame(Notificacion n) {
         notificame.add(n);
+    }
+*/
+    public void crearNotificacion (Evento ev) {
+        notif.crearNotificacion(ev);
     }
 }

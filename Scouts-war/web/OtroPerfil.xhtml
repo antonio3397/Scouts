@@ -10,7 +10,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
 
-    <ui:define name="title">Documentos</ui:define>
+    <ui:define name="title">Ver Perfil</ui:define>
 
     <ui:define name="content">
         <div class="container">
@@ -27,7 +27,7 @@
                     <h:outputLabel value="Email: "/>
                     <h:outputLabel value="#{miSesion.auxiliar.email}"/>
                     <h:outputLabel value="Fecha de nacimiento: "/>
-                    <h:outputLabel value="#{miSesion.auxiliar.fecha_nacimiento}"/>
+                    <h:outputLabel value="#{miSesion.cambioFormato(miSesion.auxiliar.fecha_nacimiento)}"/>
                     <h:outputLabel value="Código postal: "/>
                     <h:outputLabel value="#{miSesion.auxiliar.codigo_postal}"/>
                     <h:outputLabel value="Dirección: "/>
@@ -37,8 +37,8 @@
                     <h:outputLabel value="Localidad: "/>
                     <h:outputLabel value="#{miSesion.auxiliar.localidad}"/>
                     <h:outputLabel value="Fecha de ingreso: "/>
-                    <h:outputLabel value="#{miSesion.auxiliar.fecha_ingreso}"/>
-                    <h:outputLabel value="Cuota total: "/>
+                    <h:outputLabel value="#{miSesion.cambioFormato(miSesion.auxiliar.fecha_ingreso)}"/>
+                    <h:outputLabel value="Cuota mensual: "/>
                     <h:outputLabel value="#{miSesion.auxiliar.cuota_total}"/>
                     <h:outputLabel value="Teléfono: "/>
                     <h:outputLabel value="#{miSesion.auxiliar.telefono}"/>
@@ -48,12 +48,27 @@
                     <h:outputLabel value="#{miSesion.auxiliar.metodo_pago}"/>
                     <h:outputLabel value="Sección: "/>
                     <h:outputLabel value="#{miSesion.auxiliar.seccion.nombre}"/>
+                </h:panelGrid>
+                <h:panelGrid columns="3">
                     <c:choose>
                         <c:when test="#{!miSesion.scouter}">
                             <p:commandButton value="Modificar" action="#{miSesion.modificarboton()}" ajax="false"/>
                         </c:when>
                     </c:choose>
-
+                    <c:choose>
+                        <c:when test="#{miSesion.tieneResponsable(miSesion.auxiliar)}">
+                            <p:commandButton value="Ver responsable legal" action="#{control_Responsable.verResponsable(miSesion.auxiliar.responsable.id)}" ajax="false"/>
+                        </c:when>
+                    </c:choose>
+                    <c:choose>
+                        <c:when test="#{!miSesion.scouter}">
+                            <c:choose>
+                                <c:when test="#{!miSesion.auxiliar.verificado}">
+                                    <p:commandButton value="Verificar usuario" action="#{miSesion.verificarUser(miSesion.auxiliar.id)}" ajax="false"/>
+                                </c:when>
+                            </c:choose>
+                        </c:when>
+                    </c:choose>
                 </h:panelGrid>
             </h:form>
         </div>

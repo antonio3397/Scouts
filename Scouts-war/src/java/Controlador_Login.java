@@ -6,15 +6,22 @@
 
 import Negocio.ContraseniaInvalidaException;
 import Negocio.CuentaInexistenteException;
+import Negocio.CuentaNoVerificadaException;
 import Negocio.Login;
+import Negocio.Perfiles;
+import Negocio.Responsable;
 import Negocio.ScoutsException;
+import Negocio.Seccionesb;
 import Negocio.Usuarios;
-import clases.Evento;
 import clases.Perfil;
+import clases.Responsable_Legal;
 import clases.Usuario;
 import java.io.Serializable;
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.ZoneId;
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.Date;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
@@ -22,6 +29,7 @@ import javax.inject.Named;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
+import org.apache.commons.codec.digest.DigestUtils;
 
 /**
  *
@@ -41,6 +49,15 @@ public class Controlador_Login implements Serializable {
     @EJB
     private Usuarios u;
     
+    @EJB
+    private Perfiles perfs;
+    
+    @EJB
+    private Seccionesb secs;
+    
+    @EJB
+    private Responsable r;
+    
     @Inject
     private MiSesion ctrl;
 
@@ -52,27 +69,51 @@ public class Controlador_Login implements Serializable {
         try {
             Usuario usuario = new Usuario();
             usuario.setEmail(email);
-            usuario.setContrasenia(password);
+            String cifrado = DigestUtils.sha256Hex(password);
+            usuario.setContrasenia(cifrado);
             log.compruebaLogin(usuario);
             Usuario aux = log.refrescarUsuario(usuario);
+            
+            if(aux.getPerfiles().getRol().equals(Perfil.Rol.EDUCANDO)){
+                Date fechaactual = new Date();
+                Date fechanac = aux.getFecha_nacimiento();
+                LocalDate fn = fechanac.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                LocalDate fa = fechaactual.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                Period edad = Period.between(fn, fa);
+                if(edad.getYears()<=21){
+                    aux.setPerfiles(perfs.getPerfil(Perfil.Rol.EDUCANDO));
+                    if(secs.getSeccion(1L).getEdad_minima()<=edad.getYears()&& edad.getYears()<secs.getSeccion(1L).getEdad_maxima()){
+                        aux.setSeccion(secs.getSeccion(1L));
+                    } else if(secs.getSeccion(2L).getEdad_minima()<=edad.getYears()&& edad.getYears()<secs.getSeccion(2L).getEdad_maxima()){
+                        aux.setSeccion(secs.getSeccion(2L));
+                    } else if(secs.getSeccion(3L).getEdad_minima()<=edad.getYears()&& edad.getYears()<secs.getSeccion(3L).getEdad_maxima()){
+                        aux.setSeccion(secs.getSeccion(3L));
+                    } else if(secs.getSeccion(4L).getEdad_minima()<=edad.getYears()&& edad.getYears()<secs.getSeccion(4L).getEdad_maxima()){
+                        aux.setSeccion(secs.getSeccion(4L));
+                    } else if(secs.getSeccion(5L).getEdad_minima()<=edad.getYears()&& edad.getYears()<=secs.getSeccion(5L).getEdad_maxima()){
+                        aux.setSeccion(secs.getSeccion(5L));
+                    }
+                    if(edad.getYears()>=18){
+                        Responsable_Legal respon = aux.getResponsable();
+                        respon.getUsuarios().remove(aux);
+                        aux.setResponsable(null);
+                        if(respon.getUsuarios().isEmpty()){
+                            r.eliminarResponsable(respon);
+                        } else {
+                            r.modificarResponsable(respon);
+                        }
+                    }
+                } else {
+                    aux.setPerfiles(perfs.getPerfil(Perfil.Rol.SCOUTER));
+                    aux.setSeccion(secs.getSeccion(5L));
+                }
+                u.modificarUsuario(aux);
+            }
             ctrl.setUser(aux);
             List<Usuario> users = u.getUsuarios();
             ctrl.setUsers(users);
-            List<Usuario> auxs = new ArrayList<>();
-            if (aux.getPerfiles().getRol().equals(Perfil.Rol.COORDSEC) || aux.getPerfiles().getRol().equals(Perfil.Rol.SCOUTER)) {
-                for (Usuario u : users) {
-                    if (!u.equals(aux) && u.getSeccion().equals(aux.getSeccion())) {
-                        auxs.add(u);
-                    }
-                }
-            } else {
-                for (Usuario u : users) {
-                    if (!u.equals(aux)) {
-                        auxs.add(u);
-                    }
-                }
-            }
-            ctrl.setUsers2(auxs);
+            ctrl.refrescarUsers2();
+            ctrl.refrescarUsers3();
             
             return "Inicio.xhtml";
 
@@ -82,10 +123,13 @@ public class Controlador_Login implements Serializable {
         } catch (ContraseniaInvalidaException e) {
             FacesMessage fm = new FacesMessage("La contraseña no es correcta");
             FacesContext.getCurrentInstance().addMessage("login:pass", fm);
+        } catch (CuentaNoVerificadaException e) {
+            FacesMessage fm = new FacesMessage("Cuenta no verificada");
+            FacesContext.getCurrentInstance().addMessage(null, fm);
         } catch (ScoutsException e) {
             FacesMessage fm = new FacesMessage("Error: " + e);
             FacesContext.getCurrentInstance().addMessage(null, fm);
-        }
+        } 
         return null;
         
         

@@ -11,7 +11,7 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
 
 
-    <ui:define name="title">Usuarios verificados</ui:define>
+    <ui:define name="title">Usuarios no verificados</ui:define>
 
     <ui:define name="content">
 
@@ -19,11 +19,11 @@
             <c:when test="#{miSesion.coordGen || miSesion.cordSec}">
                 <div class = "container-fluid">
                     <a class="btn btn-success" href="CrearUsuario.xhtml" role="button">CREAR USUARIO +</a>
-                    <a class="btn btn-secondary" href="Lista_UsuariosNV.xhtml" role="button">Ver usuarios no verificados</a>
+                    <a class="btn btn-secondary" href="Lista_Usuarios.xhtml" role="button">Ver usuarios verificados</a>
                 </div>
                 <br/>
                 <div class="container-fluid">
-                    <p:dataTable var="users" value="#{miSesion.users2}">                 
+                    <p:dataTable var="users" value="#{miSesion.users3}">                 
                         <p:column headerText="DNI">
                             <h:outputText value="#{users.NIF}" />
                         </p:column>
@@ -43,9 +43,9 @@
                                 <p:commandButton value="Ver Perfil" action="#{miSesion.verUsuario(users.id)}" ajax="false"/>
                             </h:form>
                         </p:column>
-                        <p:column headerText="Dar de baja">
+                        <p:column headerText="Eliminar">
                             <h:form>
-                                <p:commandButton value="Dar de baja" action="#{miSesion.borrarUsuario(users.id)}" ajax="false"/>
+                                <p:commandButton value="Eliminar" action="#{miSesion.borrarUsuario(users.id)}" ajax="false"/>
                             </h:form>
                         </p:column>
                     </p:dataTable>

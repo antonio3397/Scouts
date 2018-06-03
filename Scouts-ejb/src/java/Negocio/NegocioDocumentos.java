@@ -18,6 +18,7 @@ public interface NegocioDocumentos {
     public void agnadirDocumento(Documento doc);
     public void eliminarDocumento(Documento doc);
     public Documento buscarDocumento(Documento doc);
+    public void modificarDocumento(Documento doc);
     public List<Documento> verDocumentos();
      
 }

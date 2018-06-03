@@ -39,7 +39,15 @@ public class UsuariosImpl implements Usuarios {
         } else {
             throw new CuentaExistenteException();
         }
-        
+    }
+    
+    @Override
+    public void modificarUsuario(Usuario u) throws CuentaExistenteException{
+        if(estaUsuario(u)){
+            em.merge(u);
+        } else {
+            throw new CuentaExistenteException();
+        }
     }
     
     @Override
@@ -54,12 +62,31 @@ public class UsuariosImpl implements Usuarios {
     
     @Override
     public boolean estaUsuario(Usuario u){
-        return em.find(Usuario.class, u.getId())!=null;
+        boolean esta=false;
+        Query q = em.createQuery("SELECT u FROM Usuario u WHERE u.NIF LIKE '"+u.getNIF()+"'");
+        List<Usuario> comprobarNIF = q.getResultList();
+        Query q1 = em.createQuery("SELECT u FROM Usuario u WHERE u.email LIKE '"+u.getEmail()+"'");
+        List<Usuario> comprobarEmail = q1.getResultList();
+        
+        if(em.find(Usuario.class, u.getId())!=null && !comprobarNIF.isEmpty() && !comprobarEmail.isEmpty()){
+            esta = true;
+        }
+        
+        return esta;
     }
     
     @Override
     public Usuario buscarUsuario(Long id){
         return em.find(Usuario.class, id);
+    }
+    
+    @Override
+    public Usuario refrescarUsuario(Usuario u) throws ScoutsException {
+        Query q = em.createQuery("SELECT u FROM Usuario u WHERE u.email LIKE '"+u.getEmail()+"'");
+        List<Usuario> users = q.getResultList();
+        Usuario user = users.get(0);
+        em.refresh(user);
+        return user;
     }
     
 }

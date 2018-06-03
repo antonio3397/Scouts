@@ -11,6 +11,8 @@ package Negocio;
  * @author franc
  */
 import clases.Evento;
+import clases.Seccion;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import javax.ejb.Stateless;
@@ -37,8 +39,7 @@ public class EventosImpl implements Eventos{
 
     @Override
     public void eliminar(Evento e) {
-        if(em.contains(e))
-        em.remove(e);    
+        em.remove(em.merge(e));    
     }
 
     @Override
@@ -48,8 +49,18 @@ public class EventosImpl implements Eventos{
     
     @Override
     public List<Evento> verEventos() {
-        Query list = em.createNativeQuery("SELECT e FROM Evento e");
+        Query list = em.createQuery("SELECT e FROM Evento e");
         return list.getResultList();
+    }
+    
+     @Override
+    public List<Evento> verEventos(Seccion sc) {
+        List<Evento> lista = verEventos();
+        List<Evento> listaSeccion = new ArrayList<>();
+        for(Evento event: lista)
+            if(event.getSeccion().equals(sc))
+                listaSeccion.add(event);
+        return listaSeccion;
     }
     
     private boolean estaEvento(Evento e){
@@ -62,4 +73,18 @@ public class EventosImpl implements Eventos{
         }
         return esta;
     }
+    
+    private static Long id=0L;
+    @Override
+    public Long idMax() {
+        increase();
+        return id;   
+    }
+
+    private void increase() {
+        id+=1L;
+    }
+    
+    
+    
 }
