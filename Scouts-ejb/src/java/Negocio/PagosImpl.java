@@ -19,7 +19,7 @@ import javax.persistence.Query;
 public class PagosImpl implements Pagos {
     @PersistenceContext(unitName = "Scouts-EntidadesPU")
     private EntityManager em;
-    
+    private static Long id=0L;
     @Override
     public List<Pago_cuota> getPagos(Long id) {
         List<Pago_cuota> pgs=new ArrayList<>();
@@ -37,13 +37,27 @@ public class PagosImpl implements Pagos {
     }
 
     @Override
-    public void nuevoPago(Long usuario, int precio) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void nuevoPago(Pago_cuota p) {
+        em.persist(p);
     }
 
     @Override
     public void eliminarPago(Long id) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //Suponemos que existe
+        Pago_cuota p=buscarPago(id);
+        em.remove(em.merge(p));
     }
-    
+    @Override
+    public Pago_cuota buscarPago(Long id){
+        return em.find(Pago_cuota.class, id);
+    }
+    @Override
+    public Long idMax(){
+        increase();
+        return id;
+
+    }
+    private void increase() {
+        id+=1L;
+    }
 }

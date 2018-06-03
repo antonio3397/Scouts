@@ -16,6 +16,8 @@ import javax.ejb.Local;
 public interface Pagos {
     public List<Pago_cuota> getPagos(Long id);//lista de pagos del usuario id
     public void modificarPago(Long id);//cambiar de pagado a no pagado
-    public void nuevoPago(Long usuario,int precio);
+    public void nuevoPago(Pago_cuota p);
     public void eliminarPago(Long id);
+    public Pago_cuota buscarPago(Long id);
+    public Long idMax();
 }
