@@ -15,16 +15,21 @@
 
     <ui:define name="content">
         <div class="container">
-            <h:form>
-                <h:outputText value="Titulo:" />
+            <h:form enctype="multipart/form-data">
+                <h:outputText value="Titulo*:" />
                 <br/>
                 <p:inputText value="#{Eventos.crear.titulo}"/>
                 <br/><br/>
-                <h:outputText value="Fecha:" />
+                <h:outputText value="Imagen:" />
+                <br/>
+                <p:growl showDetail="true" />
+                <p:fileUpload value="#{archivos.imagen}" mode="simple" sizeLimit="512000" allowTypes="/(\.|\/)(gif|jpe?g|png)$/"/>
+                <br/><br/>
+                <h:outputText value="Fecha*:" />
                 <br/>
                 <p:calendar value="#{Eventos.crear.fecha}" locale="es" pattern="MM/dd/yyyy HH:mm" navigator="true"/>
                 <br/><br/>
-                <h:outputText value="Localización:" />
+                <h:outputText value="Localización*:" />
                 <br/>
                 <p:inputText value="#{Eventos.crear.localizacion}"/>
                 <br/><br/>
@@ -34,11 +39,11 @@
                 <br/>
                 <h:outputText id="display" />
                 <br/><br/>
-                <h:outputText value="Precio:" />
+                <h:outputText value="Precio*(0 si no gratuito):" />
                 <br/>
                 <p:inputText value="#{Eventos.crear.precio}"/>
                 <br/><br/>
-                <h:outputText value="Sección:" />
+                <h:outputText value="Sección*:" />
                 <br/>
                 <p:selectOneMenu value="#{Eventos.seccioncrear}">
                     <c:choose>
@@ -56,9 +61,10 @@
                     </c:choose>
                 </p:selectOneMenu>
                 <br/><br/>
-                <h:outputText value="¿Documentos necesarios?:" />
+                <h:outputText value="Documentos necesarios:" />
                 <br/>
-                <p:selectBooleanButton value="#{Eventos.necdoc}" onLabel="Si" offLabel="No" style="width:60px" />
+                <p:growl showDetail="true" />
+                <p:fileUpload value="#{archivos.archivo}" mode="simple" allowTypes="/(\.|\/)(pdf|docx?)$/"/>
                 <br/><br/><br/><br/>
                 <p:commandButton value="Aceptar" action="#{Eventos.necesitaDocumentos()}" ajax="false"/>
                 <p:commandButton value="Cancelar" action="#{Eventos.cancelarcrear()}" ajax="false"/>

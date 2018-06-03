@@ -8,6 +8,7 @@ import Negocio.ContraseniaInvalidaException;
 import Negocio.CuentaInexistenteException;
 import Negocio.CuentaNoVerificadaException;
 import Negocio.Login;
+import Negocio.NegocioDocumentos;
 import Negocio.Perfiles;
 import Negocio.Responsable;
 import Negocio.ScoutsException;
@@ -20,7 +21,6 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.ZoneId;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.ejb.EJB;
@@ -57,6 +57,12 @@ public class Controlador_Login implements Serializable {
     
     @EJB
     private Responsable r;
+    
+    @EJB
+    private NegocioDocumentos nd;
+    
+    @Inject
+    private Archivos arch;
     
     @Inject
     private MiSesion ctrl;
@@ -114,6 +120,10 @@ public class Controlador_Login implements Serializable {
             ctrl.setUsers(users);
             ctrl.refrescarUsers2();
             ctrl.refrescarUsers3();
+            
+            if(aux.getPerfiles().getRol().equals(Perfil.Rol.COORDGEN)||aux.getPerfiles().getRol().equals(Perfil.Rol.COORDSEC)){
+                arch.setListd(nd.verDocumentos());
+            }
             
             return "Inicio.xhtml";
 
