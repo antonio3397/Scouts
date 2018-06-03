@@ -16,158 +16,175 @@
     <ui:define name="content">
         <div class="container">
         <blockquote class="blockquote text-center">
-            <h1 class="display-1"><em>
+            <h1 class="display-1">
+                <em>
                     <h:outputText value="#{Eventos.event.titulo}"/>
-                </em></h1>
-        </blockquote>
-        <p><h:outputText value="#{Eventos.event.descripcion}"/></p>
-        <p><h:outputText value="Se hará en #{Eventos.event.localizacion} en #{Eventos.event.fecha}"/></p>
-        <h:outputText value="Precio: " />
-        <c:choose>
-            <c:when test = "#{Eventos.event.precio==0}">
-                <h:outputText value="Gratis"/> 
-            </c:when>
-            <c:otherwise>
-                <h:outputText value="#{Eventos.event.precio}" />
-            </c:otherwise>
-        </c:choose>
-        <br/><br/>
-        <c:choose>
-            <c:when test="#{Eventos.imagen}">
-                <p:graphicImage value="#{archivos.verImagen(Eventos.event)}" alt="Imagen"/>
-                <br/><br/>
-            </c:when>
-        </c:choose>
-        <c:choose>
-            <c:when test = "#{miSesion.user.eventos.contains(Eventos.event)}">
-                <p> Estás inscrito en este evento.</p>
-                <c:choose>
-                    <c:when test="#{miSesion.scouter}">
-                        <h:form>
-                            <p:dataTable id="tbl" var="inscritos" value="#{Eventos.event.usuarios}" rendered="false">
-                                <p:column headerText="DNI">
-                                    <h:outputText value="#{inscritos.NIF}" />
-                                </p:column>
+                </em>
+            </h1>
+            <c:choose>
+                <c:when test="#{Eventos.imagen}">
+                    <p:graphicImage value="#{archivos.verImagen(Eventos.event)}" alt="Imagen" stream="false"/>
+                    <br/><br/>
+                </c:when>
+            </c:choose>
+            <h:outputText value="Descripción:"/>
+            <p:layout style="min-width:400px;min-height:200px;">
+                <p:layoutUnit position="center">
+                <p><h:outputText value="#{Eventos.event.descripcion}"/></p>
+                </p:layoutUnit>
+            </p:layout>
+            <br/><br/>
+            <h:outputText value="Localizacion y fecha: "/>
+            <p><h:outputText value="Se hará en #{Eventos.event.localizacion} el #{Eventos.cambioFormato(Eventos.event.fecha)}"/></p>
+            <br/>
+            <h:outputText value="Precio: " />
+            <c:choose>
+                <c:when test = "#{Eventos.event.precio==0}">
+                    <h:outputText value="Gratis"/> 
+                </c:when>
+                <c:otherwise>
+                    <h:outputText value="#{Eventos.event.precio}" />
+                </c:otherwise>
+            </c:choose>
+            <br/><br/>
+            <c:choose>
+                <c:when test = "#{miSesion.user.eventos.contains(Eventos.event)}">
+                    <p> Estás inscrito en este evento.</p>
+                    <c:choose>
+                        <c:when test="#{miSesion.scouter}">
+                            <h:form>
+                                <p:dataTable id="tbl" var="inscritos" value="#{Eventos.event.usuarios}" rendered="false">
+                                    <p:column headerText="DNI">
+                                        <h:outputText value="#{inscritos.NIF}" />
+                                    </p:column>
 
-                                <p:column headerText="Nombre">
-                                    <h:outputText value="#{inscritos.nombre}" />
-                                </p:column>
+                                    <p:column headerText="Nombre">
+                                        <h:outputText value="#{inscritos.nombre}" />
+                                    </p:column>
 
-                                <p:column headerText="Apellidos">
-                                    <h:outputText value="#{inscritos.apellidos}" />
-                                </p:column>
-                            </p:dataTable>
-                            <h:commandLink value="Usuarios inscritos">
-                                <p:dataExporter type="xls" target="tbl" fileName="Inscritos" pageOnly="true"/>
-                            </h:commandLink>
-                        </h:form>
-                    </c:when>
-                </c:choose>
-            </c:when>
-            <c:otherwise>
-                <c:choose>
-                    <c:when test="#{!(miSesion.coordGen || miSesion.cordSec)}">
-                        <h:form>
-                            <p:commandButton value="Inscribirse" ajax="false" action="#{miSesion.inscribirse(Eventos.event)}"></p:commandButton>
-                        </h:form>
-                        <br></br><br></br>
-                        <c:choose>
-                            <c:when test="#{miSesion.scouter}">
-                                <h:form>
-                                    <p:dataTable id="tbl" var="inscritos" value="#{Eventos.event.usuarios}" rendered="false">
-                                        <p:column headerText="DNI">
-                                            <h:outputText value="#{inscritos.NIF}" />
-                                        </p:column>
-
-                                        <p:column headerText="Nombre">
-                                            <h:outputText value="#{inscritos.nombre}" />
-                                        </p:column>
-
-                                        <p:column headerText="Apellidos">
-                                            <h:outputText value="#{inscritos.apellidos}" />
-                                        </p:column>
-                                    </p:dataTable>
-                                    <h:commandLink value="Usuarios inscritos">
-                                        <p:dataExporter type="xls" target="tbl" fileName="Inscritos" pageOnly="true"/>
-                                    </h:commandLink>
-                                </h:form>
-                            </c:when>
-                        </c:choose>
-                    </c:when>
-                    <c:otherwise>
-                        <h:form>
-                            <p:commandButton value="Modificar" action="#{Eventos.modificarEvento(Eventos.event.id)}" ajax="false" />
-                            <br/><br/>
-                            <p:dataTable id="tbl" var="inscritos" value="#{Eventos.event.usuarios}" rendered="false">
-                                <p:column headerText="DNI">
-                                    <h:outputText value="#{inscritos.NIF}" />
-                                </p:column>
-
-                                <p:column headerText="Nombre">
-                                    <h:outputText value="#{inscritos.nombre}" />
-                                </p:column>
-
-                                <p:column headerText="Apellidos">
-                                    <h:outputText value="#{inscritos.apellidos}" />
-                                </p:column>
-                            </p:dataTable>
-                            <h:commandLink value="Usuarios inscritos">
-                                <p:dataExporter type="xls" target="tbl" fileName="Inscritos" pageOnly="true"/>
-                            </h:commandLink>
-                        </h:form>
-                        <br/>
-                    </c:otherwise>
-                </c:choose>
-            </c:otherwise>
-        </c:choose>
-        <c:choose>
-            <c:when test="#{Eventos.documentos}">
-                <h:form>
-                    <p:commandButton value="Documento necesario" ajax="false" onclick="PrimeFaces.monitorDownload(start, stop);" icon="ui-icon-arrowthick-1-s">
-                        <p:fileDownload value="#{archivos.bajarArchivos(Eventos.event)}" />
-                    </p:commandButton>
-                </h:form>
-            </c:when>
-        </c:choose>
-        <br></br><br/>
-        <h5>Comentarios</h5>
-        <c:choose>
-            <c:when test="#{Comentarios.hayComentarios(Eventos.event)}">
-                <h:outputText value="Sea el primero en comentar"></h:outputText><br />
-            </c:when>
-            <c:otherwise>
-                <c:forEach items="#{Comentarios.verComentarios(Eventos.event)}" var="comments">
-                    <p:layout style="min-width:400px;min-height:200px;">
-                        <p:layoutUnit position="west" resizable="true" size="300" minSize="40" maxSize="500">
-                            <h:outputText value="#{comments.usuario.nombre} #{comments.usuario.apellidos} #{comments.fecha_creacion}" />
-                        </p:layoutUnit>
-                        <p:layoutUnit position="center">
-                            <h:outputText value="#{comments.texto}" style="white-space:pre;"  />
-                        </p:layoutUnit>
-                        <c:choose>
-                            <c:when test="#{miSesion.coordGen || miSesion.cordSec}">
-                                <p:layoutUnit position="east">
+                                    <p:column headerText="Apellidos">
+                                        <h:outputText value="#{inscritos.apellidos}" />
+                                    </p:column>
+                                </p:dataTable>
+                                <h:commandLink value="Usuarios inscritos">
+                                    <p:dataExporter type="xls" target="tbl" fileName="Inscritos" pageOnly="true"/>
+                                </h:commandLink>
+                            </h:form>
+                        </c:when>
+                    </c:choose>
+                </c:when>
+                <c:otherwise>
+                    <c:choose>
+                        <c:when test="#{!(miSesion.coordGen || miSesion.cordSec)}">
+                            <h:form>
+                                <p:commandButton value="Inscribirse" ajax="false" action="#{miSesion.inscribirse(Eventos.event)}"></p:commandButton>
+                            </h:form>
+                            <br></br><br></br>
+                            <c:choose>
+                                <c:when test="#{miSesion.scouter}">
                                     <h:form>
-                                        <p:commandButton value="Eliminar" ajax="false" actionListener="#{Comentarios.borrarComentario(comments.id)}"></p:commandButton>
+                                        <p:dataTable id="tbl" var="inscritos" value="#{Eventos.event.usuarios}" rendered="false">
+                                            <p:column headerText="DNI">
+                                                <h:outputText value="#{inscritos.NIF}" />
+                                            </p:column>
+
+                                            <p:column headerText="Nombre">
+                                                <h:outputText value="#{inscritos.nombre}" />
+                                            </p:column>
+
+                                            <p:column headerText="Apellidos">
+                                                <h:outputText value="#{inscritos.apellidos}" />
+                                            </p:column>
+                                        </p:dataTable>
+                                        <h:commandLink value="Usuarios inscritos">
+                                            <p:dataExporter type="xls" target="tbl" fileName="Inscritos" pageOnly="true"/>
+                                        </h:commandLink>
                                     </h:form>
-                                </p:layoutUnit>
-                            </c:when>
-                        </c:choose>
-                    </p:layout>
-                </c:forEach>
-            </c:otherwise>
-        </c:choose>
-        <br />
-        <h:form>
-            <p:inputTextarea rows="10" cols="50" value="#{Comentarios.mensaje}" />
+                                </c:when>
+                            </c:choose>
+                        </c:when>
+                        <c:otherwise>
+                            <h:form>
+                                <p:commandButton value="Modificar" action="#{Eventos.modificarEvento(Eventos.event.id)}" ajax="false" />
+                                <br/><br/>
+                                <p:dataTable id="tbl" var="inscritos" value="#{Eventos.event.usuarios}" rendered="false">
+                                    <p:column headerText="DNI">
+                                        <h:outputText value="#{inscritos.NIF}" />
+                                    </p:column>
 
-            <h:panelGrid columns="2" style="margin-top: 10px">
+                                    <p:column headerText="Nombre">
+                                        <h:outputText value="#{inscritos.nombre}" />
+                                    </p:column>
 
-                <p:commandButton value="Submit" update="display" ajax="false" actionListener="#{Comentarios.agnadirComentario(Eventos.event, miSesion.user)}" icon="ui-icon-disk"  />
-
-            </h:panelGrid>
-        </h:form> 
-    </div>
+                                    <p:column headerText="Apellidos">
+                                        <h:outputText value="#{inscritos.apellidos}" />
+                                    </p:column>
+                                </p:dataTable>
+                                <h:commandLink value="Usuarios inscritos">
+                                    <p:dataExporter type="xls" target="tbl" fileName="Inscritos" pageOnly="true"/>
+                                </h:commandLink>
+                            </h:form>
+                            <br/>
+                        </c:otherwise>
+                    </c:choose>
+                </c:otherwise>
+            </c:choose>
+            <c:choose>
+                <c:when test="#{Eventos.documentos}">
+                    <h:form>
+                        <p:commandButton value="Documento necesario" ajax="false" onclick="PrimeFaces.monitorDownload(start, stop);" icon="ui-icon-arrowthick-1-s">
+                            <p:fileDownload value="#{archivos.bajarArchivos(Eventos.event)}" />
+                        </p:commandButton>
+                    </h:form>
+                    <c:choose>
+                        <c:when test="#{miSesion.educando}">
+                            <br></br>
+                            <p:growl showDetail="true" />
+                            <p:fileUpload value="#{archivos.relleno}" mode="simple" allowTypes="/(\.|\/)(pdf|docx?)$/"/>
+                            <h:form>
+                                <p:commandButton value="Subir archivo" action="#{archivos.subirArchivoRelleno(Eventos.event)}" ajax="false"/>
+                            </h:form>
+                        </c:when>
+                    </c:choose>
+                </c:when>
+            </c:choose>
+            <br></br><br/>
+            <h5>Comentarios</h5>
+            <c:choose>
+                <c:when test="#{Comentarios.hayComentarios(Eventos.event)}">
+                    <h:outputText value="Sea el primero en comentar"></h:outputText><br />
+                </c:when>
+                <c:otherwise>
+                    <c:forEach items="#{Comentarios.verComentarios(Eventos.event)}" var="comments">
+                        <p:layout style="min-width:400px;min-height:200px;">
+                            <p:layoutUnit position="west" resizable="true" size="300" minSize="40" maxSize="500">
+                                <h:outputText value="#{comments.usuario.nombre} #{comments.usuario.apellidos}" />
+                                <br/>
+                                <h:outputText value="#{Comentarios.cambioFormato(comments.fecha_creacion)}" />
+                            </p:layoutUnit>
+                            <p:layoutUnit position="center">
+                                <h:outputText value="#{comments.texto}" style="white-space:pre;"  />
+                            </p:layoutUnit>
+                            <c:choose>
+                                <c:when test="#{miSesion.coordGen || miSesion.cordSec || Comentarios.isUser(comments.usuario)}">
+                                    <p:layoutUnit position="east">
+                                        <h:form>
+                                            <p:commandButton value="Eliminar" ajax="false" actionListener="#{Comentarios.borrarComentario(comments.id)}"></p:commandButton>
+                                        </h:form>
+                                    </p:layoutUnit>
+                                </c:when>
+                            </c:choose>
+                        </p:layout>
+                    </c:forEach>
+                </c:otherwise>
+            </c:choose>
+            <br />
+            <h:form>
+                <p:inputTextarea rows="4" cols="70" value="#{Comentarios.mensaje}" />
+                <br />
+                <p:commandButton value="Subir comentario" update="display" ajax="false" actionListener="#{Comentarios.agnadirComentario(Eventos.event, miSesion.user)}" />
+            </h:form> 
+            </blockquote>
+        </div>
     </ui:define>
-
 </ui:composition>

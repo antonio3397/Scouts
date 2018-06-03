@@ -27,8 +27,10 @@ public class Archivos implements Serializable{
      
     private Evento crear;
     private Documento doc = new Documento();
-    private UploadedFile archivo=null;
-    private UploadedFile imagen=null;
+    private UploadedFile archivo;
+    private UploadedFile imagen;
+    private UploadedFile relleno;
+    private List<Documento> listd;
     
     @EJB
     private NegocioDocumentos nd;
@@ -51,6 +53,18 @@ public class Archivos implements Serializable{
                 break;
             }
         }
+        if(docum==null){
+            throw new DocumentoNoExistenteException();
+        }
+        
+        return docum;
+    }
+    
+    public StreamedContent bajarArchivosDoc(Documento doc) throws DocumentoNoExistenteException{
+        
+        StreamedContent docum = null;
+        docum = new DefaultStreamedContent(new ByteArrayInputStream(doc.getDocumento()),"archivo de texto", doc.getNombre());
+        
         if(docum==null){
             throw new DocumentoNoExistenteException();
         }
@@ -94,8 +108,14 @@ public class Archivos implements Serializable{
         archivo=null;
         doc = new Documento();
         crear = new Evento();
+        listd = nd.verDocumentos();
         
         return "Lista_eventos.xhtml";
+    }
+    
+    public String cancelarEvento(){
+        archivo = null;
+        return "CrearEvento.xhtml";
     }
     
     public byte[] GuardarImagen() throws IOException{
@@ -115,9 +135,38 @@ public class Archivos implements Serializable{
         return img;
     }
     
-    public String cancelarEvento(){
-        archivo = null;
-        return "CrearEvento.xhtml";
+    public String subirArchivoRelleno(Evento e) throws IOException, CuentaExistenteException{
+        InputStream is = relleno.getInputstream();
+        byte[] buffer = new byte[(int) relleno.getSize()];
+        is.read(buffer);
+        Long idcrear;
+        
+        if(!nd.verDocumentos().isEmpty()){
+            idcrear = nd.verDocumentos().get(nd.verDocumentos().size()-1).getId()+1;
+        } else {
+            idcrear = 10L;
+        }
+        
+        //Crear Documento
+        doc.setId(idcrear);
+        doc.setNombre(archivo.getFileName());
+        doc.setDocumento(buffer);
+        doc.setTipo("Documento relleno");
+        doc.setFecha_entrega(new Date());
+        //Inserta documento
+        doc.setEvento(e);
+        doc.setUsuario(ms.getUser());
+        nd.agnadirDocumento(doc);
+        //Añade documento a la lista de documentos del usuario
+        ms.getUser().getDocumentos().add(doc);
+        us.modificarUsuario(ms.getUser());
+        //Añade documento a la lista de documentos del evento
+        e.getDocumentos().add(doc);
+        ev.modificar(crear);
+        
+        doc=new Documento();
+        
+        return "Eventos.xhtml";
     }
 
     public Evento getCrear() {
@@ -182,5 +231,21 @@ public class Archivos implements Serializable{
 
     public void setImagen(UploadedFile imagen) {
         this.imagen = imagen;
+    }
+
+    public List<Documento> getListd() {
+        return listd;
+    }
+
+    public void setListd(List<Documento> listd) {
+        this.listd = listd;
+    }
+
+    public UploadedFile getRelleno() {
+        return relleno;
+    }
+
+    public void setRelleno(UploadedFile relleno) {
+        this.relleno = relleno;
     }
 }

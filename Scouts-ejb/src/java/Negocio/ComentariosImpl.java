@@ -38,7 +38,7 @@ public class ComentariosImpl implements Comentarios{
     @Override
     public void eliminar(Long id) {
         Comentario c = buscarComentario(id);
-        em.remove(c);
+        em.remove(em.merge(c));
     }
 
     @Override

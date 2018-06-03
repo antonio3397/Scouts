@@ -22,5 +22,4 @@ public interface Eventos {
     public Evento obtenerEvento(Long id);
     public List<Evento> verEventos();
     public List<Evento> verEventos(Seccion sc);
-    public Long idMax();
 }

@@ -4,12 +4,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+import Negocio.Comentarios;
 import Negocio.CuentaExistenteException;
 import Negocio.Eventos;
 import Negocio.NegocioDocumentos;
 import Negocio.SeccionInexistenteException;
 import Negocio.Seccionesb;
 import Negocio.Usuarios;
+import clases.Comentario;
 import clases.Documento;
 import clases.Evento;
 import clases.Usuario;
@@ -52,6 +54,9 @@ public class Control_Eventos implements Serializable {
     
     @EJB
     private NegocioDocumentos nd;
+    
+    @EJB
+    private Comentarios comen;
     
     @Inject
     private Archivos arch;
@@ -112,6 +117,7 @@ public class Control_Eventos implements Serializable {
     public String borrarEvento(Long id) throws EventoException, CuentaExistenteException{
         Evento b = evento.obtenerEvento(id);
         Evento auxs = evento.obtenerEvento(id);
+        //Borra documentos
         if(!b.getDocumentos().isEmpty()){
             for(Documento d : auxs.getDocumentos()){
                 b.getDocumentos().remove(d);
@@ -123,6 +129,20 @@ public class Control_Eventos implements Serializable {
                 nd.eliminarDocumento(d);
             }
         }
+        //Borra comentarios
+        if(!b.getComentarios().isEmpty()){
+            for(Comentario c: b.getComentarios()){
+                comen.eliminar(c.getId());
+            }
+        }
+        //Borra inscripciones
+        if(!b.getUsuarios().isEmpty()){
+            for(Usuario u: b.getUsuarios()){
+                u.getEventos().remove(b);
+                us.modificarUsuario(u);
+            }
+        }
+        //Borra evento
         b.setDocumentos(null);
         evento.eliminar(b);
         return "Lista_eventos.xhtml";
@@ -157,7 +177,8 @@ public class Control_Eventos implements Serializable {
                 break;
             }
         
-            crear.setId(evento.idMax());
+            Long idcrear = evento.verEventos().get(evento.verEventos().size()-1).getId()+1;
+            crear.setId(idcrear);
             arch.setCrear(crear);
             
             return arch.crearEvento();
@@ -194,7 +215,15 @@ public class Control_Eventos implements Serializable {
                 break;
         }
         
-        crear.setId(evento.idMax());
+        Long idcrear;
+        
+        if(evento.verEventos().isEmpty()){
+            idcrear=1L;
+        } else {
+            idcrear = evento.verEventos().get(evento.verEventos().size()-1).getId()+1;
+        }
+        
+        crear.setId(idcrear);
         evento.insertar(crear);
         
        // CN.addNotificame(crear);  

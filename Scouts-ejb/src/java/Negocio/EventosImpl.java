@@ -73,18 +73,4 @@ public class EventosImpl implements Eventos{
         }
         return esta;
     }
-    
-    private static Long id=0L;
-    @Override
-    public Long idMax() {
-        increase();
-        return id;   
-    }
-
-    private void increase() {
-        id+=1L;
-    }
-    
-    
-    
 }
