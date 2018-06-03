@@ -14,31 +14,40 @@
     
     <ui:define name="content">
         <div class="container">
-            <h:form>
-                <!--titulo,fecha,localizacion,descripcion,precio-->
-                <h:panelGrid columns="2">
-                    <h:outputLabel value="Título: "/>
-                    <p:inputText value="#{Eventos.aux.titulo}"/>
-                    
-                    <h:outputLabel value="Fecha: "/>
-                    <p:calendar value="#{Eventos.aux.fecha}"/>
-                    
-                    <h:outputLabel value="Localización: "/>
-                    <p:inputText value="#{Eventos.aux.localizacion}"/>
-                    
-                    <h:outputLabel value="Descripción: "/>
-                    <p:inputText value="#{Eventos.aux.descripcion}"/>
-                    
-                    <h:outputLabel value="Precio: "/>
-                    <p:inputText value="#{Eventos.aux.precio}"/>
-                    
-                    <h:outputLabel value="Sección"/>
-                   
-                    
-                    <p:selectOneMenu value="#{Eventos.seccionMod}">
+            <h:form enctype="multipart/form-data">
+                <h:outputText value="Titulo:" />
+                <br/>
+                <p:inputText value="#{Eventos.aux.titulo}"/>
+                <br/><br/>
+                <h:outputText value="Imagen:" />
+                <br/>
+                <p:growl showDetail="true" />
+                <p:fileUpload value="#{archivos.imagen}" mode="simple" sizeLimit="512000" allowTypes="/(\.|\/)(gif|jpe?g|png)$/"/>
+                <br/><br/>
+                <h:outputText value="Fecha:" />
+                <br/>
+                <p:calendar value="#{Eventos.aux.fecha}" locale="es" pattern="MM/dd/yyyy HH:mm" navigator="true"/>
+                <br/><br/>
+                <h:outputText value="Localización*:" />
+                <br/>
+                <p:inputText value="#{Eventos.aux.localizacion}"/>
+                <br/><br/>
+                <h:outputText value="Descripción:" />
+                <br/>
+                <p:inputTextarea rows="10" cols="60" counter="display" maxlength="1200" counterTemplate="{0} Carácteres restantes." value="#{Eventos.aux.descripcion}"/>
+                <br/>
+                <h:outputText id="display" />
+                <br/><br/>
+                <h:outputText value="Precio*(0 si no gratuito):" />
+                <br/>
+                <p:inputText value="#{Eventos.aux.precio}"/>
+                <br/><br/>
+                <h:outputText value="Sección*:" />
+                <br/>
+                <p:selectOneMenu value="#{Eventos.seccionMod}">
                     <c:choose>
                         <c:when test="#{miSesion.coordGen}">
-                            <f:selectItem itemLabel="Dejar así para no modificar" itemValue="antigua" />
+                            <f:selectItem itemLabel="Selecciona uno" itemValue="a" />
                             <f:selectItem itemLabel="Castores" itemValue="Castores" />
                             <f:selectItem itemLabel="Lobatos" itemValue="Lobatos" />
                             <f:selectItem itemLabel="Scouts" itemValue="Scouts" />
@@ -49,12 +58,15 @@
                             <f:selectItem itemLabel="#{miSesion.seccion}" itemValue="#{miSesion.seccion}"/>
                         </c:otherwise>
                     </c:choose>
-                    </p:selectOneMenu>
-                    
-                    <p:commandButton value="Modificar" action="#{Eventos.aceptarMod()}" ajax="false"/>
-                    <p:commandButton value="Cancelar" action="#{Eventos.cancelarMod()}" ajax="false"/>
-                </h:panelGrid>
-                
+                </p:selectOneMenu>
+                <br/><br/>
+                <h:outputText value="Documentos necesarios:" />
+                <br/>
+                <p:growl showDetail="true" />
+                <p:fileUpload value="#{archivos.archivo}" mode="simple" allowTypes="/(\.|\/)(pdf|docx?)$/"/>
+                <br/><br/><br/><br/>
+                <p:commandButton value="Aceptar" action="#{Eventos.aceptarMod()}" ajax="false"/>
+                <p:commandButton value="Cancelar" action="#{Eventos.cancelarcrear()}" ajax="false"/>
             </h:form>
         </div>
     </ui:define>

@@ -17,11 +17,11 @@
         <br/>
         <div class="container-fluid">
             <c:choose>
-                <c:when test="#{miSesion.user.eventos.size() == 0}">
+                <c:when test="#{miSesion.user.inscripciones.size() == 0}">
                     <h:outputText value="No te has suscrito a ningún evento"></h:outputText><br />
                 </c:when>
                 <c:otherwise>
-                    <p:dataTable var="events" value="#{miSesion.user.eventos}">
+                    <p:dataTable var="events" value="#{miSesion.user.inscripciones}">
                         <p:column headerText="Titulo">
                             <h:outputText value="#{events.titulo}" />
                         </p:column>
