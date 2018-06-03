@@ -35,8 +35,7 @@ public class NegocioDocumentosImpl implements NegocioDocumentos{
     
     @Override
     public void modificarDocumento(Documento doc) {
-        if(em.contains(doc))
-            em.merge(doc);
+        em.merge(doc);
     }
 
     @Override

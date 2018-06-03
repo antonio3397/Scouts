@@ -119,6 +119,69 @@ public class Archivos implements Serializable{
         return "Lista_eventos.xhtml";
     }
     
+    public String modificarEvento() throws IOException, CuentaExistenteException{
+        
+        if(!imagen.getFileName().equals("")){
+            InputStream is = imagen.getInputstream();
+            byte[] buffer = new byte[(int) imagen.getSize()];
+            is.read(buffer);
+            
+            crear.setImagen(buffer);
+            crear.setNombreImagen(imagen.getFileName());
+        }
+        
+        if(!archivo.getFileName().equals("")){
+            InputStream is = archivo.getInputstream();
+            byte[] buffer = new byte[(int) archivo.getSize()];
+            is.read(buffer);
+            
+            Documento doc1 = null;
+            
+            for(Documento d : crear.getDocumentos()){
+                if(d.getTipo().equals("Documento a rellenar")){
+                    doc1 = d;
+                    break;
+                }
+            }
+            
+            if(doc1==null){
+                doc1 = new Documento();
+                
+                Long idcrear;
+        
+                if(!nd.verDocumentos().isEmpty()){
+                    idcrear = nd.verDocumentos().get(nd.verDocumentos().size()-1).getId()+1;
+                } else {
+                    idcrear = 10L;
+                }
+                //Crear Documento
+                doc1.setId(idcrear);
+                doc1.setNombre(archivo.getFileName());
+                doc1.setDocumento(buffer);
+                doc1.setTipo("Documento a rellenar");
+                doc1.setFecha_entrega(new Date());
+                //Inserta documento
+                doc1.setEvento(crear);
+                doc1.setUsuario(ms.getUser());
+                nd.agnadirDocumento(doc1);
+                //Añade documento a la lista de documentos del usuario
+                ms.getUser().getDocumentos().add(doc1);
+                us.modificarUsuario(ms.getUser());
+            } else {
+                doc1.setNombre(archivo.getFileName());
+                doc1.setDocumento(buffer);
+                doc1.setFecha_entrega(new Date());
+                nd.modificarDocumento(doc1);
+            }
+        }
+        
+        
+        listd = nd.verDocumentos();
+        ev.modificar(crear);
+        
+        return "Lista_eventos.xhtml";
+    }
+    
     public String cancelarEvento(){
         archivo = null;
         return "CrearEvento.xhtml";

@@ -18,6 +18,7 @@ import clases.Usuario;
 import java.io.IOException;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.ejb.EJB;
@@ -38,10 +39,9 @@ public class Control_Eventos implements Serializable {
     private Evento event;
     private Evento crear = new Evento();
     private String seccioncrear;
-    private Evento aux;
     private boolean necdoc;
-    
-    private String seccionMod;
+    private Evento aux;
+    private String seccionMod="a";
     
     @EJB
     private Eventos evento;
@@ -78,45 +78,46 @@ public class Control_Eventos implements Serializable {
         return "ModEvento.xhtml";
     }
     
-    public String aceptarMod() throws EventoException, SeccionInexistenteException {
-        Evento b = evento.obtenerEvento(aux.getId());
-        b.setTitulo(aux.getTitulo());
-        b.setFecha(aux.getFecha());
-        b.setLocalizacion(aux.getLocalizacion());
-        b.setPrecio(aux.getPrecio());
+    public String aceptarMod() throws EventoException, SeccionInexistenteException, IOException, CuentaExistenteException {
         
         switch (seccionMod) {
-            case "Castores":
-                b.setSeccion(seccion.getSeccion(1L));
-                break;
-            case "Lobatos":
-                b.setSeccion(seccion.getSeccion(2L));
-                break;
-            case "Scouts":
-                b.setSeccion(seccion.getSeccion(3L));
-                break;
-            case "Escultas":
-                b.setSeccion(seccion.getSeccion(4L));
-                break;
-            case "Rovers":
-                b.setSeccion(seccion.getSeccion(5L));
-                break;
-            default:
-                break;
+        case "Castores":
+            aux.setSeccion(seccion.getSeccion(1L));
+            break;
+        case "Lobatos":
+            aux.setSeccion(seccion.getSeccion(2L));
+            break;
+        case "Scouts":
+            aux.setSeccion(seccion.getSeccion(3L));
+            break;
+        case "Escultas":
+            aux.setSeccion(seccion.getSeccion(4L));
+            break;
+        case "Rovers":
+            aux.setSeccion(seccion.getSeccion(5L));
+            break;
+        default:
+            break;
         }
-        evento.modificar(b);
-        seccionMod = null;
+            
+        arch.setCrear(aux);
+        return arch.modificarEvento();
         
-        return "Lista_eventos.xhtml";
     }
     
     public String cancelarMod() {
+        
+        aux=null;
+        arch.setArchivo(null);
+        arch.setImagen(null);
+        
         return "Eventos.xhtml";
     }
     
     public String borrarEvento(Long id) throws EventoException, CuentaExistenteException{
         Evento b = evento.obtenerEvento(id);
         Evento auxs = evento.obtenerEvento(id);
+        List<Comentario> com = new ArrayList<>(b.getComentarios());
         //Borra documentos
         if(!b.getDocumentos().isEmpty()){
             for(Documento d : auxs.getDocumentos()){
@@ -128,13 +129,16 @@ public class Control_Eventos implements Serializable {
                 d.setEvento(null);
                 nd.eliminarDocumento(d);
             }
+            arch.setListd(nd.verDocumentos());
         }
         //Borra comentarios
         if(!b.getComentarios().isEmpty()){
-            for(Comentario c: b.getComentarios()){
+            for(Comentario c: com){
                 comen.eliminar(c.getId());
+                b.getComentarios().remove(c);
             }
         }
+        b.setComentarios(com);
         //Borra inscripciones
         if(!b.getUsuarios().isEmpty()){
             for(Usuario u: b.getUsuarios()){
@@ -145,6 +149,8 @@ public class Control_Eventos implements Serializable {
         CN.borrarNotificacionesEvento(b);
         //Borra evento
         b.setDocumentos(null);
+        b.setComentarios(null);
+        b.setUsuarios(null);
         evento.eliminar(b);
         return "Lista_eventos.xhtml";
     }
@@ -261,6 +267,14 @@ public class Control_Eventos implements Serializable {
     public String cambioFormato(Date fecha){
         SimpleDateFormat formateador = new SimpleDateFormat("dd/MM/yyyy hh:mm");
         return formateador.format(fecha);
+    }
+    
+    public boolean tieneImagen(Evento e){
+        return e.getImagen()!=null;
+    }
+    
+    public boolean tieneDocumento(Evento e){
+        return !e.getDocumentos().isEmpty();
     }
     
     public List<Evento> verEventos(){

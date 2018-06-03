@@ -20,7 +20,6 @@ import java.time.ZoneId;
 import java.util.Date;
 import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
-import javax.faces.bean.RequestScoped;
 import javax.inject.Named;
 import javax.inject.Inject;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -100,6 +99,8 @@ public class Control_Registro implements Serializable{
             
             res.setCrearuser(registrar);
             
+            registrar = new Usuario();
+            
             return "registrarResponsable.xhtml";
         } else {
             return registrarUsuario();
@@ -149,10 +150,18 @@ public class Control_Registro implements Serializable{
         registrar.setContrasenia(cifrado);
 
         u.registrarUsuario(registrar);
+        
+        registrar = new Usuario();
 
         return "exitoRegistro.xhtml";
     }
     
+    public String cancelarRegistro(){
+        
+        registrar = new Usuario();
+        
+        return "login.xhtml";
+    }
     
     public Usuario getRegistrar() {
         return registrar;
