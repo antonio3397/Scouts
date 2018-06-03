@@ -48,7 +48,7 @@
             </c:choose>
             <br/><br/>
             <c:choose>
-                <c:when test = "#{miSesion.user.eventos.contains(Eventos.event)}">
+                <c:when test = "#{miSesion.user.inscripciones.contains(Eventos.event)}">
                     <p> Estás inscrito en este evento.</p>
                     <c:choose>
                         <c:when test="#{miSesion.scouter}">

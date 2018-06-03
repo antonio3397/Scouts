@@ -5,6 +5,7 @@
  */
 
 import Negocio.CuentaExistenteException;
+import Negocio.Eventos;
 import Negocio.PerfilInexistenteException;
 import Negocio.Perfiles;
 import Negocio.Responsable;
@@ -63,6 +64,9 @@ public class MiSesion implements Serializable {
 
     @EJB
     private Usuarios u;
+    
+    @EJB
+    private Eventos ev;
     
     @EJB
     private Perfiles perfs;
@@ -177,9 +181,15 @@ public class MiSesion implements Serializable {
         return "OtroPerfil.xhtml";
     }
     
-    public String inscribirse(Evento e) throws EventoException{
-        user.getEventos().add(e);
+    public String inscribirse(Evento e) throws EventoException, CuentaExistenteException, ScoutsException{
+        if (user.getInscripciones() == null) {
+            user.setInscripciones(new ArrayList<>());
+        }
+        user.getInscripciones().add(e);
         e.getUsuarios().add(user);
+        u.modificarUsuario(user);
+        ev.modificar(e);
+        u.refrescarUsuario(user);
         
         return "Eventos.xhtml";
     }
