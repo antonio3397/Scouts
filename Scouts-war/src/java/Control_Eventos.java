@@ -4,11 +4,19 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+import Negocio.CuentaExistenteException;
 import Negocio.Eventos;
+import Negocio.NegocioDocumentos;
 import Negocio.SeccionInexistenteException;
 import Negocio.Seccionesb;
+import Negocio.Usuarios;
+import clases.Documento;
 import clases.Evento;
+import clases.Usuario;
+import java.io.IOException;
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.inject.Named;
@@ -37,7 +45,13 @@ public class Control_Eventos implements Serializable {
     private Eventos evento;
     
     @EJB
+    private Usuarios us;
+    
+    @EJB
     private Seccionesb seccion;
+    
+    @EJB
+    private NegocioDocumentos nd;
     
     @Inject
     private Archivos arch;
@@ -95,14 +109,34 @@ public class Control_Eventos implements Serializable {
         return "Eventos.xhtml";
     }
     
-    public String borrarEvento(Long id) throws EventoException {
-        evento.eliminar(evento.obtenerEvento(id));
+    public String borrarEvento(Long id) throws EventoException, CuentaExistenteException{
+        Evento b = evento.obtenerEvento(id);
+        Evento auxs = evento.obtenerEvento(id);
+        if(!b.getDocumentos().isEmpty()){
+            for(Documento d : auxs.getDocumentos()){
+                b.getDocumentos().remove(d);
+                Usuario mod = d.getUsuario();
+                mod.getDocumentos().remove(d);
+                us.modificarUsuario(mod);
+                d.setUsuario(null);
+                d.setEvento(null);
+                nd.eliminarDocumento(d);
+            }
+        }
+        b.setDocumentos(null);
+        evento.eliminar(b);
         return "Lista_eventos.xhtml";
     }
 
-    public String necesitaDocumentos() throws SeccionInexistenteException{
+    public String necesitaDocumentos() throws SeccionInexistenteException, IOException, CuentaExistenteException{
         
-        if(necdoc){
+        if(!arch.getArchivo().getFileName().equals("")){
+            
+            if(!arch.getImagen().getFileName().equals("")){
+                crear.setNombreImagen(arch.getImagen().getFileName());
+                crear.setImagen(arch.GuardarImagen());
+            }
+            
             switch (seccioncrear) {
             case "Castores":
                 crear.setSeccion(seccion.getSeccion(1L));
@@ -126,14 +160,19 @@ public class Control_Eventos implements Serializable {
             crear.setId(evento.idMax());
             arch.setCrear(crear);
             
-            return "anadirDoc.xhtml";
+            return arch.crearEvento();
         } else {
             return CrearEvento();
         }
         
     }
     
-    public String CrearEvento() throws SeccionInexistenteException {
+    public String CrearEvento() throws SeccionInexistenteException, IOException {
+        
+        if(!arch.getImagen().getFileName().equals("")){
+            crear.setNombreImagen(arch.getImagen().getFileName());
+            crear.setImagen(arch.GuardarImagen());
+        }
         
         switch (seccioncrear) {
             case "Castores":
@@ -179,6 +218,19 @@ public class Control_Eventos implements Serializable {
         event=buscarEvento(id);
 
         return "Eventos.xhtml";
+    }
+    
+    public boolean isDocumentos(){
+        return !event.getDocumentos().isEmpty();
+    }
+    
+    public boolean isImagen(){
+        return event.getImagen()!=null;
+    }
+    
+    public String cambioFormato(Date fecha){
+        SimpleDateFormat formateador = new SimpleDateFormat("dd/MM/yyyy hh:mm");
+        return formateador.format(fecha);
     }
     
     public List<Evento> verEventos(){

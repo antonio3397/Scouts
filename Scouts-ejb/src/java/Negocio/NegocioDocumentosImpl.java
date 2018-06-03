@@ -30,8 +30,7 @@ public class NegocioDocumentosImpl implements NegocioDocumentos{
 
     @Override
     public void eliminarDocumento(Documento doc) {
-        if(em.contains(doc))
-            em.remove(em.merge(doc));
+        em.remove(em.merge(doc));
     }
     
     @Override
@@ -51,9 +50,5 @@ public class NegocioDocumentosImpl implements NegocioDocumentos{
         Query list = em.createQuery("SELECT doc FROM Documento doc");
         return list.getResultList();
     }
-    
-    
-    
-    
     
 }

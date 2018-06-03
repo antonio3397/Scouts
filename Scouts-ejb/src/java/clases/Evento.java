@@ -40,10 +40,12 @@ public class Evento implements Serializable {
     @Column (nullable = false)
     private String localizacion;
     private String descripcion;
+    @Column (nullable = false)
     private Integer precio;
     @Lob
     @Column(name="Imagen")
     private byte [] imagen;
+    private String nombreImagen;
     
     @OneToMany(mappedBy = "evento")
     @JoinColumn(nullable=true)
@@ -261,6 +263,14 @@ public class Evento implements Serializable {
      */
     public void setUsuarios(List<Usuario> usuarios) {
         this.usuarios = usuarios;
+    }
+
+    public String getNombreImagen() {
+        return nombreImagen;
+    }
+
+    public void setNombreImagen(String nombreImagen) {
+        this.nombreImagen = nombreImagen;
     }
     
 }
