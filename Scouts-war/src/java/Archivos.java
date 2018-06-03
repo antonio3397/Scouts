@@ -6,6 +6,7 @@ import Negocio.NegocioDocumentos;
 import Negocio.Usuarios;
 import clases.Documento;
 import clases.Evento;
+import clases.Usuario;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -136,6 +137,7 @@ public class Archivos implements Serializable{
     }
     
     public String subirArchivoRelleno(Evento e) throws IOException, CuentaExistenteException{
+        
         InputStream is = relleno.getInputstream();
         byte[] buffer = new byte[(int) relleno.getSize()];
         is.read(buffer);
@@ -149,7 +151,7 @@ public class Archivos implements Serializable{
         
         //Crear Documento
         doc.setId(idcrear);
-        doc.setNombre(archivo.getFileName());
+        doc.setNombre(relleno.getFileName());
         doc.setDocumento(buffer);
         doc.setTipo("Documento relleno");
         doc.setFecha_entrega(new Date());
@@ -162,11 +164,28 @@ public class Archivos implements Serializable{
         us.modificarUsuario(ms.getUser());
         //Añade documento a la lista de documentos del evento
         e.getDocumentos().add(doc);
-        ev.modificar(crear);
+        ev.modificar(e);
         
         doc=new Documento();
         
         return "Eventos.xhtml";
+    }
+    
+    public String borrarArchivo(Documento doc) throws CuentaExistenteException{
+        
+        Usuario user = doc.getUsuario();
+        user.getDocumentos().remove(doc);
+        us.modificarUsuario(user);
+        Evento e = doc.getEvento();
+        e.getDocumentos().remove(doc);
+        ev.modificar(e);
+        doc.setEvento(null);
+        doc.setUsuario(null);
+        
+        nd.eliminarDocumento(doc);
+        listd = nd.verDocumentos();
+        
+        return "Lista_documentos.xhtml";
     }
 
     public Evento getCrear() {

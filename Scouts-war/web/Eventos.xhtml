@@ -139,9 +139,10 @@
                     <c:choose>
                         <c:when test="#{miSesion.educando}">
                             <br></br>
-                            <p:growl showDetail="true" />
-                            <p:fileUpload value="#{archivos.relleno}" mode="simple" allowTypes="/(\.|\/)(pdf|docx?)$/"/>
-                            <h:form>
+                            <h:form enctype="multipart/form-data">
+                                <p:growl showDetail="true" />
+                                <p:fileUpload value="#{archivos.relleno}" mode="simple" allowTypes="/(\.|\/)(pdf|docx?)$/"/>
+                                <br></br>
                                 <p:commandButton value="Subir archivo" action="#{archivos.subirArchivoRelleno(Eventos.event)}" ajax="false"/>
                             </h:form>
                         </c:when>

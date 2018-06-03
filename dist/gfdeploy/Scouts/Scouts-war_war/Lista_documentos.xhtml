@@ -35,7 +35,11 @@
                         </p:commandButton>
                     </h:form>
                 </p:column>
-                
+                <p:column headerText="Eliminar">
+                    <h:form>
+                        <p:commandButton value="Eliminar" action="#{archivos.borrarArchivo(documents)}" ajax="false"/>
+                    </h:form>
+                </p:column>
             </p:dataTable>
         </div>
     </ui:define>
